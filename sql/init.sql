@@ -90,7 +90,6 @@ FROM part_categories WHERE part_key='hdd';
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'HDD 2TB', 1500000, 'uploads/parts/HDD 2TB.jpg'
 FROM part_categories WHERE part_key='hdd';
-
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'RTX 3060', 7500000, 'uploads/parts/RTX 3060.jpg'
 FROM part_categories WHERE part_key='vga';
@@ -158,7 +157,6 @@ FROM part_categories WHERE part_key='fan';
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'Tản khí Cooler Master', 700000, 'uploads/parts/Tản khí Cooler Master.jpg'
 FROM part_categories WHERE part_key='aircool';
-
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'Tản khí Noctua', 1500000, 'uploads/parts/Tản khí Noctua.jpg'
 FROM part_categories WHERE part_key='aircool';
@@ -176,7 +174,7 @@ SELECT id, 'Custom cơ bản', 5000000, 'uploads/parts/Custom cơ bản.jpg'
 FROM part_categories WHERE part_key='custom';
 
 INSERT INTO part_items (category_id, name, price, image)
-SELECT id, 'Custom cao cấp', 9000000, 'uploads/parts/Custom-cao-cap.jpg'
+SELECT id, 'Custom cao cấp', 9000000, 'uploads/parts/Custom cao cấp.jpg'
 FROM part_categories WHERE part_key='custom';
 
 INSERT INTO part_items (category_id, name, price, image)
@@ -205,7 +203,7 @@ INSERT INTO products (name, slug, image, price, old_price, badge, description, p
   )
 ),
 (
-  'Vo-case-Inwin 925 Black - Full Tower',
+  'Vỏ case Inwin 925 Black - Full Tower',
   'vo-case-inwin-925-black-full-tower',
   'image/Vỏ case Inwin 925 Black - Full Tower.jpg',
   10990000,
@@ -270,8 +268,54 @@ SHOW TABLES;
 SELECT * FROM part_categories;
 SELECT * FROM part_items;
 SELECT * FROM products;
-SELECT id, name, price, image
+SELECT id, name, price, image 
 FROM part_items;
 UPDATE products
 SET image = 'image/mainboard-asus-rog-strix-b550-f-gaming.jpg'
 WHERE slug = 'mainboard-asus-rog-strix-b550-f-gaming';
+USE eiu_computer;
+ALTER TABLE products ADD COLUMN category VARCHAR(50);
+DESCRIBE products;
+SET SQL_SAFE_UPDATES = 0;
+UPDATE products 
+SET category = 'case' 
+WHERE slug = 'vo-case-inwin-925-black-full-tower';
+
+UPDATE products 
+SET category = 'mainboard' 
+WHERE slug LIKE '%mainboard%';
+
+UPDATE products 
+SET category = 'pc' 
+WHERE slug = 'bo-cau-hinh-gaming-pho-thong';
+SET SQL_SAFE_UPDATES = 1;
+SET SQL_SAFE_UPDATES = 0;
+
+INSERT INTO products (name, slug, image, price, old_price, badge, description, category) 
+VALUES 
+(
+  'Màn hình VSP IP2512S1 24.5 inch 120Hz', 
+  'man-hinh-vsp-ip2512s1', 
+  'image/VSP IP2512S124.5 inch  FHD  IPS  120Hz  1ms.jpg', 
+  1999000, 2999000, 'HOT', 
+  'Mức giá dễ tiếp cận, phù hợp nhu cầu gaming phổ thông.', 
+  'monitor'
+),
+(
+  'Chuột gaming RAZER DeathAdder V2', 
+  'chuot-razer-deathadder-v2', 
+  'image/RAZER DeathAdder V2.jpg', 
+  1499000, 1899000, '-21%', 
+  'Form cầm quen thuộc, cảm biến ổn định.', 
+  'gear'
+),
+(
+  'Tản nhiệt JONSBO CR-1000 EVO', 
+  'tan-nhiet-jonsbo-cr-1000', 
+  'image/tan-nhiet-khi-cpu-jonsbo-cr-1000-evo-black-color-rgb.jpg', 
+  389000, 590000, 'SALE', 
+  'Giải pháp tản khí hiệu quả cho cấu hình phổ thông.', 
+  'cooling'
+);
+
+SET SQL_SAFE_UPDATES = 1;

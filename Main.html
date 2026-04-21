@@ -581,6 +581,7 @@
         font-size: 13px;
         color: #64748b;
     }
+
     .about-section {
         background-color: #f1f5f9;
         padding: 80px 0;
@@ -623,7 +624,8 @@
     }
 
     .about-list li::before {
-        content: "\f058"; /* Icon check-circle của FontAwesome */
+        content: "\f058";
+        /* Icon check-circle của FontAwesome */
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
         position: absolute;
@@ -683,18 +685,23 @@
         font-size: 15px;
         color: #64748b;
     }
+
     @media (max-width: 991px) {
         .promo-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+
         .about-box {
             grid-template-columns: 1fr;
             gap: 40px;
         }
+
         .highlight-card:hover {
-            transform: translateY(-5px); /* Đổi hướng hover trên điện thoại */
+            transform: translateY(-5px);
+            /* Đổi hướng hover trên điện thoại */
         }
     }
+
     @media (max-width: 576px) {
         .promo-grid {
             grid-template-columns: 1fr;
@@ -874,7 +881,8 @@
                 <h2>Tại sao chọn EIU COMPUTER?</h2>
                 <p>
                     Chúng tôi cung cấp giải pháp máy tính đồng bộ từ linh kiện đến cấu hình hoàn chỉnh,
-                    được tối ưu hóa hiệu năng dành riêng cho sinh viên, dân văn phòng, designer và game thủ chuyên nghiệp.
+                    được tối ưu hóa hiệu năng dành riêng cho sinh viên, dân văn phòng, designer và game thủ chuyên
+                    nghiệp.
                 </p>
                 <ul class="about-list">
                     <li>Tư vấn cấu hình chuẩn xác, phù hợp nhu cầu thực tế</li>
@@ -1058,13 +1066,13 @@
             const productGrid = document.getElementById('featured-products');
 
             try {
-                // SỬA Ở ĐÂY: Chuyển qua POST và gửi yêu cầu lấy đúng 4 sản phẩm
+
                 const response = await fetch('http://localhost:3000/api/products', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ limit: 4 }) // Gửi limit = 4 lên Backend
+                    body: JSON.stringify({ limit: 4 })
                 });
-                
+
                 const products = await response.json();
 
                 if (products.length === 0) {
@@ -1072,7 +1080,7 @@
                     return;
                 }
 
-                // Không cần dùng hàm slice(0, 4) nữa vì Backend đã trả về đúng 4 cái rồi!
+
                 const featuredProducts = products;
 
                 const htmlContent = featuredProducts.map(product => {
@@ -1105,7 +1113,7 @@
                 `;
                 }).join('');
 
-                // Đổ HTML vào container
+
                 productGrid.innerHTML = htmlContent;
 
             } catch (error) {
