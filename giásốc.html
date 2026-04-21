@@ -669,69 +669,79 @@
         renderFloatingIcons("floating-icons");
     </script>
     <script>
+        // SỬA Ở ĐÂY: Đổi tham số apiUrl thành categoryName
+        async function loadPromoProducts(containerId, categoryName) {
+            const container = document.getElementById(containerId);
+            const SERVER_URL = 'http://localhost:3000';
+            const API_URL = 'http://localhost:3000/api/products/promo'; // Đường dẫn cố định
 
-    async function loadPromoProducts(containerId, apiUrl) {
-        const container = document.getElementById(containerId);
-        const SERVER_URL = 'http://localhost:3000';
-
-        try {
-            const response = await fetch(apiUrl);
-            const products = await response.json();
-
-            if (!products || products.length === 0) {
-                container.innerHTML = '<p>Đang cập nhật sản phẩm khuyến mãi...</p>';
-                return;
-            }
-
-            const htmlContent = products.map(product => {
-                const priceNew = Number(product.price).toLocaleString('vi-VN');
-                const priceOld = product.old_price ? Number(product.old_price).toLocaleString('vi-VN') : '';
+            try {
+                // SỬA Ở ĐÂY: Gọi API bằng phương thức POST và nhét category vào Body
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ category: categoryName })
+                });
                 
-                let badgeHtml = '';
-                if (product.badge) {
-                    const isHot = (product.badge.toUpperCase() === 'HOT' || product.badge.toUpperCase() === 'SALE');
-                    badgeHtml = `<span class="discount-badge ${isHot ? 'hot' : ''}">${product.badge}</span>`;
+                const products = await response.json();
+
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<p>Đang cập nhật sản phẩm khuyến mãi...</p>';
+                    return;
                 }
 
-                const fullImageUrl = `${SERVER_URL}/${product.image}`;
+                const htmlContent = products.map(product => {
+                    const priceNew = Number(product.price).toLocaleString('vi-VN');
+                    const priceOld = product.old_price ? Number(product.old_price).toLocaleString('vi-VN') : '';
+                    
+                    let badgeHtml = '';
+                    if (product.badge) {
+                        const isHot = (product.badge.toUpperCase() === 'HOT' || product.badge.toUpperCase() === 'SALE');
+                        badgeHtml = `<span class="discount-badge ${isHot ? 'hot' : ''}">${product.badge}</span>`;
+                    }
 
-                return `
-                    <article class="product-card">
-                        <div class="product-thumb">
-                            <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='image/default.jpg'">
-                            ${badgeHtml}
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">${product.category_name || 'Khuyến mại'}</div>
-                            <h3 class="product-name">${product.name}</h3>
-                            <p class="product-desc">${product.description || ''}</p>
-                            <div class="product-price-row">
-                                <span class="price-new">${priceNew}đ</span>
-                                ${priceOld ? `<span class="price-old">${priceOld}đ</span>` : ''}
+                    const fullImageUrl = `${SERVER_URL}/${product.image}`;
+
+                    return `
+                        <article class="product-card">
+                            <div class="product-thumb">
+                                <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='image/default.jpg'">
+                                ${badgeHtml}
                             </div>
-                            <button onclick="window.location.href='product-detail.html?slug=${product.slug}'" class="product-btn">
-                                Xem chi tiết
-                            </button>
-                        </div>
-                    </article>
-                `;
-            }).join('');
+                            <div class="product-body">
+                                <div class="product-category">${product.category_name || 'Khuyến mại'}</div>
+                                <h3 class="product-name">${product.name}</h3>
+                                <p class="product-desc">${product.description || ''}</p>
+                                <div class="product-price-row">
+                                    <span class="price-new">${priceNew}đ</span>
+                                    ${priceOld ? `<span class="price-old">${priceOld}đ</span>` : ''}
+                                </div>
+                                <button onclick="window.location.href='product-detail.html?slug=${product.slug}'" class="product-btn">
+                                    Xem chi tiết
+                                </button>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
 
-            container.innerHTML = htmlContent;
+                container.innerHTML = htmlContent;
 
-        } catch (error) {
-            console.error(`Lỗi render ${containerId}:`, error);
-            container.innerHTML = '<p>Lỗi kết nối máy chủ.</p>';
+            } catch (error) {
+                console.error(`Lỗi render ${containerId}:`, error);
+                container.innerHTML = '<p>Lỗi kết nối máy chủ.</p>';
+            }
         }
-    }
 
-    // Chạy render khi trang vừa load xong
-    document.addEventListener('DOMContentLoaded', () => {
-        loadPromoProducts('promo-monitors', 'http://localhost:3000/api/products/promo?category=monitor');
-        loadPromoProducts('promo-gears', 'http://localhost:3000/api/products/promo?category=gear');
-        loadPromoProducts('promo-cooling', 'http://localhost:3000/api/products/promo?category=cooling');
-    });
-</script>
+        // Chạy render khi trang vừa load xong
+        document.addEventListener('DOMContentLoaded', () => {
+            // SỬA Ở ĐÂY: Gọi hàm cực kỳ ngắn gọn, chỉ truyền tên category ('monitor', 'gear', 'cooling')
+            loadPromoProducts('promo-monitors', 'monitor');
+            loadPromoProducts('promo-gears', 'gear');
+            loadPromoProducts('promo-cooling', 'cooling');
+        });
+    </script>
 </body>
 
 </html>

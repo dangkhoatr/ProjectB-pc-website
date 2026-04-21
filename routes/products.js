@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-router.get("/promo", async (req, res) => {
+// 1. API Lấy sản phẩm khuyến mãi (Đổi GET -> POST, query -> body)
+router.post("/promo", async (req, res) => {
   try {
-    const categoryQuery = req.query.category; 
+    // Lấy category từ Body thay vì Query trên URL
+    const categoryQuery = req.body.category; 
 
-    // Bổ sung thêm cột category vào truy vấn
     let sql = `
       SELECT id, name, slug, image, price, old_price, badge, description, category 
       FROM products
     `;
     let params = [];
-
 
     if (categoryQuery) {
       sql += ` WHERE category = ?`;
@@ -30,7 +30,8 @@ router.get("/promo", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+// 2. API Lấy toàn bộ sản phẩm (Đổi GET -> POST, query -> body)
+router.post("/", async (req, res) => {
   try {
     let sql = `
       SELECT id, name, slug, image, price, old_price, badge, description, preset_json
@@ -38,8 +39,8 @@ router.get("/", async (req, res) => {
       ORDER BY id DESC
     `;
 
-    // Tinh chỉnh: Cho phép giới hạn số lượng sản phẩm (VD: ?limit=4 cho trang chủ)
-    const limit = parseInt(req.query.limit);
+    // Lấy giới hạn (limit) từ Body
+    const limit = parseInt(req.body.limit);
     if (!isNaN(limit)) {
       sql += ` LIMIT ${limit}`;
     }
@@ -61,10 +62,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-router.get("/:slug", async (req, res) => {
+// 3. API Lấy chi tiết sản phẩm theo Slug
+// Đổi "/:slug" thành "/detail" vì mình không truyền slug trên URL nữa
+router.post("/detail", async (req, res) => {
   try {
-    const { slug } = req.params;
+    // Lấy slug từ Body thay vì Params
+    const { slug } = req.body;
+
+    // Chặn lỗi nếu Frontend quên gửi slug
+    if (!slug) {
+      return res.status(400).json({ message: "Thiếu thông tin 'slug'" });
+    }
 
     const [rows] = await db.query(
       `

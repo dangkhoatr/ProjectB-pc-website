@@ -1174,6 +1174,7 @@
     }
 
     async function loadProductDetail() {
+      // Vẫn lấy cái slug từ thanh địa chỉ (ví dụ: ?slug=ten-san-pham)
       const params = new URLSearchParams(window.location.search);
       const slug = params.get("slug");
 
@@ -1184,14 +1185,23 @@
       }
 
       try {
-        const res = await fetch(`http://localhost:3000/api/products/${slug}`);
+        // SỬA Ở ĐÂY: Chuyển sang dùng POST và gọi API "/detail"
+        const res = await fetch("http://localhost:3000/api/products/detail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          // Giấu cái slug vào trong Body để gửi lên server
+          body: JSON.stringify({ slug: slug })
+        });
+
         if (!res.ok) {
           throw new Error("Không tìm thấy sản phẩm");
         }
 
         const product = await res.json();
-        window.currentProduct = product;
-        renderProduct(product);
+        window.currentProduct = product; // Lưu lại để dùng cho nút Add to Cart
+        renderProduct(product); // Hàm vẽ giao diện đã có sẵn ở trên
       } catch (error) {
         console.error(error);
         document.getElementById("productContent").className = "error-box";

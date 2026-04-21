@@ -860,12 +860,18 @@
     </script>
     <script>
         // Hàm lấy danh sách sản phẩm từ Backend và hiển thị
+        // Hàm lấy danh sách sản phẩm từ Backend và hiển thị
         async function fetchFeaturedProducts() {
             const productGrid = document.getElementById('featured-products');
 
             try {
+                // SỬA Ở ĐÂY: Chuyển qua POST và gửi yêu cầu lấy đúng 4 sản phẩm
+                const response = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ limit: 4 }) // Gửi limit = 4 lên Backend
+                });
                 
-                const response = await fetch('http://localhost:3000/api/products');
                 const products = await response.json();
 
                 if (products.length === 0) {
@@ -873,16 +879,13 @@
                     return;
                 }
 
-                
-                const featuredProducts = products.slice(0, 4);
+                // Không cần dùng hàm slice(0, 4) nữa vì Backend đã trả về đúng 4 cái rồi!
+                const featuredProducts = products;
 
-                
                 const htmlContent = featuredProducts.map(product => {
-                    
                     const priceNew = Number(product.price).toLocaleString('vi-VN');
                     const priceOld = product.old_price ? Number(product.old_price).toLocaleString('vi-VN') : '';
 
-                   
                     let badgeHtml = '';
                     if (product.badge) {
                         const badgeClass = product.badge.toUpperCase() === 'HOT' ? 'hot' : '';

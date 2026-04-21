@@ -562,25 +562,7 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
 
-    const PARTS = [
-      { key: "cpu", label: "Bộ vi xử lý" },
-      { key: "main", label: "Bo mạch chủ" },
-      { key: "ram", label: "RAM" },
-      { key: "ssd", label: "SSD" },
-      { key: "hdd", label: "HDD" },
-      { key: "vga", label: "VGA" },
-      { key: "psu", label: "Nguồn" },
-      { key: "case", label: "Vỏ case" },
-      { key: "monitor", label: "Màn hình" },
-      { key: "keyboard", label: "Bàn phím" },
-      { key: "mouse", label: "Chuột" },
-      { key: "headset", label: "Tai nghe" },
-      { key: "fan", label: "Fan case" },
-      { key: "aircool", label: "Tản nhiệt khí" },
-      { key: "aio", label: "Tản nhiệt nước AIO" },
-      { key: "custom", label: "Tản nhiệt nước Custom" },
-      { key: "windows", label: "Windows bản quyền" }
-    ];
+    const PARTS = [];
 
 
     let DATA = {};
@@ -1041,19 +1023,29 @@
     let PRESET_BUILDS = {};
     async function loadBackendData() {
       try {
-        const [partsRes, productsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/parts/items"),
-          fetch("http://localhost:3000/api/products")
+        //  cấu hình chung cho lệnh POST 
+        const postOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        };
+
+        // Gọi đồng thời 3 API bằng phương thức POST
+        const [categoriesRes, partsRes, productsRes] = await Promise.all([
+          fetch("http://localhost:3000/api/parts/categories", postOptions), // Lấy danh mục
+          fetch("http://localhost:3000/api/parts/items", postOptions),      // Lấy linh kiện
+          
+          // LƯU Ý: Nếu file routes/products.js của bạn chưa đổi router.get thành router.post,
+          // thì tạm thời xóa chữ `postOptions` ở dòng dưới này đi nhé (để nó chạy GET tạm).
+          // Nếu đã đổi thành POST rồi thì giữ nguyên!
+          fetch("http://localhost:3000/api/products", postOptions)          // Lấy sản phẩm combo
         ]);
 
-        if (!partsRes.ok) {
-          throw new Error("Không lấy được dữ liệu linh kiện");
+        if (!categoriesRes.ok || !partsRes.ok || !productsRes.ok) {
+          throw new Error("Lỗi khi lấy dữ liệu từ server");
         }
 
-        if (!productsRes.ok) {
-          throw new Error("Không lấy được dữ liệu sản phẩm");
-        }
-
+        // Bơm dữ liệu từ Database vào các biến
+        PARTS = await categoriesRes.json(); // Biến PARTS tự động có đủ 17 danh mục từ DB!
         DATA = await partsRes.json();
         const products = await productsRes.json();
 
@@ -1062,12 +1054,14 @@
           PRESET_BUILDS[index + 1] = product.preset_json || {};
         });
 
+        // Bắt đầu vẽ giao diện
         renderReferenceProducts(products);
-        render();
+        render(); // Hàm render sẽ tự đọc mảng PARTS mới để vẽ ra các khe cắm
         renderSavedBuilds();
         updateCartCount();
       } catch (error) {
         console.error("Lỗi load backend data:", error);
+        alert("Không thể kết nối đến máy chủ. Vui lòng bật Server backend!");
       }
     }
     function renderReferenceProducts(products) {
