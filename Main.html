@@ -513,7 +513,6 @@
         transform: scale(0.9);
     }
 
-    /* animation */
     @keyframes zoomPulse {
         0% {
             transform: scale(1);
@@ -532,6 +531,175 @@
         }
     }
 
+    .promo-strip {
+        padding: 40px 0;
+        background-color: #f8fafc;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .promo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .promo-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: #fff;
+        padding: 20px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .promo-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(225, 29, 72, 0.15);
+        border-color: #ffe4e6;
+    }
+
+    .promo-icon {
+        font-size: 36px;
+        color: var(--main);
+    }
+
+    .promo-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .promo-text strong {
+        font-size: 16px;
+        color: var(--dark-2);
+        margin-bottom: 4px;
+    }
+
+    .promo-text span {
+        font-size: 13px;
+        color: #64748b;
+    }
+    .about-section {
+        background-color: #f1f5f9;
+        padding: 80px 0;
+        border-top: 1px solid var(--line);
+    }
+
+    .about-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .about-content h2 {
+        font-size: 36px;
+        color: var(--dark-2);
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .about-content p {
+        font-size: 16px;
+        line-height: 1.7;
+        color: #475569;
+        margin-bottom: 24px;
+    }
+
+    .about-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .about-list li {
+        position: relative;
+        padding-left: 34px;
+        margin-bottom: 16px;
+        font-size: 16px;
+        color: #334155;
+        font-weight: 500;
+    }
+
+    .about-list li::before {
+        content: "\f058"; /* Icon check-circle của FontAwesome */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        top: 2px;
+        color: var(--main);
+        font-size: 20px;
+    }
+
+    .about-highlight {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .highlight-card {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: #fff;
+        padding: 24px 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border-left: 6px solid var(--main);
+        transition: transform 0.3s ease;
+    }
+
+    .highlight-card:hover {
+        transform: translateX(10px);
+    }
+
+    .highlight-icon {
+        font-size: 32px;
+        color: var(--main);
+        background: #ffe4e6;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .highlight-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .highlight-info strong {
+        font-size: 28px;
+        color: var(--dark-2);
+        line-height: 1.2;
+        margin-bottom: 4px;
+    }
+
+    .highlight-info span {
+        font-size: 15px;
+        color: #64748b;
+    }
+    @media (max-width: 991px) {
+        .promo-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .about-box {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        .highlight-card:hover {
+            transform: translateY(-5px); /* Đổi hướng hover trên điện thoại */
+        }
+    }
+    @media (max-width: 576px) {
+        .promo-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 
 
     /* FOOTER */
@@ -622,22 +790,32 @@
     <section class="promo-strip">
         <div class="container promo-grid">
             <div class="promo-item">
-                <br>
-                <strong>Miễn phí tư vấn</strong>
-                <span>Build cấu hình theo ngân sách</span>
-
+                <i class="fa-solid fa-headset promo-icon"></i>
+                <div class="promo-text">
+                    <strong>Miễn phí tư vấn</strong>
+                    <span>Build cấu hình theo ngân sách</span>
+                </div>
             </div>
             <div class="promo-item">
-                <strong>Giao hàng nhanh</strong>
-                <span>Hỗ trợ toàn quốc</span>
+                <i class="fa-solid fa-truck-fast promo-icon"></i>
+                <div class="promo-text">
+                    <strong>Giao hàng nhanh</strong>
+                    <span>Hỗ trợ vận chuyển toàn quốc</span>
+                </div>
             </div>
             <div class="promo-item">
-                <strong>Chính hãng 100%</strong>
-                <span>Bảo hành rõ ràng</span>
+                <i class="fa-solid fa-shield-halved promo-icon"></i>
+                <div class="promo-text">
+                    <strong>Chính hãng 100%</strong>
+                    <span>Bảo hành uy tín, rõ ràng</span>
+                </div>
             </div>
             <div class="promo-item">
-                <strong>Ưu đãi mỗi tuần</strong>
-                <span>Nhiều deal linh kiện hấp dẫn</span>
+                <i class="fa-solid fa-gift promo-icon"></i>
+                <div class="promo-text">
+                    <strong>Ưu đãi mỗi tuần</strong>
+                    <span>Nhiều deal linh kiện hấp dẫn</span>
+                </div>
             </div>
         </div>
     </section>
@@ -696,27 +874,42 @@
                 <h2>Tại sao chọn EIU COMPUTER?</h2>
                 <p>
                     Chúng tôi cung cấp giải pháp máy tính đồng bộ từ linh kiện đến cấu hình hoàn chỉnh,
-                    tối ưu cho sinh viên, dân văn phòng, designer và game thủ.
+                    được tối ưu hóa hiệu năng dành riêng cho sinh viên, dân văn phòng, designer và game thủ chuyên nghiệp.
                 </p>
                 <ul class="about-list">
-                    <li>Tư vấn cấu hình phù hợp nhu cầu thực tế</li>
-                    <li>Sản phẩm chính hãng, giá minh bạch</li>
-                    <li>Hỗ trợ kỹ thuật và hậu mãi rõ ràng</li>
+                    <li>Tư vấn cấu hình chuẩn xác, phù hợp nhu cầu thực tế</li>
+                    <li>Sản phẩm chính hãng 100%, giá cả minh bạch</li>
+                    <li>Hỗ trợ kỹ thuật trọn đời, chính sách hậu mãi rõ ràng</li>
                 </ul>
             </div>
 
             <div class="about-highlight">
                 <div class="highlight-card">
-                    <strong>500+</strong>
-                    <span>Khách hàng đã build máy</span>
+                    <div class="highlight-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="highlight-info">
+                        <strong>500+</strong>
+                        <span>Khách hàng đã tin tưởng build máy</span>
+                    </div>
                 </div>
                 <div class="highlight-card">
-                    <strong>100%</strong>
-                    <span>Linh kiện chính hãng</span>
+                    <div class="highlight-icon">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div class="highlight-info">
+                        <strong>100%</strong>
+                        <span>Linh kiện chính hãng, Full VAT</span>
+                    </div>
                 </div>
                 <div class="highlight-card">
-                    <strong>24/7</strong>
-                    <span>Hỗ trợ tư vấn</span>
+                    <div class="highlight-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div class="highlight-info">
+                        <strong>24/7</strong>
+                        <span>Hỗ trợ kỹ thuật & tư vấn online</span>
+                    </div>
                 </div>
             </div>
         </div>

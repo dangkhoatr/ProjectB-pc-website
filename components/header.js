@@ -72,13 +72,10 @@ function renderHeader(targetId = "header") {
               <span>Xây dựng<br>cấu hình</span>
             </a>
 
-            <div class="account-wrap">
-              <a href="#" class="header-account">◉ TÀI KHOẢN</a>
-              <div class="account-dropdown">
-                <a href="#">ĐĂNG KÝ</a>
-                <a href="#">ĐĂNG NHẬP</a>
-              </div>
-            </div>
+            <a href="auth.html" class="header-action" id="headerAccountBtn">
+              <span class="action-icon">👤</span>
+              <span id="headerAccountName">TÀI KHOẢN</span>
+            </a>
 
             <div class="header-cart" id="sharedHeaderCart">
               <div class="cart-icon">🛒</div>
@@ -142,6 +139,28 @@ function setupSharedHeader() {
   setupHeaderSearch();
   setupHeaderCart();
   updateSharedCartCount();
+  setupHeaderAccount(); // GỌI HÀM XỬ LÝ TÀI KHOẢN Ở ĐÂY
+}
+
+// SỬA Ở ĐÂY: Thêm hàm xử lý đổi tên tài khoản
+function setupHeaderAccount() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const fullName = localStorage.getItem('userName'); 
+  const accountBtn = document.getElementById('headerAccountBtn');
+  const accountNameEl = document.getElementById('headerAccountName');
+
+  if (isLoggedIn === 'true' && fullName && accountBtn && accountNameEl) {
+    // Tách họ tên thành mảng và lấy chữ cuối cùng
+    const nameArray = fullName.trim().split(' ');
+    const firstName = nameArray[nameArray.length - 1]; 
+
+    // Đổi chữ và viết hoa chữ cái đầu
+    accountNameEl.innerText = firstName;
+    accountNameEl.style.textTransform = "capitalize"; 
+    
+    // Đổi link sang trang quản lý tài khoản
+    accountBtn.href = 'account.html';
+  }
 }
 
 function setupHeaderSearch() {
