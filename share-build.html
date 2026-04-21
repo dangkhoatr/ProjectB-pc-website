@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Cấu hình được chia sẻ</title>
   <style>
     body {
@@ -96,6 +97,7 @@
 </head>
 
 <body>
+  <div id="header"></div>
   <div class="container">
     <h1>CẤU HÌNH ĐƯỢC CHIA SẺ</h1>
     <div class="desc">Danh sách linh kiện đã chọn từ trang cấu hình.</div>
@@ -104,9 +106,18 @@
     <div id="buildTotal" class="total"></div>
 
     <div class="actions">
-      <button class="btn red" onclick="window.print()">In cấu hình</button>
+      <button class="btn" style="background: #6b7280; margin-right: 12px;" onclick="window.print()">In cấu hình</button>
+
+      <button class="btn red" id="btnBuyShared" onclick="buySharedBuild()">Thêm cấu hình này vào Giỏ hàng</button>
     </div>
   </div>
+  <div id="footer"></div>
+  <script src="components/header.js"></script>
+  <script src="components/footer.js"></script>
+  <script>
+    renderHeader("header");
+    renderFooter("footer");
+  </script>
 
   <script>
     const PARTS = {
@@ -185,6 +196,32 @@
     }
 
     renderSharedBuild();
+    function buySharedBuild() {
+      // 1. Lấy dữ liệu từ URL giống như lúc render
+      const params = new URLSearchParams(window.location.search);
+      const config = params.get("config");
+      const build = decodeConfig(config);
+
+      if (!build) return alert("Cấu hình không hợp lệ!");
+
+      let cart = JSON.parse(localStorage.getItem("pc_build")) || {};
+
+      
+      for (const key in build) {
+        if (cart[key]) {
+          
+          cart[key].qty = (cart[key].qty || 1) + (build[key].qty || 1);
+        } else {
+          
+          cart[key] = build[key];
+        }
+      }
+
+      localStorage.setItem("pc_build", JSON.stringify(cart));
+
+      alert("Đã thêm toàn bộ cấu hình vào giỏ hàng!");
+      window.location.href = "cart.html"; 
+    }
   </script>
 </body>
 

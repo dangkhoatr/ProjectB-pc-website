@@ -6,7 +6,7 @@ const db = require("../db");
 router.get("/categories", async (req, res) => {
   try {
     const [rows] = await db.query(
-      "SELECT id, `key`, label FROM part_categories ORDER BY id ASC"
+      "SELECT id, part_key, label FROM part_categories ORDER BY id ASC"
     );
     res.json(rows);
   } catch (error) {
@@ -15,11 +15,11 @@ router.get("/categories", async (req, res) => {
   }
 });
 
-// Lấy toàn bộ item, group theo key giống DATA hiện tại của bạn
+// Lấy toàn bộ item, group theo part_key
 router.get("/items", async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT pc.\`key\`, pc.label, pi.id, pi.name, pi.price
+      SELECT pc.part_key, pc.label, pi.id, pi.name, pi.price, pi.image
       FROM part_items pi
       JOIN part_categories pc ON pi.category_id = pc.id
       ORDER BY pc.id ASC, pi.id ASC
@@ -27,11 +27,12 @@ router.get("/items", async (req, res) => {
 
     const grouped = {};
     rows.forEach((row) => {
-      if (!grouped[row.key]) grouped[row.key] = [];
-      grouped[row.key].push({
+      if (!grouped[row.part_key]) grouped[row.part_key] = [];
+      grouped[row.part_key].push({
         id: row.id,
         name: row.name,
-        price: row.price
+        price: Number(row.price),
+        image: row.image || ""
       });
     });
 
@@ -42,23 +43,30 @@ router.get("/items", async (req, res) => {
   }
 });
 
-// Lấy item theo key
+// Lấy item theo part_key
 router.get("/items/:key", async (req, res) => {
   try {
     const { key } = req.params;
 
     const [rows] = await db.query(
       `
-      SELECT pi.id, pi.name, pi.price
+      SELECT pi.id, pi.name, pi.price, pi.image
       FROM part_items pi
       JOIN part_categories pc ON pi.category_id = pc.id
-      WHERE pc.\`key\` = ?
+      WHERE pc.part_key = ?
       ORDER BY pi.id ASC
       `,
       [key]
     );
 
-    res.json(rows);
+    res.json(
+      rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+        price: Number(row.price),
+        image: row.image || ""
+      }))
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi lấy linh kiện theo loại" });

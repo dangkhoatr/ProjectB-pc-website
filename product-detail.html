@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
   <style>
     :root {
@@ -167,7 +169,7 @@
       font-weight: 800;
       line-height: 1.05;
       font-size: 12px;
-      box-shadow: inset 0 0 0 4px rgba(255,255,255,0.25);
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.25);
       padding: 8px;
     }
 
@@ -351,6 +353,516 @@
       border: 1px solid var(--line);
     }
 
+    /* ===== PRODUCT DETAIL PRO STYLE ===== */
+
+    .product-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+    }
+
+    /* Title */
+    .product-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    /* Meta */
+    .meta {
+      font-size: 13px;
+      color: #9ca3af;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* Layout */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 600px 1fr;
+      gap: 40px;
+    }
+
+    /* Image */
+    .main-image {
+      width: 100%;
+      max-width: 500px;
+      object-fit: contain;
+    }
+
+    /* ===== RIGHT SIDE ===== */
+
+    .section-heading {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    /* Description */
+    .highlight-text {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .highlight-text h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .highlight-text h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 14px;
+    }
+
+    .highlight-text ul {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+
+    .highlight-text li {
+      margin-bottom: 6px;
+    }
+
+    /* ===== PRICE BOX ===== */
+
+    .price-panel {
+      background: #f9fafb;
+      border: 1px solid #eee;
+      padding: 18px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+
+    .price-value {
+      font-size: 30px;
+      font-weight: 800;
+      color: #e11d48;
+    }
+
+    /* ===== BUTTON ===== */
+
+    .buy-now-btn {
+      background: linear-gradient(135deg, #ff1e2d, #d90429);
+      padding: 14px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .cart-btn {
+      background: #f59e0b;
+      border-radius: 6px;
+    }
+
+    .installment-btn {
+      background: #1e3a8a;
+      border-radius: 6px;
+    }
+
+    .buy-now-btn:hover,
+    .cart-btn:hover,
+    .installment-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* ===== SPEC TABLE ===== */
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .spec-table td {
+      padding: 10px;
+      border: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    .spec-table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .product-info-section {
+      padding: 32px 16px;
+      background: #f5f7fb;
+    }
+
+    .product-info-card {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e8ecf3;
+      border-radius: 20px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+      padding: 32px;
+      font-family: "Inter", sans-serif;
+      color: #1f2937;
+    }
+
+    .product-info-header {
+      margin-bottom: 24px;
+    }
+
+    .product-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #111827, #374151);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .product-title {
+      margin: 0 0 14px;
+      font-size: 32px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .product-meta span {
+      position: relative;
+    }
+
+    .product-meta strong {
+      color: #111827;
+    }
+
+    .product-price-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: linear-gradient(135deg, #fff7ed, #fffbeb);
+      border: 1px solid #fed7aa;
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 22px;
+    }
+
+    .price-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #9a3412;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .price-current {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1;
+      color: #dc2626;
+    }
+
+    .price-note {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .product-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      min-width: 180px;
+      height: 48px;
+      padding: 0 22px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(220, 38, 38, 0.24);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-dark {
+      background: #111827;
+      color: #fff;
+    }
+
+    .product-highlight {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+
+    .product-highlight h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .product-highlight p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.75;
+      color: #475569;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 22px;
+    }
+
+    .info-block {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .info-block h3 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .info-block ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .info-block ul li {
+      margin-bottom: 10px;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .spec-table tr:not(:last-child) td {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .spec-table td {
+      padding: 14px 12px;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    .spec-table td:first-child {
+      width: 38%;
+      font-weight: 700;
+      color: #111827;
+      background: #f8fafc;
+    }
+
+    .spec-table td:last-child {
+      color: #475569;
+    }
+
+    .product-review-section {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 16px 32px;
+      font-family: "Inter", sans-serif;
+    }
+
+    .review-box {
+      background: #fff;
+      border: 1px solid #dcdcdc;
+      padding: 14px 16px 18px;
+    }
+
+    .review-title {
+      margin: 0 0 12px;
+      font-size: 26px;
+      font-weight: 700;
+      color: #222;
+      line-height: 1.35;
+    }
+
+    .review-overview {
+      display: grid;
+      grid-template-columns: 220px 1fr 230px;
+      border: 1px solid #dcdcdc;
+      background: #fafafa;
+      min-height: 150px;
+    }
+
+    .review-summary,
+    .review-breakdown,
+    .review-action {
+      padding: 18px 20px;
+    }
+
+    .review-summary {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #e3e3e3;
+      text-align: center;
+    }
+
+    .review-score {
+      font-size: 28px;
+      font-weight: 700;
+      color: #003b8b;
+      margin-bottom: 6px;
+    }
+
+    .review-stars {
+      font-size: 18px;
+      color: #cfcfcf;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .review-count {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .review-breakdown {
+      border-right: 1px solid #e3e3e3;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .review-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 16px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .review-label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .review-bar {
+      width: 100%;
+      height: 10px;
+      background: #e5e5e5;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .review-bar-fill {
+      height: 100%;
+      background: #d70000;
+      width: 0;
+    }
+
+    .review-value {
+      font-size: 14px;
+      color: #666;
+      text-align: right;
+    }
+
+    .review-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .review-action-text {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .review-btn {
+      min-width: 155px;
+      height: 38px;
+      border: none;
+      background: #d60000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .review-btn:hover {
+      background: #b80000;
+    }
+
+
+    @media (max-width: 991px) {
+      .product-title {
+        font-size: 26px;
+      }
+
+      .price-current {
+        font-size: 32px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .product-info-card {
+        padding: 22px 16px;
+        border-radius: 16px;
+      }
+
+      .product-title {
+        font-size: 22px;
+      }
+
+      .product-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
     @media (max-width: 1200px) {
       .detail-grid {
         grid-template-columns: 1fr;
@@ -394,13 +906,7 @@
 </head>
 
 <body>
-  <div class="top-bar">
-    <div class="top-inner">
-      <div class="menu-title">☰ DANH MỤC SẢN PHẨM</div>
-      <div class="hotline-box">HOTLINE: 033.457.7086</div>
-    </div>
-  </div>
-
+  <div id="header"></div>
   <div class="page">
     <div class="breadcrumb" id="breadcrumb">
       <a href="index.html">Trang chủ</a> ›
@@ -410,6 +916,133 @@
 
     <div id="productContent" class="loading-box">Đang tải sản phẩm...</div>
   </div>
+  <section class="product-info-section">
+    <div class="product-info-card">
+      <div class="product-highlight">
+        <h2>Đặc điểm nổi bật</h2>
+        <p>
+          ROG Strix B550 Gaming series motherboards offer a feature-set usually
+          found in the higher-end ROG Strix X570 Gaming series, including the latest
+          PCIe 4.0. With robust power delivery and effective cooling, ROG Strix B550
+          Gaming is well-equipped to handle 3rd Gen AMD Ryzen CPUs. Boasting futuristic
+          aesthetics and intuitive ROG software, ROG Strix B550-F Gaming (Wi-Fi) gives
+          you a head start on your dream build.
+        </p>
+      </div>
+
+      <div class="product-grid">
+        <div class="info-block">
+          <h3>Thông tin nhanh</h3>
+          <ul>
+            <li>Chipset AMD B550</li>
+            <li>Hỗ trợ AMD Ryzen thế hệ 3</li>
+            <li>Hỗ trợ PCIe 4.0</li>
+            <li>Tích hợp Wi-Fi</li>
+            <li>Thiết kế ROG Strix cao cấp</li>
+          </ul>
+        </div>
+
+        <div class="info-block">
+          <h3>Thông số kỹ thuật</h3>
+          <table class="spec-table">
+            <tr>
+              <td>Tên sản phẩm</td>
+              <td>ASUS ROG STRIX B550-F GAMING (WI-FI)</td>
+            </tr>
+            <tr>
+              <td>Thương hiệu</td>
+              <td>ASUS</td>
+            </tr>
+            <tr>
+              <td>Chipset</td>
+              <td>AMD B550</td>
+            </tr>
+            <tr>
+              <td>Kết nối nổi bật</td>
+              <td>PCIe 4.0, Wi-Fi</td>
+            </tr>
+            <tr>
+              <td>Bảo hành</td>
+              <td>36 tháng</td>
+            </tr>
+            <tr>
+              <td>Tình trạng</td>
+              <td>Liên hệ</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="product-review-section">
+    <div class="review-box">
+      <h2 class="review-title">
+        Đánh giá &amp; Nhận xét về Mainboard Asus ROG STRIX B550-F GAMING(WI-FI)
+      </h2>
+
+      <div class="review-overview">
+        <div class="review-summary">
+          <div class="review-score">0/5</div>
+          <div class="review-stars">☆ ☆ ☆ ☆ ☆</div>
+          <div class="review-count">0 đánh giá &amp; nhận xét</div>
+        </div>
+
+        <div class="review-breakdown">
+          <div class="review-row">
+            <span class="review-label">5 sao</span>
+            <div class="review-bar">
+              <div class="review-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="review-value">0</span>
+          </div>
+
+          <div class="review-row">
+            <span class="review-label">4 sao</span>
+            <div class="review-bar">
+              <div class="review-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="review-value">0</span>
+          </div>
+
+          <div class="review-row">
+            <span class="review-label">3 sao</span>
+            <div class="review-bar">
+              <div class="review-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="review-value">0</span>
+          </div>
+
+          <div class="review-row">
+            <span class="review-label">2 sao</span>
+            <div class="review-bar">
+              <div class="review-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="review-value">0</span>
+          </div>
+
+          <div class="review-row">
+            <span class="review-label">1 sao</span>
+            <div class="review-bar">
+              <div class="review-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="review-value">0</span>
+          </div>
+        </div>
+
+        <div class="review-action">
+          <p class="review-action-text">Bạn đã dùng sản phẩm này?</p>
+          <button class="review-btn">Gửi đánh giá của bạn</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="footer"></div>
+  <script src="components/header.js"></script>
+  <script src="components/footer.js"></script>
+  <script>
+    renderHeader("header");
+    renderFooter("footer");
+  </script>
 
   <script>
     function formatPrice(value) {
@@ -575,4 +1208,5 @@
     loadProductDetail();
   </script>
 </body>
+
 </html>

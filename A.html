@@ -6,545 +6,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Xây dựng cấu hình</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    .site-header {
-      width: 100%;
-    }
-
-    .header-top {
-      background: #000;
-      color: #fff;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-inner {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 90px;
-    }
-
-    .header-top .header-inner {
-      min-height: 92px;
-      gap: 24px;
-    }
-
-    .header-logo img {
-      height: 64px;
-      width: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    .header-logo-text {
-      font-size: 30px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .header-center {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .showroom-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .showroom-link {
-      color: #fff;
-      text-decoration: none;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .showroom-dropdown {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      width: 540px;
-      background: #fff;
-      border: 1px solid #d1d5db;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-      display: none;
-      z-index: 99999;
-    }
-
-    .showroom-title {
-      padding: 12px 14px;
-      border-bottom: 1px solid #e5e7eb;
-      color: #1f2937;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .showroom-dropdown iframe {
-      width: 100%;
-      height: 300px;
-      border: 0;
-      display: block;
-    }
-
-    .showroom-wrap:hover .showroom-dropdown {
-      display: block;
-    }
-
-    .top-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-    }
-
-    .top-links a {
-      color: #fff;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .top-links .pill {
-      background: #f59e0b;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 600;
-    }
-
-    .sales-support-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .sales-support-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f59e0b;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 600;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .sales-support-dropdown {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      width: 400px;
-      background: #f3f4f6;
-      border: 1px solid #2b90ef;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-      z-index: 99999;
-
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(8px);
-      transition: all 0.25s ease;
-    }
-
-    .sales-support-wrap:hover .sales-support-dropdown {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .sales-support-title {
-      background: #1697d4;
-      color: #fff;
-      text-align: center;
-      font-size: 16px;
-      font-weight: 700;
-      padding: 10px 12px;
-    }
-
-    .sales-support-body {
-      padding: 12px 14px 14px;
-    }
-
-    .sales-support-section {
-      margin-bottom: 14px;
-    }
-
-    .sales-support-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .sales-support-section h4 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      font-weight: 700;
-      color: #111827;
-    }
-
-    .sales-support-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 4px 0;
-      font-size: 15px;
-      color: #111827;
-    }
-
-    .sales-support-name {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .sales-support-name::before {
-      content: "🟦";
-      font-size: 11px;
-      line-height: 1;
-    }
-
-    .sales-support-phone {
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-
-    .search-bar {
-      display: flex;
-      align-items: center;
-      background: #fff;
-      border-radius: 3px;
-      overflow: visible;
-      height: 40px;
-      max-width: 760px;
-      position: relative;
-    }
-
-    .search-category option {
-      font-size: 14px;
-      color: #111827;
-      background: #fff;
-    }
-
-    .search-bar input {
-      flex: 1;
-      height: 40px;
-      border: none;
-      outline: none;
-      padding: 0 14px;
-      font-size: 14px;
-    }
-
-    .search-bar button {
-      width: 54px;
-      height: 40px;
-      border: none;
-      background: #fff;
-      color: #ef4444;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .search-category {
-      width: 180px;
-      height: 40px;
-      border: none;
-      outline: none;
-      padding: 0 38px 0 14px;
-      font-size: 14px;
-      color: #111827;
-      background: #fff;
-      border-right: 1px solid #e5e7eb;
-      cursor: pointer;
-
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 12px;
-    }
-
-    .search-bar select {
-      border: none;
-      outline: none;
-      height: 100%;
-      padding: 0 12px;
-      color: #111827;
-      background: #fff;
-      min-width: 150px;
-    }
-
-    .search-bar input {
-      flex: 1;
-      border: none;
-      outline: none;
-      height: 100%;
-      padding: 0 12px;
-      font-size: 14px;
-    }
-
-    .search-bar button {
-      width: 54px;
-      height: 100%;
-      border: none;
-      background: #fff;
-      color: #ef4444;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      height: 100%;
-    }
-
-    .header-action,
-    .header-account {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .header-action {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .account-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .header-account {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .account-dropdown {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 120px;
-      background: #fff;
-      border-radius: 3px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      z-index: 99999;
-
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s ease;
-    }
-
-    .account-wrap:hover .account-dropdown {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .account-dropdown::before {
-      content: "";
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: 8px solid #fff;
-    }
-
-    .account-dropdown a {
-      display: block;
-      padding: 12px 18px;
-      text-align: center;
-      text-decoration: none;
-      color: #111827;
-      font-weight: 700;
-      border-bottom: 1px solid #d1d5db;
-      white-space: nowrap;
-    }
-
-
-    .account-dropdown a:last-child {
-      border-bottom: none;
-    }
-
-    .account-dropdown a:hover {
-      background: #f3f4f6;
-    }
-
-
-    .action-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #fff;
-      color: #ef4444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-cart {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-
-      border: 1px solid #fff;
-      border-radius: 6px;
-      padding: 8px 14px;
-
-      color: #fff;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .header-cart:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .cart-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-
-      border: 1px solid #ffffff;
-      padding: 8px 14px;
-      border-radius: 6px;
-
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-
-    .cart-circle {
-      width: 28px;
-      height: 28px;
-      background: #fff;
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 14px;
-    }
-
-    .product-menu-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .product-menu {
-      color: #ef4444;
-      font-weight: 700;
-      white-space: nowrap;
-      cursor: pointer;
-      height: 48px;
-      display: flex;
-      align-items: center;
-    }
-
-    .product-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 260px;
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      display: none;
-      z-index: 99999;
-    }
-
-    .product-menu-wrap:hover .product-dropdown {
-      display: block;
-    }
-
-    .product-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 38px;
-      padding: 10px 14px;
-      color: #111827;
-      text-decoration: none;
-      border-bottom: 1px solid #e5e7eb;
-      background: #fff;
-      font-size: 14px;
-    }
-
-    .product-item:last-child {
-      border-bottom: none;
-    }
-
-    .product-item:hover {
-      background: #f9fafb;
-      color: #ef4444;
-    }
-
-    .header-bottom {
-      background: #fff;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .header-bottom-inner {
-      justify-content: space-between;
-      min-height: 36px;
-    }
-
-    .product-menu {
-      color: #ef4444;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .hotline-box {
-      position: relative;
-      background: #ef2b1d;
-      color: #fff;
-      font-weight: 800;
-      padding: 8px 28px 8px 42px;
-      min-width: 300px;
-      text-align: center;
-    }
-
-    .hotline-box::before {
-      content: "";
-      position: absolute;
-      left: -32px;
-      top: 0;
-      width: 0;
-      height: 0;
-      border-top: 18px solid transparent;
-      border-bottom: 18px solid transparent;
-      border-right: 32px solid #ef2b1d;
-    }
-
     :root {
       --main: #2b90ef;
       --dark: #1f2937;
@@ -854,6 +321,31 @@
       font-weight: 600;
     }
 
+    .item-with-image {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .item-thumb-wrap {
+      width: 80px;
+      height: 80px;
+      border: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
     @media (max-width: 1024px) {
       .ref-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -874,14 +366,59 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(239, 43, 85, 0.28);
-      display: none;
+
+      /* ❌ bỏ display none */
+      display: flex;
       align-items: center;
       justify-content: center;
+
+      /* ✅ ẩn mượt */
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.7) translateY(20px);
+
+      transition:
+        opacity 0.25s ease,
+        transform 0.3s ease,
+        visibility 0.25s;
+
       z-index: 10000;
     }
 
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* hover: zoom nhịp */
     .back-to-top:hover {
-      filter: brightness(1.05);
+      animation: zoomPulse 0.8s ease-in-out infinite;
+      filter: brightness(1.1);
+    }
+
+    /* click */
+    .back-to-top:active {
+      transform: scale(0.9);
+    }
+
+    /* animation */
+    @keyframes zoomPulse {
+      0% {
+        transform: scale(1);
+      }
+
+      30% {
+        transform: scale(1.2);
+      }
+
+      60% {
+        transform: scale(0.95);
+      }
+
+      100% {
+        transform: scale(1.1);
+      }
     }
 
     /* NEWSLETTER */
@@ -920,211 +457,11 @@
       cursor: pointer;
       border-radius: 0 4px 4px 0;
     }
-
-
-    /* FOOTER */
-
-    .footer {
-      background: #000;
-      color: #fff;
-    }
-
-    .footer-container {
-      max-width: 1600px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 40px;
-      padding: 40px 20px;
-    }
-
-    .footer-col h4 {
-      margin-bottom: 15px;
-    }
-
-    .footer-col ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .footer-col li {
-      margin-bottom: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .footer-col li:hover {
-      color: #2b90ef;
-    }
-
-    .mobile-btn {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      cursor: pointer;
-      background: #f3f4f6;
-    }
-
-    .footer-bottom {
-      background: #e5e7eb;
-      color: #444;
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-    }
   </style>
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="header-top">
-      <div class="header-inner">
-        <div class="header-logo">
-          <div class="header-logo-text">EIU COMPUTER</div>
-        </div>
-
-        <div class="header-center">
-          <div class="top-links">
-            <div class="showroom-wrap">
-              <a href="#" class="showroom-link">📍 Hệ thống showroom</a>
-
-              <div class="showroom-dropdown">
-                <div class="showroom-title">
-                  <b>ĐỊA CHỈ:</b> EIU Computer - Bình Dương
-                </div>
-
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.8127628283733!2d106.66392941133005!3d11.052660453990931!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1d7df763eaf%3A0xf4323e44f2867057!2zxJDhuqFpIGjhu41jIFF14buRYyB04bq_IE1p4buBbiDEkMO0bmc!5e0!3m2!1svi!2s!4v1773253281765!5m2!1svi!2s"
-                  width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"></iframe>
-              </div>
-            </div>
-            <div class="sales-support-wrap">
-              <a href="#" class="sales-support-btn">🎧 Tư vấn bán hàng</a>
-
-              <div class="sales-support-dropdown">
-                <div class="sales-support-title">HỖ TRỢ TẠI HÀ NỘI/TOÀN QUỐC</div>
-
-                <div class="sales-support-body">
-                  <div class="sales-support-section">
-                    <h4>Bán hàng online</h4>
-
-                    <div class="sales-support-row">
-                      <span class="sales-support-name">Mr Khoa</span>
-                      <span class="sales-support-phone">012.345.6789</span>
-                    </div>
-
-                    <div class="sales-support-row">
-                      <span class="sales-support-name">Mr Khoa</span>
-                      <span class="sales-support-phone">012.345.6789</span>
-                    </div>
-
-                    <div class="sales-support-row">
-                      <span class="sales-support-name">Mr Khoa</span>
-                      <span class="sales-support-phone">012.345.6789</span>
-                    </div>
-                  </div>
-
-                  <div class="sales-support-section">
-                    <h4>Kỹ thuật - Bảo hành</h4>
-
-                    <div class="sales-support-row">
-                      <span class="sales-support-name">Bảo Hành</span>
-                      <span class="sales-support-phone">012.345.6789</span>
-                    </div>
-                  </div>
-
-                  <div class="sales-support-section">
-                    <h4>Tư vấn tản nhiệt nước - Modding</h4>
-
-                    <div class="sales-support-row">
-                      <span class="sales-support-name">Mr Khoa</span>
-                      <span class="sales-support-phone">012.345.6789</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <a href="#">🧾 Chính sách bảo hành</a>
-            <a href="#">💳 Mua trả góp</a>
-            <a href="#">📰 Tin tức</a>
-          </div>
-
-          <div class="search-bar">
-            <select class="search-category">
-              <option>Tất cả danh mục</option>
-              <option>Laptop - Máy tính xách tay</option>
-              <option>PC Đồ Họa, Workstation</option>
-              <option>PC Gaming, Streaming</option>
-              <option>Linh Kiện Máy Tính</option>
-              <option>Monitor - Màn hình</option>
-              <option>Gaming Gear</option>
-              <option>Tản Nhiệt - Cooling</option>
-              <option>Thiết Bị Mạng</option>
-              <option>Phụ Kiện Các Loại</option>
-            </select>
-
-            <input type="text" placeholder="Nhập nội dung tìm kiếm..." />
-            <button type="button">🔍</button>
-          </div>
-        </div>
-
-        <div class="header-actions">
-          <a href="#" class="header-action">
-            <span class="action-icon">⚡</span>
-            <span>Giá sốc</span>
-          </a>
-
-          <a href="#" class="header-action">
-            <span class="action-icon">🧾</span>
-            <span>Xây dựng<br>cấu hình</span>
-          </a>
-
-          <div class="account-wrap">
-            <a href="#" class="header-account">◉ TÀI KHOẢN</a>
-
-            <div class="account-dropdown">
-              <a href="dangky.html">ĐĂNG KÝ</a>
-              <a href="dangnhap.html">ĐĂNG NHẬP</a>
-            </div>
-          </div>
-
-
-          <div class="header-cart">
-            <div class="cart-icon">
-              🛒
-            </div>
-            <div class="cart-text" onclick="openCart()">
-              Giỏ hàng (<span id="cartCount">0</span>)
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="header-bottom">
-      <div class="header-inner header-bottom-inner">
-        <div class="product-menu-wrap">
-          <div class="product-menu">☰ DANH MỤC SẢN PHẨM</div>
-
-          <div class="product-dropdown">
-            <a href="#" class="product-item">💻 Laptop - Máy tính xách tay</a>
-            <a href="#" class="product-item">🖥 PC Đồ Họa, Workstation</a>
-            <a href="#" class="product-item">🎮 PC Gaming, Streaming</a>
-            <a href="#" class="product-item">🧩 Linh Kiện Máy Tính</a>
-            <a href="#" class="product-item">🖥 Monitor - Màn hình</a>
-            <a href="#" class="product-item">🎧 Gaming Gear</a>
-            <a href="#" class="product-item">❄️ Tản Nhiệt - Cooling</a>
-            <a href="#" class="product-item">📶 Thiết Bị Mạng</a>
-            <a href="#" class="product-item">🔌 Phụ Kiện Các Loại</a>
-            <a href="#" class="product-item">🏷 Hàng Thanh Lý Giá Rẻ</a>
-          </div>
-        </div>
-        <div class="hotline-box">HOTLINE: 012.345.6789</div>
-      </div>
-    </div>
-  </header>
+  <div id="header"></div>
 
   <div class="page">
     <div class="title">CHỌN LINH KIỆN XÂY DỰNG CẤU HÌNH</div>
@@ -1187,7 +524,6 @@
       </div>
     </div>
   </div>
-  <!-- DELETE PART MODAL -->
   <div class="overlay" id="deleteOverlay">
     <div class="modal">
       <h3 style="margin-top:0">XÓA LINH KIỆN</h3>
@@ -1201,7 +537,6 @@
   </div>
 
 
-  <!-- EXPORT IMAGE ONLY SELECTED PARTS -->
   <div id="exportImageArea" style="
   position: fixed;
   left: -9999px;
@@ -1226,6 +561,7 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
+
     const PARTS = [
       { key: "cpu", label: "Bộ vi xử lý" },
       { key: "main", label: "Bo mạch chủ" },
@@ -1249,52 +585,77 @@
 
     let DATA = {};
 
-
     let build = {};
     let currentKey = "";
     let deleteKey = "";
-    let cartQuantity = 0;
+
+    try {
+      build = JSON.parse(localStorage.getItem("pc_build")) || {};
+    } catch {
+      build = {};
+    }
+
+    let cartQuantity = Number(localStorage.getItem("cart_quantity") || 0);
     console.log("cartQuantity init =", cartQuantity);
 
-    localStorage.removeItem("pc_build");
-    localStorage.removeItem("cart_builds");
+    console.log("cartQuantity init =", cartQuantity);
+    function init() {
+      render();
+      renderSavedBuilds();
+      updateCartCount();
+    }
+
+    init();
+    function recalcCartQuantityFromBuild() {
+      let totalQty = 0;
+
+      for (const key in build) {
+        totalQty += Number(build[key].qty || 1);
+      }
+
+      cartQuantity = totalQty;
+      localStorage.setItem("cart_quantity", cartQuantity);
+    }
     function render() {
       let html = "";
       let total = 0;
 
       PARTS.forEach(p => {
+        const selected = build[p.key];
+
         html += `
       <div class="row">
         <div class="cell-left">${p.label}</div>
         <div class="cell-right">
           <button class="pick" onclick="clickPart('${p.key}')">
-            ${build[p.key] ? build[p.key].name + " x" + (build[p.key].qty || 1) + " ❌" : "+ Chọn " + p.label}
+            ${selected ? `${selected.name} x${selected.qty || 1} ❌` : `+ Chọn ${p.label}`}
           </button>
         </div>
       </div>
     `;
-        if (build[p.key]) {
-          total += build[p.key].price * (build[p.key].qty || 1);
+
+        if (selected) {
+          total += Number(selected.price || 0) * Number(selected.qty || 1);
         }
       });
-      /* ===== ACTION BAR ===== */
+
       html += `
-        <div class="row">
-          <div class="cell-right">
-            <div class="action-bar">
-              <button class="action-btn" onclick="saveBuild()"> LƯU CẤU HÌNH</button>
-              <button class="action-btn" onclick="exportExcel()">TẢI FILE EXCEL CẤU HÌNH</button>
-              <button class="action-btn" onclick="exportImage()"> TẢI ẢNH</button>
-              <button class="action-btn" onclick="shareBuild()">CHIA SẺ CẤU HÌNH</button>
-              <button class="action-btn" onclick="printBuild()">XEM VÀ IN</button>
-            </div>
-          </div>
+    <div class="row">
+      <div class="cell-right">
+        <div class="action-bar">
+          <button class="action-btn" onclick="saveBuild()">LƯU CẤU HÌNH</button>
+          <button class="action-btn" onclick="exportExcel()">TẢI FILE EXCEL CẤU HÌNH</button>
+          <button class="action-btn" onclick="exportImage()">TẢI ẢNH</button>
+          <button class="action-btn" onclick="shareBuild()">CHIA SẺ CẤU HÌNH</button>
+          <button class="action-btn" onclick="printBuild()">XEM VÀ IN</button>
         </div>
-      `;
+      </div>
+    </div>
+  `;
 
       document.getElementById("list").innerHTML = html;
       document.getElementById("total").innerText =
-        "Chi phí dự tính: " + total.toLocaleString() + " đ";
+        "Chi phí dự tính: " + total.toLocaleString("vi-VN") + " đ";
     }
 
     function clickPart(key) {
@@ -1314,12 +675,29 @@
       currentKey = key;
       document.getElementById("modalTitle").innerText =
         "Chọn " + PARTS.find(p => p.key === key).label;
+
       let list = "";
+
       DATA[key].forEach((i, index) => {
         const qtyId = `qty_${key}_${index}`;
+        const imageSrc =
+          i.image && i.image.trim() !== ""
+            ? `http://localhost:3000/${i.image}`
+            : "https://via.placeholder.com/100x100?text=No+Image";
+
         list += `
-        <div class="item">
-          <b>${i.name}</b> - ${i.price.toLocaleString()} đ
+      <div class="item item-with-image">
+        <div class="item-thumb-wrap">
+          <img
+            src="${imageSrc}"
+            alt="${i.name}"
+            class="item-thumb"
+            onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'"
+          >
+        </div>
+
+        <div class="item-content">
+          <div class="item-name"><b>${i.name}</b> - ${Number(i.price).toLocaleString("vi-VN")} đ</div>
 
           <div style="margin-top:8px; display:flex; gap:10px; align-items:center;">
             <input
@@ -1335,8 +713,10 @@
             </button>
           </div>
         </div>
-      `;
+      </div>
+    `;
       });
+
       document.getElementById("modalList").innerHTML = list;
       document.getElementById("overlay").style.display = "flex";
     }
@@ -1350,10 +730,10 @@
         qty
       };
 
-      cartQuantity += qty;
-      localStorage.setItem("cart_quantity", cartQuantity);
+      localStorage.setItem("pc_build", JSON.stringify(build));
+      recalcCartQuantityFromBuild();
 
-      save();
+      render();
       updateCartCount();
       closeModal();
     }
@@ -1364,6 +744,7 @@
 
     function save() {
       localStorage.setItem("pc_build", JSON.stringify(build));
+      recalcCartQuantityFromBuild();
       render();
       updateCartCount();
     }
@@ -1452,14 +833,10 @@
 
     function confirmDelete() {
       if (deleteKey && build[deleteKey]) {
-        const qty = Number(build[deleteKey].qty || 1);
-
-        cartQuantity = Math.max(0, cartQuantity - qty);
-        localStorage.setItem("cart_quantity", cartQuantity);
-
         delete build[deleteKey];
         localStorage.setItem("pc_build", JSON.stringify(build));
 
+        recalcCartQuantityFromBuild();
         render();
         updateCartCount();
       }
@@ -1468,12 +845,10 @@
     }
 
     function confirmReset() {
-      localStorage.removeItem("pc_build");
       build = {};
+      localStorage.setItem("pc_build", JSON.stringify(build));
 
-      cartQuantity = 0;
-      localStorage.removeItem("cart_quantity");
-
+      recalcCartQuantityFromBuild();
       render();
       updateCartCount();
       closeReset();
@@ -1573,13 +948,16 @@
 
 
     function updateCartCount() {
-      const count = Number(cartQuantity) || 0;
+      const count = Number(localStorage.getItem("cart_quantity") || 0);
 
       const el1 = document.getElementById("headerCartCount");
       if (el1) el1.innerText = count;
 
       const el2 = document.getElementById("cartCount");
       if (el2) el2.innerText = count;
+
+      const el3 = document.getElementById("sharedCartCount");
+      if (el3) el3.innerText = count;
     }
     function openCart(showEmptyMessage = true) {
       let html = "";
@@ -1595,7 +973,7 @@
       });
 
       if (selectedItems.length === 0) {
-        html = showEmptyMessage ? "<i>Giỏ hàng trống</i>" : "";
+        html = showEmptyMessage ? "<i>Giỏ hàng trống</i>" : "<i>Giỏ hàng trống</i>";
       } else {
         selectedItems.forEach(item => {
           const qty = Number(item.qty || 1);
@@ -1638,17 +1016,21 @@
     function removeSelectedPart(key) {
       if (!build[key]) return;
 
-      const qty = Number(build[key].qty || 1);
-
-      cartQuantity = Math.max(0, cartQuantity - qty);
-      localStorage.setItem("cart_quantity", cartQuantity);
-
       delete build[key];
+
       localStorage.setItem("pc_build", JSON.stringify(build));
 
-      render();
+      try {
+        build = JSON.parse(localStorage.getItem("pc_build")) || {};
+      } catch {
+        build = {};
+      }
+
+      recalcCartQuantityFromBuild();
       updateCartCount();
-      openCart();
+      render();
+
+      openCart(true);
     }
 
     function closeCart() {
@@ -1695,12 +1077,21 @@
       let html = "";
 
       products.forEach((product, index) => {
+        const productImage = product.image
+          ? `http://localhost:3000/${product.image}`
+          : "https://via.placeholder.com/300x200?text=No+Image";
+
         html += `
       <div class="ref-card">
         <div class="ref-badge">${product.badge || ""}</div>
 
         <a href="product-detail.html?slug=${product.slug}">
-          <img src="${product.image}" alt="${product.name}" class="product-img">
+          <img 
+            src="${productImage}" 
+            alt="${product.name}" 
+            class="product-img"
+            onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'"
+          >
         </a>
 
         <div class="ref-name">${product.name}</div>
@@ -1731,7 +1122,6 @@
     }
 
 
-
     function loadPreset(id) {
       const preset = PRESET_BUILDS[id];
       if (!preset) return;
@@ -1741,27 +1131,46 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    recalcCartQuantityFromBuild();
     loadBackendData();
 
     function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const start = window.scrollY;
+      const duration = 700;
+      const startTime = performance.now();
+
+      function scrollStep(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        const ease =
+          progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        window.scrollTo(0, start * (1 - ease));
+
+        if (progress < 1) {
+          requestAnimationFrame(scrollStep);
+        }
+      }
+
+      requestAnimationFrame(scrollStep);
     }
 
-    window.addEventListener("scroll", function () {
-      const btn = document.getElementById("backToTop");
-      if (!btn) return;
-
-      if (window.scrollY > 300) {
-        btn.style.display = "flex";
-      } else {
-        btn.style.display = "none";
+    window.addEventListener("storage", () => {
+      try {
+        build = JSON.parse(localStorage.getItem("pc_build")) || {};
+      } catch {
+        build = {};
       }
+
+      recalcCartQuantityFromBuild();
+      updateCartCount();
+      render();
     });
 
-
   </script>
-
-  <button id="backToTop" class="back-to-top" onclick="scrollToTop()" title="Lên đầu trang">▲</button>
   <!-- NEWSLETTER -->
   <div class="newsletter">
     <div class="newsletter-title">
@@ -1774,63 +1183,19 @@
     </div>
   </div>
   <!-- FOOTER -->
-  <footer class="footer">
-
-    <div class="footer-container">
-
-      <div class="footer-col">
-        <h4>Thông tin chung</h4>
-        <ul>
-          <li>Giới thiệu công ty</li>
-          <li>Góp ý, Khiếu nại</li>
-          <li>Thông tin tuyển dụng</li>
-          <li>Hướng dẫn mua Hàng</li>
-          <li>Mua Hàng Trả Góp</li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Quy định & chính sách</h4>
-        <ul>
-          <li>Chính Sách Bảo Hành</li>
-          <li>Chính sách đổi, trả lại hàng</li>
-          <li>Chính sách cho doanh nghiệp</li>
-          <li>Chính sách vận chuyển</li>
-          <li>Bảo mật thông tin khách hàng</li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Cộng đồng EIU Computer</h4>
-        <ul>
-          <li>Facebook</li>
-          <li>Youtube</li>
-          <li>Group Gaming</li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Showroom</h4>
-
-        <p>📍 Địa chỉ: EIU University - Bình Dương.</p>
-        <a href="https://maps.app.goo.gl/vtXfY7FLzfGSHH6N9" style="color:yellow">[Xem đường đi]</a>
-        <p>📞 Hotline: 0123456789</p>
-      </div>
-
-    </div>
-
-
-    <div class="footer-bottom">
-      © Chi Nhánh EIU Computer - Công Ty Cổ Phần Tư Vấn Đầu Tư Và Xây Dựng
-      <br>
-      Địa chỉ: EIU University - Bình Dương
-      <br>
-      GPKD số 0101383221-001 do Sở KHĐT HCM cấp ngày 1/1/2026
-      <br>
-      Email: cskh@eiu.vn. Điện thoại: 0123456789
-    </div>
-
-  </footer>
+  <div id="footer"></div>
+  <script src="components/header.js"></script>
+  <script src="components/footer.js"></script>
+  <script>
+    renderHeader("header");
+    renderFooter("footer");
+  </script>
+  <!-- Social media -->
+  <div id="floating-icons"></div>
+  <script src="components/floating-icons.js"></script>
+  <script>
+    renderFloatingIcons("floating-icons");
+  </script>
 </body>
 
 </html>

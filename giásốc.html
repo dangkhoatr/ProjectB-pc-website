@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Xây dựng cấu hình</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    :root {
+        --primary: #e11d48;
+        --primary-dark: #be123c;
+        --text: #111827;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --bg-soft: #f8fafc;
+        --bg-card: #ffffff;
+        --shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+        --radius-lg: 20px;
+        --radius-md: 14px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Inter, Arial, sans-serif;
+        color: var(--text);
+        background: #fff;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .promo-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px 20px 64px;
+    }
+
+    .promo-breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+
+    .promo-hero-box {
+        background: linear-gradient(135deg, #fff1f2, #ffffff);
+        border: 1px solid #ffe4e6;
+        border-radius: 28px;
+        padding: 32px;
+        box-shadow: var(--shadow);
+    }
+
+    .promo-label {
+        display: inline-flex;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 14px;
+    }
+
+    .promo-title {
+        margin: 0;
+        font-size: 40px;
+        line-height: 1.1;
+        font-weight: 800;
+    }
+
+    .promo-subtitle {
+        margin: 14px 0 0;
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    .promo-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--muted);
+        margin-top: 18px;
+        font-size: 14px;
+    }
+
+    .promo-intro,
+    .promo-links,
+    .promo-program,
+    .promo-product-group,
+    .promo-faq {
+        margin-top: 28px;
+    }
+
+    .promo-banner img,
+    .promo-program-banner img {
+        border-radius: 22px;
+    }
+
+    .promo-commitments {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+
+    .commit-item {
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px 16px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .promo-article-card,
+    .promo-rules,
+    .faq-item {
+        margin-top: 18px;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow);
+    }
+
+    .promo-article-card h2,
+    .promo-rules h3,
+    .faq-item h3 {
+        margin-top: 0;
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .section-kicker {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .section-title {
+        margin: 6px 0 0;
+        font-size: 28px;
+        font-weight: 800;
+    }
+
+    .promo-date {
+        color: var(--muted);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .promo-note {
+        margin-bottom: 18px;
+        padding: 14px 18px;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #9a3412;
+        border-radius: 14px;
+        font-weight: 600;
+    }
+
+    .link-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+
+    .link-card {
+        display: block;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        font-weight: 700;
+        transition: 0.25s ease;
+    }
+
+    .link-card:hover {
+        transform: translateY(-3px);
+        border-color: #fda4af;
+    }
+
+    .gift-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .gift-card {
+        background: linear-gradient(180deg, #ffffff, #fff7ed);
+        border: 1px solid #fed7aa;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: var(--shadow);
+    }
+
+    .gift-level {
+        color: #c2410c;
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .gift-card h3 {
+        margin: 0 0 10px;
+        font-size: 22px;
+    }
+
+    .gift-card p {
+        color: var(--muted);
+        margin: 0 0 14px;
+    }
+
+    .gift-card ul,
+    .promo-rules ul {
+        margin: 0;
+        padding-left: 18px;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .product-card {
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: 0.25s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .product-thumb {
+        position: relative;
+        background: #f9fafb;
+    }
+
+    .product-thumb img {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        padding: 7px 10px;
+        border-radius: 999px;
+    }
+
+    .product-body {
+        padding: 18px;
+    }
+
+    .product-category {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .product-name {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.45;
+    }
+
+    .product-desc {
+        margin: 10px 0 14px;
+        color: var(--muted);
+        line-height: 1.65;
+        min-height: 78px;
+    }
+
+    .product-price-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .price-new {
+        color: var(--primary);
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .price-old {
+        color: #9ca3af;
+        text-decoration: line-through;
+        font-weight: 600;
+    }
+
+    .product-btn,
+    .view-all {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .product-btn {
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-weight: 700;
+        transition: 0.25s ease;
+    }
+
+    .product-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .view-all {
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .faq-list {
+        display: grid;
+        gap: 16px;
+    }
+
+    @media (max-width: 1200px) {
+
+        .promo-commitments,
+        .link-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .gift-grid,
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .promo-title {
+            font-size: 32px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .promo-page {
+            padding: 18px 14px 48px;
+        }
+
+        .promo-hero-box {
+            padding: 22px;
+            border-radius: 22px;
+        }
+
+        .promo-title {
+            font-size: 26px;
+        }
+
+        .promo-subtitle {
+            font-size: 15px;
+        }
+
+        .promo-commitments,
+        .link-grid,
+        .gift-grid,
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .product-thumb img {
+            height: 220px;
+        }
+    }
+</style>
+
+<body>
+    <div id="header"></div>
+    <main class="promo-page">
+        <section class="promo-hero">
+            <div class="promo-breadcrumb">
+                <a href="Main.html">Trang chủ</a>
+                <span>/</span>
+                <a href="#">Tin tức</a>
+                <span>/</span>
+                <span>Chương trình khuyến mãi</span>
+            </div>
+
+            <div class="promo-hero-box">
+                <div class="promo-label">HOT DEAL</div>
+                <h1 class="promo-title">HOT: CÁC CHƯƠNG TRÌNH KHUYẾN MÃI</h1>
+                <p class="promo-subtitle">
+                    Cập nhật liên tục các chương trình ưu đãi, quà tặng, hoàn tiền và danh sách
+                    sản phẩm đang áp dụng khuyến mại.
+                </p>
+
+                <div class="promo-meta">
+                    <span>22-12-2019</span>
+                    <span>•</span>
+                    <span>Cập nhật thường xuyên</span>
+                    <span>•</span>
+                    <span>Khuyến mại toàn hệ thống</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="promo-intro">
+            <div class="promo-banner">
+                <img src="./image/-banner-mu-pc-tng-mn-tintuc.jpg" alt="Banner khuyến mại" />
+            </div>
+
+            <div class="promo-commitments">
+                <div class="commit-item">✔ Cam kết chính hãng</div>
+                <div class="commit-item">✔ Đổi mới trong 15 ngày đầu</div>
+                <div class="commit-item">✔ Thanh toán linh hoạt</div>
+                <div class="commit-item">✔ Giao hàng toàn quốc</div>
+            </div>
+
+            <div class="promo-article-card">
+                <h2>Thông tin chung</h2>
+                <p>
+                    Đây là khu vực tổng hợp toàn bộ chương trình khuyến mãi đang áp dụng cho
+                    khách hàng mua PC, linh kiện, màn hình và gaming gear. Mỗi chương trình có
+                    thể khác nhau về mức quà tặng, mốc giá trị đơn hàng, thời gian áp dụng và
+                    điều kiện đi kèm.
+                </p>
+                <p>
+                    Người dùng có thể theo dõi nội dung ưu đãi theo từng đợt, xem nhóm sản phẩm
+                    liên quan và chọn nhanh các deal phù hợp với nhu cầu build PC, nâng cấp hệ
+                    thống hoặc mua trọn bộ.
+                </p>
+            </div>
+        </section>
+
+        <section class="promo-links">
+            <h2 class="section-title">Danh mục liên kết</h2>
+
+            <div class="link-grid">
+                <a href="#" class="link-card">Chính sách vận chuyển</a>
+                <a href="#" class="link-card">Chính sách bảo hành</a>
+                <a href="#" class="link-card">Hướng dẫn mua hàng</a>
+                <a href="#" class="link-card">Tư vấn build PC</a>
+            </div>
+        </section>
+
+        <section class="promo-program">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Chương trình nổi bật</div>
+                    <h2 class="section-title">Mừng Quốc Tế Phụ Nữ</h2>
+                </div>
+                <div class="promo-date">⏱ 01/08/2025 - 31/08/2025</div>
+            </div>
+
+            <div class="promo-note">
+                Không áp dụng đồng thời với các chương trình khuyến mãi khác.
+            </div>
+
+            <div class="promo-program-banner">
+            </div>
+
+            <div class="gift-grid">
+                <article class="gift-card">
+                    <div class="gift-level">PC đơn giá &gt; 10 triệu</div>
+                    <h3>Nhận ngay bộ quà tặng</h3>
+                    <p>Khách hàng chọn một trong hai hình thức ưu đãi tương ứng.</p>
+                    <ul>
+                        <li>Chọn quà tặng trị giá 600.000đ</li>
+                        <li>Hoàn tiền lên tới 500.000đ</li>
+                    </ul>
+                </article>
+
+                <article class="gift-card">
+                    <div class="gift-level">PC đơn giá &gt; 20 triệu</div>
+                    <h3>Ưu đãi nâng mức giá trị quà</h3>
+                    <p>Áp dụng cho bộ PC đủ điều kiện theo giá bán niêm yết.</p>
+                    <ul>
+                        <li>Chọn quà tặng trị giá 1.100.000đ</li>
+                        <li>Hoàn tiền lên tới 900.000đ</li>
+                    </ul>
+                </article>
+
+                <article class="gift-card">
+                    <div class="gift-level">PC đơn giá &gt; 40 triệu</div>
+                    <h3>Quà tặng và hoàn tiền cao hơn</h3>
+                    <p>Phù hợp với cấu hình cao cấp, gaming hoặc workstation.</p>
+                    <ul>
+                        <li>Chọn quà tặng trị giá 1.200.000đ</li>
+                        <li>Hoàn tiền lên tới 1.100.000đ</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="promo-rules">
+                <h3>Điều kiện áp dụng</h3>
+                <ul>
+                    <li>Không áp dụng cùng hoặc cộng dồn với các chương trình khác.</li>
+                    <li>Quà khuyến mại khách hàng tự chọn theo giá bán lẻ niêm yết.</li>
+                    <li>
+                        Bộ PC chưa bao gồm thiết bị ngoại vi như màn hình, tai nghe, bàn phím,
+                        chuột, micro và các phụ kiện khác.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="promo-product-group">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Khuyến mại theo nhóm</div>
+                    <h2 class="section-title">Màn hình khuyến mại</h2>
+                </div>
+                <a href="#" class="view-all">Xem tất cả</a>
+            </div>
+
+            <div class="product-grid" id="promo-monitors">
+            </div>
+        </section>
+
+        <section class="promo-product-group">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Khuyến mại theo nhóm</div>
+                    <h2 class="section-title">Gaming gear khuyến mại</h2>
+                </div>
+                <a href="#" class="view-all">Xem tất cả</a>
+            </div>
+
+            <div class="product-grid" id="promo-gears">
+            </div>
+        </section>
+
+        <section class="promo-product-group">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Khuyến mại theo nhóm</div>
+                    <h2 class="section-title">Cooling và phụ kiện tản nhiệt</h2>
+                </div>
+                <a href="#" class="view-all">Xem tất cả</a>
+            </div>
+
+            <div class="product-grid" id="promo-cooling">
+            </div>
+        </section>
+
+        <section class="promo-faq">
+            <h2 class="section-title">Câu hỏi thường gặp</h2>
+
+            <div class="faq-list">
+                <article class="faq-item">
+                    <h3>Chương trình có áp dụng đồng thời với deal khác không?</h3>
+                    <p>
+                        Thông thường không. Mỗi chương trình sẽ có ghi chú riêng về điều kiện cộng dồn
+                        hoặc không cộng dồn.
+                    </p>
+                </article>
+
+                <article class="faq-item">
+                    <h3>Quà tặng được chọn như thế nào?</h3>
+                    <p>
+                        Khách hàng chọn theo mức ưu đãi tương ứng với giá trị đơn hàng hoặc bộ PC đủ điều kiện.
+                    </p>
+                </article>
+
+                <article class="faq-item">
+                    <h3>Ngoại vi có được tính vào bộ PC không?</h3>
+                    <p>
+                        Với chương trình mẫu này, các thiết bị ngoại vi như màn hình, phím, chuột, tai nghe
+                        không được tính trong giá trị bộ PC để áp khuyến mại.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+    <script>
+        function scrollToTop() {
+            const start = window.scrollY;
+            const duration = 700;
+            const startTime = performance.now();
+
+            function scrollStep(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                const ease =
+                    progress < 0.5
+                        ? 4 * progress * progress * progress
+                        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+                window.scrollTo(0, start * (1 - ease));
+
+                if (progress < 1) {
+                    requestAnimationFrame(scrollStep);
+                }
+            }
+
+            requestAnimationFrame(scrollStep);
+        }
+
+        window.addEventListener("storage", () => {
+            try {
+                build = JSON.parse(localStorage.getItem("pc_build")) || {};
+            } catch {
+                build = {};
+            }
+
+            recalcCartQuantityFromBuild();
+            updateCartCount();
+            render();
+        });
+    </script>
+    <div id="footer"></div>
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script>
+        renderHeader("header");
+        renderFooter("footer");
+
+    </script>
+    <!-- Social media -->
+    <div id="floating-icons"></div>
+    <script src="components/floating-icons.js"></script>
+    <script>
+        renderFloatingIcons("floating-icons");
+    </script>
+    <script>
+
+    async function loadPromoProducts(containerId, apiUrl) {
+        const container = document.getElementById(containerId);
+        const SERVER_URL = 'http://localhost:3000';
+
+        try {
+            const response = await fetch(apiUrl);
+            const products = await response.json();
+
+            if (!products || products.length === 0) {
+                container.innerHTML = '<p>Đang cập nhật sản phẩm khuyến mãi...</p>';
+                return;
+            }
+
+            const htmlContent = products.map(product => {
+                const priceNew = Number(product.price).toLocaleString('vi-VN');
+                const priceOld = product.old_price ? Number(product.old_price).toLocaleString('vi-VN') : '';
+                
+                let badgeHtml = '';
+                if (product.badge) {
+                    const isHot = (product.badge.toUpperCase() === 'HOT' || product.badge.toUpperCase() === 'SALE');
+                    badgeHtml = `<span class="discount-badge ${isHot ? 'hot' : ''}">${product.badge}</span>`;
+                }
+
+                const fullImageUrl = `${SERVER_URL}/${product.image}`;
+
+                return `
+                    <article class="product-card">
+                        <div class="product-thumb">
+                            <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='image/default.jpg'">
+                            ${badgeHtml}
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">${product.category_name || 'Khuyến mại'}</div>
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-desc">${product.description || ''}</p>
+                            <div class="product-price-row">
+                                <span class="price-new">${priceNew}đ</span>
+                                ${priceOld ? `<span class="price-old">${priceOld}đ</span>` : ''}
+                            </div>
+                            <button onclick="window.location.href='product-detail.html?slug=${product.slug}'" class="product-btn">
+                                Xem chi tiết
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            container.innerHTML = htmlContent;
+
+        } catch (error) {
+            console.error(`Lỗi render ${containerId}:`, error);
+            container.innerHTML = '<p>Lỗi kết nối máy chủ.</p>';
+        }
+    }
+
+    // Chạy render khi trang vừa load xong
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPromoProducts('promo-monitors', 'http://localhost:3000/api/products/promo?category=monitor');
+        loadPromoProducts('promo-gears', 'http://localhost:3000/api/products/promo?category=gear');
+        loadPromoProducts('promo-cooling', 'http://localhost:3000/api/products/promo?category=cooling');
+    });
+</script>
+</body>
+
+</html>
