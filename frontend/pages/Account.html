@@ -8,7 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -346,7 +348,7 @@
     <div id="header"></div>
 
     <div class="breadcrumb">
-        <a href="Main.html">Trang chủ</a> › <span>Tài khoản của tôi</span>
+        <a href="index.html">Trang chủ</a> › <span>Tài khoản của tôi</span>
     </div>
 
     <div class="account-container">
@@ -479,8 +481,10 @@
     </div>
 
     <div id="footer"></div>
-    <script src="components/header.js"></script>
-    <script src="components/footer.js"></script>
+    
+    <script src="../components/header.js"></script>
+    <script src="../components/footer.js"></script>
+    
     <script>
         renderHeader("header");
         renderFooter("footer");
@@ -489,18 +493,14 @@
     <script>
         // Hàm chuyển đổi giữa các Tab
         function switchTab(tabId, element) {
-            // 1. Gỡ class 'active' khỏi tất cả các li trong menu
             const menuItems = document.querySelectorAll('.acc-menu li');
             menuItems.forEach(item => item.classList.remove('active'));
 
-            // 2. Thêm class 'active' cho li vừa được click
             element.classList.add('active');
 
-            // 3. Ẩn tất cả các tab nội dung
             const panes = document.querySelectorAll('.tab-pane');
             panes.forEach(pane => pane.classList.remove('active'));
 
-            // 4. Hiển thị tab nội dung tương ứng
             document.getElementById(tabId).classList.add('active');
         }
 
@@ -513,22 +513,18 @@
         const btnCancel = document.getElementById('cancelEditBtn');
         const btnSave = document.getElementById('saveProfileBtn');
 
-        // Bật chế độ chỉnh sửa
         function enableEdit() {
             inpName.disabled = false;
             inpPhone.disabled = false;
             inpAddress.disabled = false;
             
-            // Focus vào ô tên để gõ luôn
             inpName.focus();
 
-            // Đổi nút bấm
             btnEdit.style.display = 'none';
             btnCancel.style.display = 'inline-block';
             btnSave.style.display = 'inline-block';
         }
 
-        // Hủy chỉnh sửa
         function cancelEdit() {
             inpName.disabled = true;
             inpPhone.disabled = true;
@@ -539,10 +535,7 @@
             btnSave.style.display = 'none';
         }
 
-        // Lưu thông tin giả lập
         function saveProfile() {
-            // Ở đồ án thực tế, chỗ này bạn sẽ dùng fetch(..., { method: "POST" }) để gửi data lên Database
-            
             if(inpName.value.trim() === '' || inpPhone.value.trim() === '') {
                 alert("Vui lòng điền đầy đủ Họ tên và Số điện thoại!");
                 return;
@@ -550,10 +543,8 @@
 
             alert("Cập nhật thông tin thành công!");
             
-            // Khóa form lại sau khi lưu
             cancelEdit();
             
-            // Cập nhật tên trên avatar menu trái
             document.querySelector('.acc-name').innerText = inpName.value;
         }
     </script>

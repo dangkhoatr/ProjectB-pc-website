@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="../assets/css/style.css">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Giỏ hàng của bạn</title>
   <style>
@@ -21,12 +23,13 @@
       padding: 24px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       border-radius: 10px;
+      min-height: 400px;
     }
 
     h1 {
       margin-top: 0;
       font-size: 28px;
-      color: #2563eb; /* Đổi màu xanh cho khác trang Share */
+      color: #2563eb; 
     }
 
     .cart-table {
@@ -129,8 +132,9 @@
 
   <div id="footer"></div>
   
-  <script src="components/header.js"></script>
-  <script src="components/footer.js"></script>
+  <script src="../components/header.js"></script>
+  <script src="../components/footer.js"></script>
+  
   <script>
     renderHeader("header");
     renderFooter("footer");
@@ -162,7 +166,7 @@
             <i class="fa-solid fa-cart-arrow-down"></i>
             <h2>Giỏ hàng đang trống</h2>
             <p>Bạn chưa có sản phẩm nào trong giỏ hàng. Hãy quay lại cửa hàng để mua sắm nhé!</p>
-            <a href="Main.html" class="btn btn-checkout" style="display:inline-block; margin-top:16px; text-decoration:none;">Quay lại Trang chủ</a>
+            <a href="index.html" class="btn btn-checkout" style="display:inline-block; margin-top:16px; text-decoration:none;">Quay lại Trang chủ</a>
           </div>
         `;
         return;
@@ -247,22 +251,24 @@
       cartContent.innerHTML = html;
     }
 
-    // Cập nhật lại hàm xóa để xóa sạch cả 2 giỏ
     function clearCart() {
       if(confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?")) {
         localStorage.removeItem("pc_build");
-        localStorage.removeItem("cart"); // Thêm dòng này
-        localStorage.removeItem("cartItems"); // Thêm dòng này dự phòng
+        localStorage.removeItem("cart"); 
+        localStorage.removeItem("cartItems"); 
         loadCart(); 
         
-
         if(typeof updateCartCount === 'function') updateCartCount();
       }
     }
+
     function checkout() {
       alert("Cảm ơn bạn đã đặt hàng! Tính năng thanh toán đang được phát triển.");
       localStorage.removeItem("pc_build"); 
-      window.location.href = "Main.html"; 
+      localStorage.removeItem("cart"); 
+      
+      // SỬA ĐƯỜNG DẪN TRANG CHỦ
+      window.location.href = "index.html"; 
     }
 
     // Chạy hàm loadCart ngay khi mở trang

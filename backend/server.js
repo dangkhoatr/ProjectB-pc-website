@@ -14,8 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/image", express.static(path.join(__dirname, "image")));
-
+app.use("/image", express.static(path.join(__dirname, "../frontend/assets/images")));
 app.get("/", (req, res) => {
   res.json({ message: "EIU Computer Backend is running" });
 });

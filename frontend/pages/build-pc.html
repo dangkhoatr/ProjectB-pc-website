@@ -6,7 +6,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="../assets/css/style.css">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Xây dựng cấu hình</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -479,13 +481,11 @@
     <div id="savedBuilds"></div>
 
   </div>
-  <!-- CART BAR -->
   <div class="header-cart" onclick="openCart()">
     <span class="cart-circle">🛒</span>
     <span>Giỏ hàng (<span id="headerCartCount">0</span>)</span>
   </div>
 
-  <!-- CART OVERLAY -->
   <div class="overlay" id="cartOverlay">
     <div class="modal" style="width:600px; max-height:80vh; overflow:auto">
       <h3 style="margin-top:0">GIỎ HÀNG</h3>
@@ -502,7 +502,6 @@
   </div>
 
 
-  <!-- OVERLAY -->
   <div class="overlay" id="overlay">
     <div class="modal">
       <h3 id="modalTitle"></h3>
@@ -510,7 +509,6 @@
       <button class="btn" onclick="closeModal()">Đóng</button>
     </div>
   </div>
-  <!-- RESET MODAL -->
   <div class="overlay" id="resetOverlay">
     <div class="modal">
       <h3 style="margin-top:0">LÀM MỚI</h3>
@@ -551,22 +549,39 @@
     <hr>
     <div id="exportTotal" style="font-weight:bold"></div>
   </div>
-  <!-- ================= CẤU HÌNH THAM KHẢO ================= -->
   <section class="ref-section">
     <div class="ref-title">CẤU HÌNH THAM KHẢO</div>
 
     <div class="ref-grid" id="refGrid"></div>
   </section>
 
+  <div class="newsletter">
+    <div class="newsletter-title">
+      ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ
+    </div>
+
+    <div class="newsletter-box">
+      <input type="email" placeholder="Email của bạn..." />
+      <button>Gửi</button>
+    </div>
+  </div>
+  <div id="footer"></div>
+
+  <script src="../components/header.js"></script>
+  <script src="../components/footer.js"></script>
+  <script src="../components/floating-icons.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
   <script>
+    // Gọi UI Components
+    renderHeader("header");
+    renderFooter("footer");
+    renderFloatingIcons("floating-icons");
 
-    const PARTS = [];
-
-
+    let PARTS = [];
     let DATA = {};
-
     let build = {};
     let currentKey = "";
     let deleteKey = "";
@@ -575,12 +590,10 @@
       build = JSON.parse(localStorage.getItem("pc_build")) || {};
     } catch {
       build = {};
-    }
+    } 
 
     let cartQuantity = Number(localStorage.getItem("cart_quantity") || 0);
-    console.log("cartQuantity init =", cartQuantity);
 
-    console.log("cartQuantity init =", cartQuantity);
     function init() {
       render();
       renderSavedBuilds();
@@ -588,6 +601,7 @@
     }
 
     init();
+    
     function recalcCartQuantityFromBuild() {
       let totalQty = 0;
 
@@ -598,6 +612,7 @@
       cartQuantity = totalQty;
       localStorage.setItem("cart_quantity", cartQuantity);
     }
+
     function render() {
       let html = "";
       let total = 0;
@@ -651,53 +666,53 @@
       }
     }
 
-
-
     function openModal(key) {
       currentKey = key;
-      document.getElementById("modalTitle").innerText =
-        "Chọn " + PARTS.find(p => p.key === key).label;
+      
+      // 1. Tìm tên danh mục an toàn
+      const partInfo = PARTS.find(p => p.key === key);
+      document.getElementById("modalTitle").innerText = "Chọn " + (partInfo ? partInfo.label : key);
 
       let list = "";
+      let itemsToRender = [];
 
-      DATA[key].forEach((i, index) => {
-        const qtyId = `qty_${key}_${index}`;
-        const imageSrc =
-          i.image && i.image.trim() !== ""
-            ? `http://localhost:3000/${i.image}`
-            : "https://via.placeholder.com/100x100?text=No+Image";
+      // 2. Kiểm tra xem DATA từ backend trả về là dạng Mảng (Array) hay Đối tượng (Object)
+      if (Array.isArray(DATA)) {
+          // Nếu backend trả về một mảng chứa tất cả linh kiện, ta lọc ra linh kiện thuộc key này
+          // (Tùy theo database của bạn cột phân loại tên là gì: category, type, hay category_key)
+          itemsToRender = DATA.filter(item => item.category === key || item.type === key || item.category_key === key);
+      } else if (DATA && DATA[key]) {
+          // Nếu backend trả về object chia sẵn theo key { cpu: [...], ram: [...] }
+          itemsToRender = DATA[key];
+      }
 
-        list += `
-      <div class="item item-with-image">
-        <div class="item-thumb-wrap">
-          <img
-            src="${imageSrc}"
-            alt="${i.name}"
-            class="item-thumb"
-            onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'"
-          >
-        </div>
+      // 3. Nếu không có sản phẩm nào, báo lỗi nhẹ nhàng thay vì sập web
+      if (itemsToRender.length === 0) {
+          list = "<div style='padding: 20px; text-align: center; color: red;'>Chưa có sản phẩm nào trong danh mục này hoặc chưa kết nối được Database.</div>";
+      } else {
+          // 4. Render danh sách sản phẩm
+          itemsToRender.forEach((i, index) => {
+            const qtyId = `qty_${key}_${index}`;
+            const imageSrc = i.image && i.image.trim() !== ""
+                ? `http://localhost:3000/${i.image}`
+                : "https://via.placeholder.com/100x100?text=No+Image";
 
-        <div class="item-content">
-          <div class="item-name"><b>${i.name}</b> - ${Number(i.price).toLocaleString("vi-VN")} đ</div>
-
-          <div style="margin-top:8px; display:flex; gap:10px; align-items:center;">
-            <input
-              type="number"
-              id="${qtyId}"
-              value="1"
-              min="1"
-              style="width:70px; padding:4px 6px;"
-            >
-
-            <button onclick="selectItem('${i.name}', ${i.price}, document.getElementById('${qtyId}').value)">
-              Chọn
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-      });
+            list += `
+              <div class="item item-with-image">
+                <div class="item-thumb-wrap">
+                  <img src="${imageSrc}" alt="${i.name}" class="item-thumb" onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
+                </div>
+                <div class="item-content">
+                  <div class="item-name"><b>${i.name}</b> - ${Number(i.price).toLocaleString("vi-VN")} đ</div>
+                  <div style="margin-top:8px; display:flex; gap:10px; align-items:center;">
+                    <input type="number" id="${qtyId}" value="1" min="1" style="width:70px; padding:4px 6px;">
+                    <button onclick="selectItem('${i.name}', ${i.price}, document.getElementById('${qtyId}').value)">Chọn</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+      }
 
       document.getElementById("modalList").innerHTML = list;
       document.getElementById("overlay").style.display = "flex";
@@ -730,6 +745,7 @@
       render();
       updateCartCount();
     }
+    
     function openReset() {
       document.getElementById("resetOverlay").style.display = "flex";
     }
@@ -737,6 +753,7 @@
     function closeReset() {
       document.getElementById("resetOverlay").style.display = "none";
     }
+    
     function saveBuild() {
       if (Object.keys(build).length === 0) return;
 
@@ -804,6 +821,7 @@
       localStorage.setItem("saved_builds", JSON.stringify(saved));
       renderSavedBuilds();
     }
+    
     function openDelete() {
       document.getElementById("deleteOverlay").style.display = "flex";
     }
@@ -840,7 +858,6 @@
     function exportExcel() {
       if (Object.keys(build).length === 0) return;
 
-      // Chuẩn bị dữ liệu cho Excel
       const rows = [
         ["Danh mục", "Linh kiện", "Giá (VND)"]
       ];
@@ -860,17 +877,14 @@
       rows.push([]);
       rows.push(["", "TỔNG TIỀN", total]);
 
-      // Tạo workbook & worksheet
       const ws = XLSX.utils.aoa_to_sheet(rows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Cau_hinh_PC");
 
-      // Tên file
       const fileName = "Cau_hinh_PC_" + Date.now() + ".xlsx";
-
-      // Xuất file
       XLSX.writeFile(wb, fileName);
     }
+    
     function exportImage() {
       const listEl = document.getElementById("exportList");
       const totalEl = document.getElementById("exportTotal");
@@ -910,6 +924,7 @@
         link.click();
       });
     }
+    
     function shareBuild() {
       if (Object.keys(build).length === 0) {
         alert("Chưa có cấu hình để chia sẻ");
@@ -920,14 +935,9 @@
       window.location.href = "share-build.html?config=" + encoded;
     }
 
-
-
-
     function printBuild() {
-      // In trang hiện tại (trình duyệt mở hộp thoại in)
       window.print();
     }
-
 
     function updateCartCount() {
       const count = Number(localStorage.getItem("cart_quantity") || 0);
@@ -941,6 +951,7 @@
       const el3 = document.getElementById("sharedCartCount");
       if (el3) el3.innerText = count;
     }
+    
     function openCart(showEmptyMessage = true) {
       let html = "";
       let total = 0;
@@ -995,6 +1006,7 @@
 
       document.getElementById("cartOverlay").style.display = "flex";
     }
+    
     function removeSelectedPart(key) {
       if (!build[key]) return;
 
@@ -1021,31 +1033,25 @@
 
     /* ===== PRESET CẤU HÌNH THAM KHẢO ===== */
     let PRESET_BUILDS = {};
+    
     async function loadBackendData() {
       try {
-        //  cấu hình chung cho lệnh POST 
         const postOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         };
 
-        // Gọi đồng thời 3 API bằng phương thức POST
         const [categoriesRes, partsRes, productsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/parts/categories", postOptions), // Lấy danh mục
-          fetch("http://localhost:3000/api/parts/items", postOptions),      // Lấy linh kiện
-          
-          // LƯU Ý: Nếu file routes/products.js của bạn chưa đổi router.get thành router.post,
-          // thì tạm thời xóa chữ `postOptions` ở dòng dưới này đi nhé (để nó chạy GET tạm).
-          // Nếu đã đổi thành POST rồi thì giữ nguyên!
-          fetch("http://localhost:3000/api/products", postOptions)          // Lấy sản phẩm combo
+          fetch("http://localhost:3000/api/parts/categories", postOptions), 
+          fetch("http://localhost:3000/api/parts/items", postOptions),      
+          fetch("http://localhost:3000/api/products", postOptions)          
         ]);
 
         if (!categoriesRes.ok || !partsRes.ok || !productsRes.ok) {
           throw new Error("Lỗi khi lấy dữ liệu từ server");
         }
 
-        // Bơm dữ liệu từ Database vào các biến
-        PARTS = await categoriesRes.json(); // Biến PARTS tự động có đủ 17 danh mục từ DB!
+        PARTS = await categoriesRes.json(); 
         DATA = await partsRes.json();
         const products = await productsRes.json();
 
@@ -1054,9 +1060,8 @@
           PRESET_BUILDS[index + 1] = product.preset_json || {};
         });
 
-        // Bắt đầu vẽ giao diện
         renderReferenceProducts(products);
-        render(); // Hàm render sẽ tự đọc mảng PARTS mới để vẽ ra các khe cắm
+        render(); 
         renderSavedBuilds();
         updateCartCount();
       } catch (error) {
@@ -1064,6 +1069,7 @@
         alert("Không thể kết nối đến máy chủ. Vui lòng bật Server backend!");
       }
     }
+    
     function renderReferenceProducts(products) {
       const refGrid = document.getElementById("refGrid");
       if (!refGrid) return;
@@ -1115,7 +1121,6 @@
       refGrid.innerHTML = html;
     }
 
-
     function loadPreset(id) {
       const preset = PRESET_BUILDS[id];
       if (!preset) return;
@@ -1165,31 +1170,8 @@
     });
 
   </script>
-  <!-- NEWSLETTER -->
-  <div class="newsletter">
-    <div class="newsletter-title">
-      ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ
-    </div>
-
-    <div class="newsletter-box">
-      <input type="email" placeholder="Email của bạn..." />
-      <button>Gửi</button>
-    </div>
-  </div>
-  <!-- FOOTER -->
-  <div id="footer"></div>
-  <script src="components/header.js"></script>
-  <script src="components/footer.js"></script>
-  <script>
-    renderHeader("header");
-    renderFooter("footer");
-  </script>
-  <!-- Social media -->
+  
   <div id="floating-icons"></div>
-  <script src="components/floating-icons.js"></script>
-  <script>
-    renderFloatingIcons("floating-icons");
-  </script>
-</body>
 
+</body>
 </html>

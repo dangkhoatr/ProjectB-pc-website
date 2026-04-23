@@ -269,7 +269,7 @@
 
     <div class="auth-container">
         <div class="logo-area">
-            <a href="Main.html">EIU COMPUTER</a>
+            <a href="index.html">EIU COMPUTER</a>
         </div>
 
         <div class="auth-card">
@@ -352,40 +352,33 @@
             </div>
         </div>
 
-        <a href="Main.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> Quay lại Trang chủ</a>
+        <a href="index.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> Quay lại Trang chủ</a>
     </div>
 
     <script>
-        // Chuyển đổi giữa 2 Tab Đăng nhập và Đăng ký
         function switchTab(tabName) {
-            // Xử lý nút bấm
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // Xử lý Form hiển thị
             document.querySelectorAll('.form-pane').forEach(form => {
                 form.classList.remove('active');
             });
             document.getElementById(tabName + 'Form').classList.add('active');
         }
 
-        // Xử lý khi bấm Đăng nhập (Mô phỏng)
         function handleLogin(e) {
-            e.preventDefault(); // Chặn hành động load lại trang của form
+            e.preventDefault(); 
             
-            // Giả lập lưu phiên đăng nhập vào LocalStorage
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userName', 'Nguyễn Gia Kiệt'); // Tên giả lập
+            localStorage.setItem('userName', 'Nguyễn Gia Kiệt');
 
             alert('Đăng nhập thành công! Chào mừng quay trở lại.');
             
-            // Chuyển hướng về trang Tài khoản hoặc Trang chủ
             window.location.href = 'account.html';
         }
 
-        // Xử lý khi bấm Đăng ký (Mô phỏng)
         function handleRegister(e) {
             e.preventDefault();
 
@@ -400,10 +393,8 @@
 
             alert(`Đăng ký thành công tài khoản cho ${name}! Vui lòng đăng nhập.`);
             
-            // Tự động chuyển về Tab Đăng nhập
             document.querySelectorAll('.tab-btn')[0].click();
             
-            // Reset form đăng ký
             document.getElementById('registerForm').reset();
         }
     </script>

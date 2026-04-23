@@ -2,13 +2,15 @@
 <html lang="vi">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../assets/css/style.css">
 
   <title>Xem cấu hình PC đã chia sẻ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body {
@@ -18,8 +20,8 @@
       font-size: 14.5px;
       line-height: 1.6;
       color: #1f2937;
+      background: #f3f4f6; /* Thêm background nhẹ để dễ nhìn */
     }
-
 
     .page {
       max-width: 900px;
@@ -27,40 +29,54 @@
       background: #ffffff;
       padding: 30px;
       border: 1px solid #e5e7eb;
+      border-radius: 12px; /* Bo góc nhẹ cho đẹp */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
     h2 {
       margin-top: 0;
       color: #1f2937;
+      font-size: 24px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
     }
 
     .item {
-      padding: 10px 0;
+      padding: 12px 0;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
     .item b {
       color: #111827;
+      display: inline-block;
+      width: 150px;
     }
 
     .total {
-      margin-top: 20px;
-      font-size: 18px;
+      margin-top: 24px;
+      font-size: 22px;
       font-weight: bold;
-      color: #2b90ef;
+      color: #e11d48; /* Đổi màu đồng bộ theme */
       text-align: right;
     }
 
     .back {
       margin-top: 30px;
       display: inline-block;
-      padding: 10px 16px;
-      background: #2b90ef;
+      padding: 12px 20px;
+      background: #e11d48; /* Đổi màu đồng bộ theme */
       color: #ffffff;
       text-decoration: none;
       font-weight: bold;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    
+    .back:hover {
+        background: #be123c;
     }
 
     .error {
@@ -68,6 +84,7 @@
       font-size: 20px;
       margin-top: 80px;
       color: #dc2626;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -102,17 +119,18 @@
       const data = params.get("config");
 
       if (!data) {
-        document.body.innerHTML =
-          "<div class='error'>Không có cấu hình để hiển thị</div>";
+        document.getElementById("content").innerHTML =
+          "<div class='error'>Không có cấu hình để hiển thị. Vui lòng kiểm tra lại đường dẫn!</div><div style='text-align:center;'><a class='back' href='build-pc.html'>← Quay lại trang cấu hình</a></div>";
         return;
       }
 
       let build;
       try {
-        build = JSON.parse(decodeURIComponent(atob(data)));
+        // Cần dùng thêm unescape encodeURIComponent để giải mã font tiếng Việt cho chuẩn xác
+        build = JSON.parse(decodeURIComponent(escape(atob(data))));
       } catch (e) {
-        document.body.innerHTML =
-          "<div class='error'>Link cấu hình không hợp lệ</div>";
+        document.getElementById("content").innerHTML =
+          "<div class='error'>Link cấu hình không hợp lệ hoặc đã bị hỏng.</div><div style='text-align:center;'><a class='back' href='build-pc.html'>← Quay lại trang cấu hình</a></div>";
         return;
       }
 
@@ -121,26 +139,31 @@
 
       for (const key in build) {
         const part = PARTS.find(p => p.key === key);
+        const item = build[key];
+        const qty = item.qty || 1;
+        const lineTotal = item.price * qty;
+        
         html += `
           <div class="item">
-            <div><b>${part ? part.label : key}</b>: ${build[key].name}</div>
-            <div>${build[key].price.toLocaleString()} đ</div>
+            <div><b>${part ? part.label : key}</b>: ${item.name} x${qty}</div>
+            <div style="font-weight: 600;">${lineTotal.toLocaleString("vi-VN")} đ</div>
           </div>
         `;
-        total += build[key].price;
+        total += lineTotal;
       }
 
       html += `
         <div class="total">
-          TỔNG TIỀN: ${total.toLocaleString()} đ
+          TỔNG TIỀN: ${total.toLocaleString("vi-VN")} đ
         </div>
-        <a class="back" href="/">← Quay lại trang cấu hình</a>
+        <a class="back" href="build-pc.html">← Quay lại trang Xây dựng cấu hình</a>
       `;
 
       document.getElementById("content").innerHTML = html;
     }
 
-    loadFromShareLink();
+    // Chạy khi nội dung trang đã sẵn sàng
+    document.addEventListener('DOMContentLoaded', loadFromShareLink);
   </script>
 
 </body>

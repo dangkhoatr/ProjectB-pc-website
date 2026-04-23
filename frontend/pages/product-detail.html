@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="../assets/css/style.css">
 
   <style>
     :root {
@@ -1037,8 +1038,10 @@
     </div>
   </section>
   <div id="footer"></div>
-  <script src="components/header.js"></script>
-  <script src="components/footer.js"></script>
+  
+  <script src="../components/header.js"></script>
+  <script src="../components/footer.js"></script>
+  
   <script>
     renderHeader("header");
     renderFooter("footer");
@@ -1112,6 +1115,9 @@
         <span>${product.name}</span>
       `;
 
+      // Thêm http://localhost:3000/ vào src của ảnh để load đúng đường dẫn
+      const imgUrl = product.image ? `http://localhost:3000/${product.image}` : 'https://via.placeholder.com/500x500?text=No+Image';
+
       document.getElementById("productContent").className = "product-box";
       document.getElementById("productContent").innerHTML = `
         <h1 class="product-title">${product.name}</h1>
@@ -1130,7 +1136,7 @@
               <div class="warranty-badge">3<br>Năm<br>Bảo Hành</div>
 
               <div class="main-image-wrap">
-                <img class="main-image" src="${product.image}" alt="${product.name}">
+                <img class="main-image" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/500x500?text=No+Image'" alt="${product.name}">
               </div>
             </div>
 
@@ -1174,7 +1180,6 @@
     }
 
     async function loadProductDetail() {
-      // Vẫn lấy cái slug từ thanh địa chỉ (ví dụ: ?slug=ten-san-pham)
       const params = new URLSearchParams(window.location.search);
       const slug = params.get("slug");
 
@@ -1185,13 +1190,11 @@
       }
 
       try {
-        // SỬA Ở ĐÂY: Chuyển sang dùng POST và gọi API "/detail"
         const res = await fetch("http://localhost:3000/api/products/detail", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          // Giấu cái slug vào trong Body để gửi lên server
           body: JSON.stringify({ slug: slug })
         });
 
@@ -1200,8 +1203,8 @@
         }
 
         const product = await res.json();
-        window.currentProduct = product; // Lưu lại để dùng cho nút Add to Cart
-        renderProduct(product); // Hàm vẽ giao diện đã có sẵn ở trên
+        window.currentProduct = product; 
+        renderProduct(product); 
       } catch (error) {
         console.error(error);
         document.getElementById("productContent").className = "error-box";
@@ -1218,5 +1221,4 @@
     loadProductDetail();
   </script>
 </body>
-
 </html>

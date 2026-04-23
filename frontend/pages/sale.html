@@ -6,425 +6,428 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <title>Xây dựng cấu hình</title>
+    <title>Chương trình khuyến mãi | EIU Computer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<style>
-    :root {
-        --primary: #e11d48;
-        --primary-dark: #be123c;
-        --text: #111827;
-        --muted: #6b7280;
-        --line: #e5e7eb;
-        --bg-soft: #f8fafc;
-        --bg-card: #ffffff;
-        --shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
-        --radius-lg: 20px;
-        --radius-md: 14px;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: Inter, Arial, sans-serif;
-        color: var(--text);
-        background: #fff;
-    }
-
-    img {
-        display: block;
-        width: 100%;
-    }
-
-    a {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .promo-page {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 24px 20px 64px;
-    }
-
-    .promo-breadcrumb {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        color: var(--muted);
-        font-size: 14px;
-        margin-bottom: 16px;
-    }
-
-    .promo-hero-box {
-        background: linear-gradient(135deg, #fff1f2, #ffffff);
-        border: 1px solid #ffe4e6;
-        border-radius: 28px;
-        padding: 32px;
-        box-shadow: var(--shadow);
-    }
-
-    .promo-label {
-        display: inline-flex;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: #fee2e2;
-        color: #b91c1c;
-        font-weight: 700;
-        font-size: 13px;
-        margin-bottom: 14px;
-    }
-
-    .promo-title {
-        margin: 0;
-        font-size: 40px;
-        line-height: 1.1;
-        font-weight: 800;
-    }
-
-    .promo-subtitle {
-        margin: 14px 0 0;
-        max-width: 850px;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.7;
-    }
-
-    .promo-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        color: var(--muted);
-        margin-top: 18px;
-        font-size: 14px;
-    }
-
-    .promo-intro,
-    .promo-links,
-    .promo-program,
-    .promo-product-group,
-    .promo-faq {
-        margin-top: 28px;
-    }
-
-    .promo-banner img,
-    .promo-program-banner img {
-        border-radius: 22px;
-    }
-
-    .promo-commitments {
-        margin-top: 18px;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 14px;
-    }
-
-    .commit-item {
-        background: var(--bg-soft);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 14px 16px;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    .promo-article-card,
-    .promo-rules,
-    .faq-item {
-        margin-top: 18px;
-        background: var(--bg-card);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-lg);
-        padding: 24px;
-        box-shadow: var(--shadow);
-    }
-
-    .promo-article-card h2,
-    .promo-rules h3,
-    .faq-item h3 {
-        margin-top: 0;
-    }
-
-    .section-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        gap: 16px;
-        margin-bottom: 18px;
-    }
-
-    .section-kicker {
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    .section-title {
-        margin: 6px 0 0;
-        font-size: 28px;
-        font-weight: 800;
-    }
-
-    .promo-date {
-        color: var(--muted);
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .promo-note {
-        margin-bottom: 18px;
-        padding: 14px 18px;
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        color: #9a3412;
-        border-radius: 14px;
-        font-weight: 600;
-    }
-
-    .link-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 14px;
-    }
-
-    .link-card {
-        display: block;
-        background: var(--bg-card);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 18px;
-        font-weight: 700;
-        transition: 0.25s ease;
-    }
-
-    .link-card:hover {
-        transform: translateY(-3px);
-        border-color: #fda4af;
-    }
-
-    .gift-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-
-    .gift-card {
-        background: linear-gradient(180deg, #ffffff, #fff7ed);
-        border: 1px solid #fed7aa;
-        border-radius: 20px;
-        padding: 22px;
-        box-shadow: var(--shadow);
-    }
-
-    .gift-level {
-        color: #c2410c;
-        font-weight: 800;
-        font-size: 13px;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-    }
-
-    .gift-card h3 {
-        margin: 0 0 10px;
-        font-size: 22px;
-    }
-
-    .gift-card p {
-        color: var(--muted);
-        margin: 0 0 14px;
-    }
-
-    .gift-card ul,
-    .promo-rules ul {
-        margin: 0;
-        padding-left: 18px;
-    }
-
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-
-    .product-card {
-        background: var(--bg-card);
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: 0.25s ease;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .product-thumb {
-        position: relative;
-        background: #f9fafb;
-    }
-
-    .product-thumb img {
-        height: 250px;
-        object-fit: cover;
-    }
-
-    .discount-badge {
-        position: absolute;
-        top: 14px;
-        left: 14px;
-        background: var(--primary);
-        color: #fff;
-        font-size: 12px;
-        font-weight: 800;
-        padding: 7px 10px;
-        border-radius: 999px;
-    }
-
-    .product-body {
-        padding: 18px;
-    }
-
-    .product-category {
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 13px;
-        margin-bottom: 8px;
-    }
-
-    .product-name {
-        margin: 0;
-        font-size: 18px;
-        line-height: 1.45;
-    }
-
-    .product-desc {
-        margin: 10px 0 14px;
-        color: var(--muted);
-        line-height: 1.65;
-        min-height: 78px;
-    }
-
-    .product-price-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
-    }
-
-    .price-new {
-        color: var(--primary);
-        font-size: 22px;
-        font-weight: 800;
-    }
-
-    .price-old {
-        color: #9ca3af;
-        text-decoration: line-through;
-        font-weight: 600;
-    }
-
-    .product-btn,
-    .view-all {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .product-btn {
-        width: 100%;
-        border: none;
-        cursor: pointer;
-        background: var(--primary);
-        color: #fff;
-        border-radius: 12px;
-        padding: 12px 16px;
-        font-weight: 700;
-        transition: 0.25s ease;
-    }
-
-    .product-btn:hover {
-        background: var(--primary-dark);
-    }
-
-    .view-all {
-        color: var(--primary);
-        font-weight: 700;
-    }
-
-    .faq-list {
-        display: grid;
-        gap: 16px;
-    }
-
-    @media (max-width: 1200px) {
-
-        .promo-commitments,
-        .link-grid {
-            grid-template-columns: repeat(2, 1fr);
+    
+    <style>
+        :root {
+            --primary: #e11d48;
+            --primary-dark: #be123c;
+            --text: #111827;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --bg-soft: #f8fafc;
+            --bg-card: #ffffff;
+            --shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 14px;
         }
 
-        .gift-grid,
-        .product-grid {
-            grid-template-columns: repeat(2, 1fr);
+        * {
+            box-sizing: border-box;
         }
 
-        .promo-title {
-            font-size: 32px;
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            color: var(--text);
+            background: #fff;
         }
-    }
 
-    @media (max-width: 768px) {
+        img {
+            display: block;
+            width: 100%;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
         .promo-page {
-            padding: 18px 14px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 20px 64px;
+        }
+
+        .promo-breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 16px;
         }
 
         .promo-hero-box {
-            padding: 22px;
-            border-radius: 22px;
+            background: linear-gradient(135deg, #fff1f2, #ffffff);
+            border: 1px solid #ffe4e6;
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .promo-label {
+            display: inline-flex;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 14px;
         }
 
         .promo-title {
-            font-size: 26px;
+            margin: 0;
+            font-size: 40px;
+            line-height: 1.1;
+            font-weight: 800;
         }
 
         .promo-subtitle {
-            font-size: 15px;
+            margin: 14px 0 0;
+            max-width: 850px;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.7;
         }
 
-        .promo-commitments,
-        .link-grid,
-        .gift-grid,
-        .product-grid {
-            grid-template-columns: 1fr;
+        .promo-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: var(--muted);
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        .promo-intro,
+        .promo-links,
+        .promo-program,
+        .promo-product-group,
+        .promo-faq {
+            margin-top: 28px;
+        }
+
+        .promo-banner img,
+        .promo-program-banner img {
+            border-radius: 22px;
+        }
+
+        .promo-commitments {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .commit-item {
+            background: var(--bg-soft);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .promo-article-card,
+        .promo-rules,
+        .faq-item {
+            margin-top: 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .promo-article-card h2,
+        .promo-rules h3,
+        .faq-item h3 {
+            margin-top: 0;
         }
 
         .section-head {
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .section-kicker {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .section-title {
+            margin: 6px 0 0;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .promo-date {
+            color: var(--muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .promo-note {
+            margin-bottom: 18px;
+            padding: 14px 18px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #9a3412;
+            border-radius: 14px;
+            font-weight: 600;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .link-card {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 18px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px);
+            border-color: #fda4af;
+        }
+
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .gift-card {
+            background: linear-gradient(180deg, #ffffff, #fff7ed);
+            border: 1px solid #fed7aa;
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .gift-level {
+            color: #c2410c;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .gift-card h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+
+        .gift-card p {
+            color: var(--muted);
+            margin: 0 0 14px;
+        }
+
+        .gift-card ul,
+        .promo-rules ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: 0.25s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-thumb {
+            position: relative;
+            background: #f9fafb;
         }
 
         .product-thumb img {
-            height: 220px;
+            height: 250px;
+            object-fit: cover;
         }
-    }
-</style>
+
+        .discount-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 7px 10px;
+            border-radius: 999px;
+        }
+
+        .product-body {
+            padding: 18px;
+        }
+
+        .product-category {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.45;
+        }
+
+        .product-desc {
+            margin: 10px 0 14px;
+            color: var(--muted);
+            line-height: 1.65;
+            min-height: 78px;
+        }
+
+        .product-price-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .price-new {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .price-old {
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
+        .product-btn,
+        .view-all {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .product-btn {
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .product-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .view-all {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .faq-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        @media (max-width: 1200px) {
+
+            .promo-commitments,
+            .link-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gift-grid,
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .promo-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .promo-page {
+                padding: 18px 14px 48px;
+            }
+
+            .promo-hero-box {
+                padding: 22px;
+                border-radius: 22px;
+            }
+
+            .promo-title {
+                font-size: 26px;
+            }
+
+            .promo-subtitle {
+                font-size: 15px;
+            }
+
+            .promo-commitments,
+            .link-grid,
+            .gift-grid,
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .product-thumb img {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
 
 <body>
     <div id="header"></div>
     <main class="promo-page">
         <section class="promo-hero">
             <div class="promo-breadcrumb">
-                <a href="Main.html">Trang chủ</a>
+                <a href="index.html">Trang chủ</a>
                 <span>/</span>
                 <a href="#">Tin tức</a>
                 <span>/</span>
@@ -451,7 +454,7 @@
 
         <section class="promo-intro">
             <div class="promo-banner">
-                <img src="./image/-banner-mu-pc-tng-mn-tintuc.jpg" alt="Banner khuyến mại" />
+                <img src="../assets/images/-banner-mu-pc-tng-mn-tintuc.jpg" alt="Banner khuyến mại" onerror="this.style.display='none'" />
             </div>
 
             <div class="promo-commitments">
@@ -484,7 +487,8 @@
                 <a href="#" class="link-card">Chính sách vận chuyển</a>
                 <a href="#" class="link-card">Chính sách bảo hành</a>
                 <a href="#" class="link-card">Hướng dẫn mua hàng</a>
-                <a href="#" class="link-card">Tư vấn build PC</a>
+                
+                <a href="build-pc.html" class="link-card">Tư vấn build PC</a>
             </div>
         </section>
 
@@ -654,29 +658,30 @@
             render();
         });
     </script>
+    
     <div id="footer"></div>
-    <script src="components/header.js"></script>
-    <script src="components/footer.js"></script>
+    
+    <script src="../components/header.js"></script>
+    <script src="../components/footer.js"></script>
+    
     <script>
         renderHeader("header");
         renderFooter("footer");
-
     </script>
-    <!-- Social media -->
+    
     <div id="floating-icons"></div>
-    <script src="components/floating-icons.js"></script>
+    <script src="../components/floating-icons.js"></script>
     <script>
         renderFloatingIcons("floating-icons");
     </script>
+    
     <script>
-        // SỬA Ở ĐÂY: Đổi tham số apiUrl thành categoryName
         async function loadPromoProducts(containerId, categoryName) {
             const container = document.getElementById(containerId);
             const SERVER_URL = 'http://localhost:3000';
-            const API_URL = 'http://localhost:3000/api/products/promo'; // Đường dẫn cố định
+            const API_URL = 'http://localhost:3000/api/products/promo'; 
 
             try {
-                // SỬA Ở ĐÂY: Gọi API bằng phương thức POST và nhét category vào Body
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
@@ -707,7 +712,7 @@
                     return `
                         <article class="product-card">
                             <div class="product-thumb">
-                                <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='image/default.jpg'">
+                                <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='../assets/images/default.jpg'">
                                 ${badgeHtml}
                             </div>
                             <div class="product-body">
@@ -734,14 +739,11 @@
             }
         }
 
-        // Chạy render khi trang vừa load xong
         document.addEventListener('DOMContentLoaded', () => {
-            // SỬA Ở ĐÂY: Gọi hàm cực kỳ ngắn gọn, chỉ truyền tên category ('monitor', 'gear', 'cooling')
             loadPromoProducts('promo-monitors', 'monitor');
             loadPromoProducts('promo-gears', 'gear');
             loadPromoProducts('promo-cooling', 'cooling');
         });
     </script>
 </body>
-
 </html>

@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="../assets/css/style.css">
+  
   <title>Cấu hình được chia sẻ</title>
   <style>
     body {
@@ -112,8 +114,10 @@
     </div>
   </div>
   <div id="footer"></div>
-  <script src="components/header.js"></script>
-  <script src="components/footer.js"></script>
+  
+  <script src="../components/header.js"></script>
+  <script src="../components/footer.js"></script>
+  
   <script>
     renderHeader("header");
     renderFooter("footer");
@@ -196,8 +200,8 @@
     }
 
     renderSharedBuild();
+    
     function buySharedBuild() {
-      // 1. Lấy dữ liệu từ URL giống như lúc render
       const params = new URLSearchParams(window.location.search);
       const config = params.get("config");
       const build = decodeConfig(config);
@@ -206,13 +210,10 @@
 
       let cart = JSON.parse(localStorage.getItem("pc_build")) || {};
 
-      
       for (const key in build) {
         if (cart[key]) {
-          
           cart[key].qty = (cart[key].qty || 1) + (build[key].qty || 1);
         } else {
-          
           cart[key] = build[key];
         }
       }
@@ -220,9 +221,10 @@
       localStorage.setItem("pc_build", JSON.stringify(cart));
 
       alert("Đã thêm toàn bộ cấu hình vào giỏ hàng!");
+      
+      // Chuyển hướng tới trang giỏ hàng (đường dẫn hiện tại đã chuẩn vì cùng thư mục pages)
       window.location.href = "cart.html"; 
     }
   </script>
 </body>
-
 </html>

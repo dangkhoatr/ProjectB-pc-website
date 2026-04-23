@@ -7,7 +7,7 @@ function renderHeader(targetId = "header") {
       <div class="header-top">
         <div class="header-inner">
           <div class="header-logo">
-            <a href="Main.html" class="header-logo-text">EIU COMPUTER</a>
+            <a href="index.html" class="header-logo-text">EIU COMPUTER</a>
           </div>
 
           <div class="header-center">
@@ -62,12 +62,12 @@ function renderHeader(targetId = "header") {
           </div>
 
           <div class="header-actions">
-            <a href="giásốc.html" class="header-action">
+            <a href="sale.html" class="header-action">
               <span class="action-icon">⚡</span>
               <span>Giá sốc</span>
             </a>
 
-            <a href="A.html" class="header-action">
+            <a href="build-pc.html" class="header-action">
               <span class="action-icon">🧾</span>
               <span>Xây dựng<br>cấu hình</span>
             </a>
