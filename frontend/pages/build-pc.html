@@ -580,7 +580,9 @@
     renderFooter("footer");
     renderFloatingIcons("floating-icons");
 
-    let PARTS = [];
+    const PARTS = [];
+
+
     let DATA = {};
     let build = {};
     let currentKey = "";
@@ -1042,16 +1044,21 @@
         };
 
         const [categoriesRes, partsRes, productsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/parts/categories", postOptions), 
-          fetch("http://localhost:3000/api/parts/items", postOptions),      
-          fetch("http://localhost:3000/api/products", postOptions)          
+          fetch("http://localhost:3000/api/parts/categories", postOptions), // Lấy danh mục
+          fetch("http://localhost:3000/api/parts/items", postOptions),      // Lấy linh kiện
+          
+          // LƯU Ý: Nếu file routes/products.js của bạn chưa đổi router.get thành router.post,
+          // thì tạm thời xóa chữ `postOptions` ở dòng dưới này đi nhé (để nó chạy GET tạm).
+          // Nếu đã đổi thành POST rồi thì giữ nguyên!
+          fetch("http://localhost:3000/api/products", postOptions)          // Lấy sản phẩm combo
         ]);
 
         if (!categoriesRes.ok || !partsRes.ok || !productsRes.ok) {
           throw new Error("Lỗi khi lấy dữ liệu từ server");
         }
 
-        PARTS = await categoriesRes.json(); 
+        // Bơm dữ liệu từ Database vào các biến
+        PARTS = await categoriesRes.json(); // Biến PARTS tự động có đủ 17 danh mục từ DB!
         DATA = await partsRes.json();
         const products = await productsRes.json();
 

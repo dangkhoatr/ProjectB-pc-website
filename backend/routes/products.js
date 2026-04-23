@@ -30,7 +30,7 @@ router.post("/promo", async (req, res) => {
   }
 });
 
-// 2. API Lấy toàn bộ sản phẩm (Đổi GET -> POST, query -> body)
+
 router.post("/", async (req, res) => {
   try {
     let sql = `
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
       ORDER BY id DESC
     `;
 
-    // Lấy giới hạn (limit) từ Body
+    
     const limit = parseInt(req.body.limit);
     if (!isNaN(limit)) {
       sql += ` LIMIT ${limit}`;

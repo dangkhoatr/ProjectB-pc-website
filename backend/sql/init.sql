@@ -90,7 +90,6 @@ FROM part_categories WHERE part_key='hdd';
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'HDD 2TB', 1500000, 'uploads/parts/HDD 2TB.jpg'
 FROM part_categories WHERE part_key='hdd';
-
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'RTX 3060', 7500000, 'uploads/parts/RTX 3060.jpg'
 FROM part_categories WHERE part_key='vga';
@@ -158,7 +157,6 @@ FROM part_categories WHERE part_key='fan';
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'Tản khí Cooler Master', 700000, 'uploads/parts/Tản khí Cooler Master.jpg'
 FROM part_categories WHERE part_key='aircool';
-
 INSERT INTO part_items (category_id, name, price, image)
 SELECT id, 'Tản khí Noctua', 1500000, 'uploads/parts/Tản khí Noctua.jpg'
 FROM part_categories WHERE part_key='aircool';
