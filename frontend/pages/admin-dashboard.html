@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EIU COMPUTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .toast-animate { animation: fadeIn 0.3s ease forwards; }
+        .dropdown-animate {
+            transform-origin: bottom left;
+            animation: scaleIn 0.2s ease-out forwards;
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-[#f1f5f9] text-gray-800 font-sans antialiased overflow-hidden">
+
+    <div class="h-screen flex">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-60 bg-[#0f172a] flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto -translate-x-full relative">
+            <a href="index.html" class="flex items-center gap-3 px-5 py-5 border-b border-white/10 hover:bg-white/5 transition block cursor-pointer">
+                <div class="w-9 h-9 rounded-lg bg-[#e11d48] flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" stroke-width="2"/>
+                        <path d="M8 21h8M12 17v4" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-white font-bold text-sm leading-none hover:text-[#e11d48] transition">EIU COMPUTER</div>
+                    <div class="text-gray-400 text-xs mt-0.5">Admin Panel</div>
+                </div>
+            </a>
+
+            <nav class="flex-1 px-3 py-4 space-y-1">
+                <button onclick="switchTab('products')" id="nav-products" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition bg-[#e11d48] text-white">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+                    Quản lý sản phẩm
+                </button>
+                <button onclick="switchTab('stats')" id="nav-stats" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-gray-400 hover:text-white hover:bg-white/5">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Thống kê
+                </button>
+            </nav>
+
+            <div class="relative px-3 py-4 border-t border-white/10">
+                <div id="admin-dropdown" class="hidden absolute bottom-full left-3 w-[calc(100%-24px)] mb-2 bg-[#1e293b] border border-white/10 rounded-lg shadow-xl overflow-hidden dropdown-animate">
+                    <button onclick="logoutAdmin()" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition text-left">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Đăng xuất
+                    </button>
+                </div>
+                <div onclick="toggleAdminMenu()" class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 cursor-pointer transition">
+                    <div class="w-8 h-8 rounded-full bg-[#e11d48]/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-[#e11d48]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div id="admin-name" class="text-white text-xs font-semibold">Đang tải...</div>
+                        <div id="admin-email" class="text-gray-500 text-xs truncate max-w-[120px]">...</div>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </div>
+            </div>
+        </aside>
+
+        <div id="sidebar-overlay" class="fixed inset-0 z-30 bg-black/50 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+        <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto relative">
+            <header class="bg-white border-b border-gray-200 px-6 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-20 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <button class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition" onclick="toggleSidebar()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <div>
+                        <h1 id="page-title" class="text-lg font-bold text-gray-900 leading-none">Quản lý sản phẩm</h1>
+                        <p class="text-xs text-gray-400 mt-0.5">EIU COMPUTER Admin Panel</p>
+                    </div>
+                </div>
+                <button id="btn-add-product" onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-[#e11d48] text-white text-sm font-bold rounded-lg hover:bg-[#be123c] transition shadow-sm active:scale-95 whitespace-nowrap">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    Thêm sản phẩm
+                </button>
+            </header>
+
+            <main class="flex-1 p-6 space-y-6">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center"><svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg></div>
+                        <div><div id="stat-total" class="text-2xl font-extrabold text-gray-900 leading-none">0</div><div class="text-xs text-gray-500 mt-1">Tổng sản phẩm</div></div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center"><svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                        <div><div id="stat-active" class="text-2xl font-extrabold text-gray-900 leading-none">0</div><div class="text-xs text-gray-500 mt-1">Đang bán</div></div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center"><svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg></div>
+                        <div><div id="stat-sale" class="text-2xl font-extrabold text-gray-900 leading-none">0</div><div class="text-xs text-gray-500 mt-1">Đang sale</div></div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center"><svg class="w-5 h-5 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></div>
+                        <div><div id="stat-out" class="text-2xl font-extrabold text-gray-900 leading-none">0</div><div class="text-xs text-gray-500 mt-1">Hết hàng</div></div>
+                    </div>
+                </div>
+
+                <div id="tab-content-products" class="block">
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-gray-100"><h3 class="font-bold text-gray-800">Danh sách sản phẩm</h3></div>
+                        
+                        <div class="p-5">
+                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4 flex flex-wrap lg:flex-nowrap items-end gap-3">
+                                <div class="w-full lg:w-48 shrink-0">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Danh mục</label>
+                                    <select id="search-category" onchange="loadSearchFilters()" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition bg-white">
+                                        <option value="all">Tất cả danh mục</option>
+                                    </select>
+                                </div>
+
+                                <div id="filter-wrapper" class="w-full lg:w-48 shrink-0 hidden">
+                                    <label id="filter-label" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Thương hiệu</label>
+                                    <select id="search-brand" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition bg-white">
+                                        <option value="all">Tất cả</option>
+                                    </select>
+                                </div>
+
+                                <div class="w-full flex-1">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tên sản phẩm / Mã</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                        </div>
+                                        <input type="text" id="search-keyword" placeholder="Nhập tên linh kiện cần tìm..." class="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition">
+                                    </div>
+                                </div>
+
+                                <button onclick="executeSearch()" class="w-full lg:w-auto px-6 py-2 bg-[#111827] text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition active:scale-95 shrink-0 flex items-center justify-center gap-2">
+                                    Lọc dữ liệu
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto rounded-lg border border-gray-100">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-3 w-12">Ảnh</th>
+                                            <th class="px-4 py-3">Tên sản phẩm</th>
+                                            <th class="px-4 py-3">Danh mục</th>
+                                            <th class="px-4 py-3 text-right">Giá</th>
+                                            <th class="px-4 py-3 text-center">Tồn kho</th>
+                                            <th class="px-4 py-3 text-center">Trạng thái</th>
+                                            <th class="px-4 py-3 text-center">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="product-table-body" class="divide-y divide-gray-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-content-stats" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                            <h3 class="font-bold text-gray-800 mb-4">Giá trị tồn kho</h3>
+                            <div class="flex items-end gap-3 mb-5"><span id="total-inventory-value" class="text-3xl font-extrabold text-[#e11d48]">0 ₫</span></div>
+                            <div id="inventory-breakdown" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-[#e11d48] to-[#be123c]">
+                <div>
+                    <h2 id="modal-title" class="text-lg font-bold text-white">Thêm sản phẩm mới</h2>
+                    <p id="modal-subtitle" class="text-red-100 text-sm mt-0.5">Điền đầy đủ thông tin sản phẩm</p>
+                </div>
+                <button onclick="closeModal()" class="p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="saveProduct(event)" class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+                <input type="hidden" id="form-id">
+                
+                <section>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Thông tin cơ bản</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tên sản phẩm <span class="text-[#e11d48]">*</span></label>
+                            <input required id="form-name" placeholder="VD: Màn hình LG UltraGear 24GQ50F-B 24 inch" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Danh mục <span class="text-[#e11d48]">*</span></label>
+                            <select id="form-category" onchange="renderDynamicSpecs()" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] bg-white transition"></select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Giá bán (VNĐ) <span class="text-[#e11d48]">*</span></label>
+                                <input required type="number" min="0" id="form-price" placeholder="3300000" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Giá gốc (để sale tag)</label>
+                                <input type="number" min="0" id="form-original-price" placeholder="3900000" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tồn kho <span class="text-[#e11d48]">*</span></label>
+                                <input required type="number" min="0" id="form-stock" placeholder="10" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] transition" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Trạng thái</label>
+                                <select id="form-status" class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] bg-white transition">
+                                    <option value="active">Đang bán</option>
+                                    <option value="sale">Giảm giá (Sale)</option>
+                                    <option value="out_of_stock">Hết hàng</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Hình ảnh sản phẩm</label>
+                            <div class="flex items-center gap-4">
+                                <div id="image-preview-container" class="w-16 h-16 rounded-lg border border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <input type="file" id="form-image-file" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#e11d48]/10 file:text-[#e11d48] hover:file:bg-[#e11d48]/20 transition cursor-pointer" />
+                            </div>
+                            <input type="hidden" id="form-image-base64" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-2 mb-3 mt-4">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Thông số kỹ thuật</h3>
+                        <span id="spec-category-label" class="text-xs font-semibold text-[#e11d48] bg-red-50 px-2 py-0.5 rounded-full border border-red-100">CPU</span>
+                    </div>
+                    <div id="dynamic-specs-container" class="grid grid-cols-2 gap-x-4 gap-y-3"></div>
+                </section>
+            </form>
+
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeModal()" class="px-5 py-2 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">Hủy</button>
+                <button type="submit" form="product-form" class="px-6 py-2 text-sm font-bold text-white bg-[#e11d48] rounded-lg hover:bg-[#be123c] transition shadow-sm active:scale-95">Lưu sản phẩm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2"></div>
+
+    <script>
+        // KIỂM TRA QUYỀN ADMIN
+        document.addEventListener("DOMContentLoaded", () => {
+            const userData = localStorage.getItem('user');
+            if (!userData) {
+                alert("Bạn chưa đăng nhập!");
+                window.location.href = "auth.html";
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            if (user.role !== 'admin') {
+                alert("Chỗ này của Admin, khách hàng đi nhầm cửa rồi!");
+                window.location.href = "Account.html";
+                return;
+            }
+
+            document.getElementById('admin-name').innerText = user.name;
+            document.getElementById('admin-email').innerText = user.email;
+        });
+
+        function toggleAdminMenu() { document.getElementById('admin-dropdown').classList.toggle('hidden'); }
+        function logoutAdmin() { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'auth.html'; }
+        
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('admin-dropdown');
+            const profileBtn = menu.nextElementSibling;
+            if (menu && profileBtn && !menu.contains(e.target) && !profileBtn.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // 1. CẤU HÌNH DANH MỤC VÀ SPECS 
+        const CATEGORIES = {
+            "cpu": { 
+                label: "Vi xử lý (CPU)", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Intel", "AMD"]},
+                    {key: "socket", label: "Socket hỗ trợ", type: "select", options: ["LGA 1700", "LGA 1200", "LGA 1151", "AM5", "AM4"]}, 
+                    {key: "cores", label: "Số nhân", type: "select", options: ["4", "6", "8", "10", "12", "14", "16", "24"]}, 
+                    {key: "threads", label: "Số luồng", type: "select", options: ["8", "12", "16", "20", "24", "28", "32"]} 
+                ] 
+            },
+            "vga": { 
+                label: "Card màn hình (VGA)", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["ASUS", "GIGABYTE", "MSI", "Colorful", "Zotac", "Galax"]},
+                    {key: "chipset", label: "Chipset", type: "select", options: ["NVIDIA GeForce", "AMD Radeon", "Intel Arc"]},
+                    {key: "vram", label: "Dung lượng VRAM", type: "select", options: ["4GB", "6GB", "8GB", "10GB", "12GB", "16GB", "20GB", "24GB"]}, 
+                    {key: "ports", label: "Cổng xuất hình", type: "select", options: ["1x HDMI, 3x DP", "2x HDMI, 2x DP", "1x HDMI, 2x DP", "Khác"]} 
+                ] 
+            },
+            "ram": { 
+                label: "Bộ nhớ trong (RAM)", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Corsair", "Kingston", "G.Skill", "TeamGroup", "Crucial", "Adata"]},
+                    {key: "type", label: "Chuẩn RAM", type: "select", options: ["DDR4", "DDR5"]},
+                    {key: "capacity", label: "Dung lượng", type: "select", options: ["8GB", "16GB", "32GB", "64GB"]}, 
+                    {key: "bus", label: "Tốc độ Bus", type: "select", options: ["3200MHz", "3600MHz", "4800MHz", "5200MHz", "5600MHz", "6000MHz", "6400MHz", "7200MHz"]} 
+                ] 
+            },
+            "mainboard": { 
+                label: "Bo mạch chủ (Main)", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["ASUS", "GIGABYTE", "MSI", "ASRock"]},
+                    {key: "socket", label: "Socket", type: "select", options: ["LGA 1700", "LGA 1200", "AM5", "AM4"]}, 
+                    {key: "chipset", label: "Chipset", type: "select", options: ["H610", "B660", "B760", "Z690", "Z790", "A520", "B550", "X570", "A620", "B650", "X670"]}, 
+                    {key: "form_factor", label: "Kích thước (Form Factor)", type: "select", options: ["ATX", "Micro-ATX (mATX)", "Mini-ITX", "E-ATX"]} 
+                ] 
+            },
+            "ssd": { 
+                label: "Ổ cứng SSD", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Samsung", "Kingston", "WD", "Crucial", "Corsair"]}, 
+                    {key: "form_factor", label: "Form Factor", type: "select", options: ["M.2 NVMe", "2.5 inch SATA", "M.2 SATA"]}, 
+                    {key: "capacity", label: "Dung lượng", type: "select", options: ["250GB", "256GB", "500GB", "512GB", "1TB", "2TB", "4TB"]}, 
+                    {key: "read_speed", label: "Tốc độ đọc", unit: "MB/s", type: "number"}, 
+                    {key: "write_speed", label: "Tốc độ ghi", unit: "MB/s", type: "number"}, 
+                    {key: "nand", label: "Loại NAND", type: "select", options: ["TLC", "QLC", "MLC"]}, 
+                    {key: "pcie", label: "PCIe Gen", type: "select", options: ["Gen 3.0", "Gen 4.0", "Gen 5.0", "SATA 3"]}
+                ] 
+            },
+            "hdd": { 
+                label: "Ổ cứng HDD", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["WD", "Seagate", "Toshiba"]}, 
+                    {key: "capacity", label: "Dung lượng", type: "select", options: ["1TB", "2TB", "4TB", "8TB", "16TB"]}, 
+                    {key: "rpm", label: "Tốc độ quay", type: "select", options: ["5400 RPM", "7200 RPM"]}, 
+                    {key: "cache", label: "Cache", unit: "MB", type: "number"}, 
+                    {key: "interface", label: "Giao tiếp", type: "select", options: ["SATA 3"]} 
+                ] 
+            },
+            "psu": { 
+                label: "Nguồn (PSU)", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Corsair", "Cooler Master", "Gigabyte", "ASUS", "MSI", "SilverStone"]}, 
+                    {key: "wattage", label: "Công suất", type: "select", options: ["450W", "500W", "550W", "650W", "750W", "850W", "1000W", "1200W", "1600W"]}, 
+                    {key: "certification", label: "Chứng nhận 80+", type: "select", options: ["Không có", "White", "Bronze", "Silver", "Gold", "Platinum", "Titanium"]}, 
+                    {key: "cable_type", label: "Dạng cáp", type: "select", options: ["Non-Modular", "Semi-Modular", "Full-Modular"]}, 
+                    {key: "fan_size", label: "Quạt làm mát", unit: "mm", type: "number"}, 
+                    {key: "pcie_ports", label: "Cổng PCIe"} 
+                ] 
+            },
+            "case": { 
+                label: "Vỏ Case", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["NZXT", "Corsair", "Deepcool", "Montech", "Lian Li", "Fractal Design"]}, 
+                    {key: "support_mb", label: "Hỗ trợ Form Factor", type: "select", options: ["ATX, mATX, ITX", "mATX, ITX", "E-ATX, ATX, mATX"]}, 
+                    {key: "dimensions", label: "Kích thước (mm)"}, 
+                    {key: "max_gpu", label: "GPU tối đa", unit: "mm", type: "number"}, 
+                    {key: "max_cpu", label: "CPU cooler tối đa", unit: "mm", type: "number"}, 
+                    {key: "fan_slots", label: "Khe quạt"}, 
+                    {key: "rgb", label: "RGB", type: "select", options: ["Có sẵn Fan RGB", "Không có RGB"]}, 
+                    {key: "side_panel", label: "Panel bên", type: "select", options: ["Kính cường lực", "Thép", "Mica"]} 
+                ] 
+            },
+            "cooler_air": { 
+                label: "Tản nhiệt khí", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Noctua", "Thermalright", "Deepcool", "Cooler Master", "ID-Cooling"]}, 
+                    {key: "type", label: "Loại", type: "select", options: ["Tháp đơn", "Tháp đôi", "Top-down"]}, 
+                    {key: "socket", label: "Socket hỗ trợ"}, 
+                    {key: "fan_size", label: "Kích thước quạt", type: "select", options: ["92mm", "120mm", "140mm"]}, 
+                    {key: "fan_count", label: "Số quạt", unit: "quạt", type: "number"}, 
+                    {key: "height", label: "Chiều cao", unit: "mm", type: "number"}, 
+                    {key: "tdp", label: "TDP hỗ trợ", unit: "W", type: "number"}, 
+                    {key: "rgb", label: "RGB", type: "select", options: ["ARGB", "RGB", "Không LED"]} 
+                ] 
+            },
+            "cooler_aio": { 
+                label: "Tản nhiệt nước AIO", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["NZXT", "Corsair", "ASUS ROG", "Deepcool", "Lian Li"]}, 
+                    {key: "rad_size", label: "Kích thước radiator", type: "select", options: ["120mm", "240mm", "280mm", "360mm", "420mm"]}, 
+                    {key: "fan_count", label: "Số quạt", type: "select", options: ["1", "2", "3"]}, 
+                    {key: "socket", label: "Socket hỗ trợ", type: "text", placeholder: "LGA1700, AM5..."}, 
+                    {key: "pump_speed", label: "Tốc độ bơm", unit: "RPM", type: "number"}, 
+                    {key: "rgb", label: "RGB", type: "select", options: ["Có màn hình LCD", "ARGB", "RGB", "Không LED"]} 
+                ] 
+            },
+            "monitor": { 
+                label: "Màn hình", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["LG", "ASUS", "Dell", "Samsung", "AOC", "Gigabyte", "MSI", "BenQ"]}, 
+                    {key: "size", label: "Kích thước", type: "select", options: ["24 inch", "24.5 inch", "27 inch", "32 inch", "34 inch (Ultrawide)", "49 inch"]}, 
+                    {key: "resolution", label: "Độ phân giải", type: "select", options: ["FHD (1920x1080)", "2K QHD (2560x1440)", "4K UHD (3840x2160)", "UWQHD (3440x1440)"]}, 
+                    {key: "refresh_rate", label: "Tần số quét", type: "select", options: ["60Hz", "75Hz", "100Hz", "144Hz", "165Hz", "170Hz", "180Hz", "240Hz", "360Hz", "540Hz"]}, 
+                    {key: "panel", label: "Loại tấm nền", type: "select", options: ["IPS", "Fast IPS", "VA", "TN", "OLED", "Mini LED"]}, 
+                    {key: "response_time", label: "Thời gian phản hồi", type: "select", options: ["0.03ms", "0.5ms", "1ms", "2ms", "4ms", "5ms"]}, 
+                    {key: "hdr", label: "HDR", type: "select", options: ["Không", "HDR10", "HDR400", "HDR600", "HDR1000"]}, 
+                    {key: "ports", label: "Cổng kết nối", type: "text", placeholder: "VD: 2x HDMI 2.0, 1x DP 1.4"} 
+                ] 
+            },
+            "keyboard": { 
+                label: "Bàn phím", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Akko", "Logitech", "Razer", "Corsair", "Keychron", "Ducky", "Leopold"]}, 
+                    {key: "layout", label: "Layout", type: "select", options: ["Fullsize (104/108)", "1800 Compact (98/100)", "TKL (87%)", "75%", "65%", "60%"]}, 
+                    {key: "switch_type", label: "Loại switch", type: "select", options: ["Linear", "Tactile", "Clicky", "Optical", "Magnetic (Rapid Trigger)"]}, 
+                    {key: "switch_name", label: "Tên switch", type: "text", placeholder: "VD: Cherry MX Red, Akko CS..."}, 
+                    {key: "connection", label: "Kết nối", type: "select", options: ["Có dây", "Không dây (Bluetooth + 2.4Ghz)", "3 Modes (Dây + BT + 2.4G)"]}, 
+                    {key: "rgb", label: "RGB", type: "select", options: ["RGB từng phím", "LED đơn sắc", "Không LED"]}, 
+                    {key: "hotswap", label: "Hot-swap", type: "select", options: ["Có (5 pin)", "Có (3 pin)", "Không"]} 
+                ] 
+            },
+            "mouse": { 
+                label: "Chuột", fields: [ 
+                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Logitech", "Razer", "Zowie", "Glorious", "Pulsar", "Lamzu"]}, 
+                    {key: "max_dpi", label: "DPI tối đa", type: "select", options: ["8000 DPI", "16000 DPI", "20000 DPI", "25600 DPI", "30000 DPI", "35000 DPI"]}, 
+                    {key: "sensor", label: "Cảm biến", type: "text", placeholder: "VD: Focus Pro 30K, HERO 25K..."}, 
+                    {key: "connection", label: "Kết nối", type: "select", options: ["Có dây", "Không dây (2.4Ghz)", "Bluetooth + 2.4Ghz", "3 Modes"]}, 
+                    {key: "weight", label: "Trọng lượng", unit: "g", type: "number"}, 
+                    {key: "buttons", label: "Số nút", unit: "nút", type: "number"}, 
+                    {key: "rgb", label: "RGB", type: "select", options: ["Có RGB", "Không RGB"]} 
+                ] 
+            }
+        };
+
+        let products = [
+            { id: "P_12345", name: "Intel Core i9 14900K", category: "cpu", price: 15500000, original_price: 16000000, stock: 12, status: "active", image: "https://placehold.co/100x100/1f2937/fff?text=CPU", specs: {brand: "Intel", socket: "LGA 1700", cores: "24", threads: "32"} },
+            { id: "P_67890", name: "Màn hình LG UltraGear 24GQ50F-B", category: "monitor", price: 3300000, stock: 3, status: "sale", image: "https://placehold.co/100x100/dc2626/fff?text=LG+24", specs: {brand: "LG", size: "24 inch", resolution: "FHD (1920x1080)", refresh_rate: "165Hz", panel: "VA", response_time: "1ms"} }
+        ];
+
+        let currentTab = "products";
+
+        // INIT DROPDOWNS
+        function initCategoryDropdown() {
+            const select = document.getElementById('form-category');
+            const searchSelect = document.getElementById('search-category');
+            select.innerHTML = '';
+            for (const [key, data] of Object.entries(CATEGORIES)) {
+                select.innerHTML += `<option value="${key}">${data.label}</option>`;
+                searchSelect.innerHTML += `<option value="${key}">${data.label}</option>`;
+            }
+        }
+
+        // TÌM KIẾM ĐA TẦNG
+        function loadSearchFilters() {
+            const catKey = document.getElementById('search-category').value;
+            const filterWrapper = document.getElementById('filter-wrapper');
+            const brandSelect = document.getElementById('search-brand');
+
+            if (catKey === 'all') {
+                filterWrapper.classList.add('hidden');
+                brandSelect.value = 'all';
+                return;
+            }
+
+            filterWrapper.classList.remove('hidden');
+            brandSelect.innerHTML = '<option value="all">Tất cả các hãng</option>';
+
+            const catDef = CATEGORIES[catKey];
+            if (catDef && catDef.fields) {
+                const brandField = catDef.fields.find(f => f.key === 'brand');
+                if (brandField && brandField.options) {
+                    brandField.options.forEach(opt => {
+                        brandSelect.innerHTML += `<option value="${opt}">${opt}</option>`;
+                    });
+                }
+            }
+        }
+
+        function executeSearch() {
+            const category = document.getElementById('search-category').value;
+            const brand = document.getElementById('search-brand').value;
+            const keyword = document.getElementById('search-keyword').value.toLowerCase().trim();
+
+            showToast("Đang lọc dữ liệu...", "success");
+            
+            const filteredProducts = products.filter(p => {
+                if (category !== 'all' && p.category !== category) return false;
+                if (category !== 'all' && brand !== 'all') {
+                    if (!p.specs || p.specs.brand !== brand) return false;
+                }
+                if (keyword !== '' && !p.name.toLowerCase().includes(keyword)) return false;
+                return true;
+            });
+
+            renderProductTable(filteredProducts); 
+        }
+
+        // IMAGE UPLOAD
+        document.getElementById('form-image-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64Str = event.target.result;
+                    document.getElementById('form-image-base64').value = base64Str; 
+                    document.getElementById('image-preview-container').innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover" />`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function resetImagePreview(imgUrl = null) {
+            document.getElementById('form-image-file').value = ""; 
+            const container = document.getElementById('image-preview-container');
+            if (imgUrl) {
+                document.getElementById('form-image-base64').value = imgUrl;
+                container.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover" />`;
+            } else {
+                document.getElementById('form-image-base64').value = "";
+                container.innerHTML = `<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
+            }
+        }
+
+        // MODAL
+        function openModal(productId = null) {
+            const modal = document.getElementById('product-modal');
+            const form = document.getElementById('product-form');
+            form.reset();
+
+            if (productId) {
+                const p = products.find(x => x.id === productId);
+                document.getElementById('modal-title').innerText = "Chỉnh sửa sản phẩm";
+                document.getElementById('modal-subtitle').innerText = `ID: ${p.id}`;
+                document.getElementById('form-id').value = p.id;
+                document.getElementById('form-name').value = p.name;
+                document.getElementById('form-category').value = p.category;
+                document.getElementById('form-price').value = p.price;
+                document.getElementById('form-original-price').value = p.original_price || "";
+                document.getElementById('form-stock').value = p.stock;
+                document.getElementById('form-status').value = p.status;
+                resetImagePreview(p.image); 
+                document.getElementById('dynamic-specs-container').dataset.savedSpecs = JSON.stringify(p.specs || {});
+            } else {
+                document.getElementById('modal-title').innerText = "Thêm sản phẩm mới";
+                document.getElementById('modal-subtitle').innerText = "Điền đầy đủ thông tin sản phẩm";
+                document.getElementById('form-id').value = "";
+                resetImagePreview(); 
+                document.getElementById('dynamic-specs-container').dataset.savedSpecs = "{}";
+            }
+
+            renderDynamicSpecs();
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        // DYNAMIC SPECS
+        function renderDynamicSpecs() {
+            const catKey = document.getElementById('form-category').value;
+            const def = CATEGORIES[catKey];
+            document.getElementById('spec-category-label').innerText = def.label;
+            
+            const container = document.getElementById('dynamic-specs-container');
+            container.innerHTML = '';
+            const savedSpecs = JSON.parse(container.dataset.savedSpecs || "{}");
+
+            def.fields.forEach(f => {
+                const val = savedSpecs[f.key] || "";
+                const baseClass = "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] bg-white";
+                let inputHtml = "";
+
+                if (f.type === "select") {
+                    let optionsHtml = '<option value="">-- Chọn --</option>';
+                    if (f.options) {
+                        f.options.forEach(opt => {
+                            const isSelected = val === opt ? "selected" : "";
+                            optionsHtml += `<option value="${opt}" ${isSelected}>${opt}</option>`;
+                        });
+                    }
+                    inputHtml = `<select id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="select" class="${baseClass}">${optionsHtml}</select>`;
+                } else {
+                    const typeAttr = f.type === 'number' ? 'number' : 'text';
+                    inputHtml = `<input type="${typeAttr}" id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="${typeAttr}" value="${val}" class="${baseClass}" />`;
+                }
+
+                container.innerHTML += `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                            ${f.label} ${f.unit ? `<span class="text-gray-400 font-normal">(${f.unit})</span>` : ''}
+                        </label>
+                        ${inputHtml}
+                    </div>
+                `;
+            });
+        }
+
+        // LƯU SẢN PHẨM
+        function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-id').value;
+            const catKey = document.getElementById('form-category').value;
+            const base64Image = document.getElementById('form-image-base64').value; 
+            
+            const newProduct = {
+                id: id ? id : "P_" + Math.floor(Math.random() * 100000),
+                name: document.getElementById('form-name').value,
+                category: catKey,
+                price: Number(document.getElementById('form-price').value),
+                original_price: document.getElementById('form-original-price').value ? Number(document.getElementById('form-original-price').value) : null,
+                stock: Number(document.getElementById('form-stock').value),
+                status: document.getElementById('form-status').value,
+                image: base64Image || "https://placehold.co/100x100/1f2937/fff?text=No+Image", 
+                specs: {}
+            };
+
+            const specElements = document.querySelectorAll('#dynamic-specs-container input, #dynamic-specs-container select');
+            specElements.forEach(el => {
+                const key = el.getAttribute('data-spec-key');
+                const type = el.getAttribute('data-spec-type');
+                newProduct.specs[key] = type === 'number' ? Number(el.value) : el.value;
+            });
+
+            if (id) {
+                const index = products.findIndex(p => p.id === id);
+                products[index] = newProduct;
+                showToast("Đã cập nhật sản phẩm thành công!");
+            } else {
+                products.unshift(newProduct);
+                showToast("Đã thêm sản phẩm mới!");
+            }
+
+            closeModal();
+            renderUI();
+        }
+
+        // TIỆN ÍCH
+        function formatVND(n) { return n.toLocaleString("vi-VN"); }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebar-overlay').classList.toggle('hidden'); }
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            const pClass = tab === 'products' ? "bg-[#e11d48] text-white" : "text-gray-400 hover:text-white hover:bg-white/5";
+            const sClass = tab === 'stats' ? "bg-[#e11d48] text-white" : "text-gray-400 hover:text-white hover:bg-white/5";
+            document.getElementById('nav-products').className = `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${pClass}`;
+            document.getElementById('nav-stats').className = `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${sClass}`;
+            document.getElementById('tab-content-products').className = tab === 'products' ? 'block' : 'hidden';
+            document.getElementById('tab-content-stats').className = tab === 'stats' ? 'block' : 'hidden';
+            document.getElementById('page-title').innerText = tab === 'products' ? "Quản lý sản phẩm" : "Thống kê tổng quan";
+            document.getElementById('btn-add-product').className = tab === 'products' ? 'flex items-center gap-2 px-4 py-2 bg-[#e11d48] text-white text-sm font-bold rounded-lg hover:bg-[#be123c] transition shadow-sm active:scale-95 whitespace-nowrap' : 'hidden';
+        }
+
+        function showToast(msg, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = type === "success" ? "bg-emerald-600" : "bg-red-600";
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-semibold text-white toast-animate ${bgClass}`;
+            toast.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+                products = products.filter(p => p.id !== id);
+                showToast("Đã xóa sản phẩm", "success");
+                renderUI();
+            }
+        }
+
+        function renderProductTable(dataToRender) {
+            const tbody = document.getElementById('product-table-body');
+            tbody.innerHTML = '';
+            
+            if(dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Không tìm thấy sản phẩm nào phù hợp!</td></tr>`;
+                return;
+            }
+
+            const STATUS_CONFIG = {
+                active: { label: "Đang bán", cls: "bg-emerald-50 text-emerald-700" },
+                sale: { label: "Đang Sale", cls: "bg-amber-50 text-amber-700" },
+                out_of_stock: { label: "Hết hàng", cls: "bg-red-50 text-red-700" }
+            };
+
+            dataToRender.forEach(p => {
+                const cat = CATEGORIES[p.category];
+                const st = STATUS_CONFIG[p.status] || STATUS_CONFIG.active;
+                const stockCls = p.stock === 0 ? "text-red-500" : p.stock <= 5 ? "text-amber-600" : "text-gray-800";
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 border-b border-gray-50 transition">
+                        <td class="px-4 py-3">
+                            <img src="${p.image}" class="w-10 h-10 rounded-md object-cover border border-gray-200" alt="img" />
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="font-medium text-gray-900">${p.name}</div>
+                            ${p.specs && p.specs.brand ? `<div class="text-xs text-gray-400 mt-0.5">Hãng: ${p.specs.brand}</div>` : ''}
+                        </td>
+                        <td class="px-4 py-3 text-gray-500">${cat ? cat.label : p.category}</td>
+                        <td class="px-4 py-3 text-right font-semibold text-gray-900">${formatVND(p.price)} ₫</td>
+                        <td class="px-4 py-3 text-center font-bold ${stockCls}">${p.stock}</td>
+                        <td class="px-4 py-3 text-center"><span class="text-xs font-semibold px-2.5 py-1 rounded-full ${st.cls}">${st.label}</span></td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="openModal('${p.id}')" class="text-blue-600 hover:text-blue-800 mr-3 text-sm font-semibold">Sửa</button>
+                            <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-800 text-sm font-semibold">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderUI() {
+            document.getElementById('stat-total').innerText = products.length;
+            document.getElementById('stat-active').innerText = products.filter(p => p.status === "active").length;
+            document.getElementById('stat-sale').innerText = products.filter(p => p.status === "sale").length;
+            document.getElementById('stat-out').innerText = products.filter(p => p.status === "out_of_stock").length;
+
+            renderProductTable(products); // Vẽ bảng mặc định
+
+            const totalVal = products.reduce((acc, p) => acc + (p.price * p.stock), 0);
+            document.getElementById('total-inventory-value').innerText = formatVND(totalVal) + ' ₫';
+            const invContainer = document.getElementById('inventory-breakdown');
+            invContainer.innerHTML = '';
+            [...products].filter(p => p.stock > 0).sort((a,b) => (b.price*b.stock) - (a.price*a.stock)).slice(0,5).forEach(p => {
+                const val = p.price * p.stock; const pct = totalVal > 0 ? Math.round((val / totalVal) * 100) : 0;
+                invContainer.innerHTML += `
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-600 mb-1"><span class="truncate max-w-[200px] font-medium">${p.name}</span><span class="font-semibold text-gray-900 ml-2">${formatVND(val)} ₫</span></div>
+                        <div class="h-1.5 bg-gray-100 rounded-full"><div class="h-full bg-[#e11d48] rounded-full transition-all duration-700" style="width: ${pct}%"></div></div>
+                    </div>`;
+            });
+        }
+
+        // Khởi động
+        initCategoryDropdown();
+        renderUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực Email - EIU COMPUTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes fly { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes planeFly { 0% { transform: translate(0, 0); } 50% { transform: translate(5px, -5px); } 100% { transform: translate(0, 0); } }
+        @keyframes pulse-custom { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); opacity: 1; } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        .animate-fly { animation: fly 3s ease-in-out infinite; }
+        .animate-plane { animation: planeFly 3s ease-in-out infinite; }
+        .animate-pulse-custom { animation: pulse-custom 2s ease-in-out infinite; }
+        .animate-bounce-in { animation: bounceIn 0.6s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#f3f4f6]">
+    <div class="min-h-screen flex items-stretch font-sans">
+        <div class="hidden lg:flex flex-col justify-between w-[420px] shrink-0 px-12 py-14" style="background: linear-gradient(160deg, #111827 0%, #1e0a12 60%, #3b0018 100%)">
+            <div>
+                <div class="flex items-center gap-3 mb-10">
+                    <div class="w-10 h-10 rounded-lg bg-[#e11d48] flex items-center justify-center shadow"><i data-lucide="cpu" class="text-white w-5 h-5"></i></div>
+                    <span class="text-white font-extrabold text-xl tracking-wide">EIU COMPUTER</span>
+                </div>
+                <h2 class="text-white text-3xl font-extrabold leading-tight">Một bước cuối để hoàn tất tài khoản của bạn</h2>
+                <p class="mt-4 text-gray-400 text-sm leading-relaxed">Chúng tôi đã gửi một liên kết xác nhận đến email của bạn. Hãy kiểm tra hộp thư đến để kích hoạt tài khoản.</p>
+            </div>
+            <div class="flex flex-col gap-5 mt-12">
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="shield-check" class="text-[#e11d48] w-4 h-4"></i></div>
+                    <div><p class="text-white text-sm font-semibold">Bảo mật tài khoản</p><p class="text-gray-500 text-xs mt-0.5">Xác thực 2 lớp, bảo vệ thông tin cá nhân</p></div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="mail" class="text-[#e11d48] w-4 h-4"></i></div>
+                    <div><p class="text-white text-sm font-semibold">Thông báo qua email</p><p class="text-gray-500 text-xs mt-0.5">Cập nhật đơn hàng, khuyến mãi nhanh nhất</p></div>
+                </div>
+            </div>
+            <p class="text-gray-600 text-xs mt-12">&copy; 2026 EIU Computer · EIU University – Bình Dương</p>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center px-6 py-12">
+            <div class="w-full max-w-[440px]">
+                <div id="main-card" class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                    <div id="top-bar" class="h-1 w-full bg-[#e11d48] transition-colors duration-700"></div>
+                    <div class="px-8 pt-8 pb-6 flex flex-col items-center gap-5">
+                        <div class="relative flex items-center justify-center">
+                            <span id="glow-ring" class="absolute rounded-full w-24 h-24 bg-[rgba(225,29,72,0.08)] animate-pulse-custom"></span>
+                            <div id="icon-container" class="relative z-10">
+                                <svg viewBox="0 0 64 64" class="w-16 h-16 animate-fly">
+                                    <ellipse cx="24" cy="50" rx="18" ry="3" fill="#fecdd3" opacity="0.5" />
+                                    <rect x="4" y="18" width="40" height="28" rx="3" fill="white" stroke="#fca5a5" stroke-width="1.5" />
+                                    <path d="M4 21L24 33L44 21" stroke="#e11d48" stroke-width="2" fill="none" />
+                                    <path d="M46 8L60 20L50 23L46 36L40 22L30 17Z" fill="#e11d48" class="animate-plane" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <h1 id="status-title" class="text-xl font-bold text-[#111827]">Chờ xác nhận Email...</h1>
+                            <p id="status-desc" class="mt-2 text-gray-500 text-sm leading-relaxed">
+                                Đang kiểm tra mã. Nếu không thấy email, hãy kiểm tra mục <span class="font-semibold text-gray-700">thư rác</span>.
+                            </p>
+                        </div>
+
+                        <div id="progress-container" class="w-full space-y-2">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-[#e11d48] animate-pulse"></span>
+                                    <span id="progress-label">Đang xử lý yêu cầu...</span>
+                                </span>
+                                <span id="progress-percent" class="tabular-nums">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div id="progress-bar" class="h-full bg-[#e11d48] transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div id="action-buttons" class="w-full flex flex-col gap-3 pt-1">
+                            <a href="auth.html" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white bg-[#e11d48] hover:bg-[#be123c] transition-all">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Quay lại Đăng nhập
+                            </a>
+                            
+                            <div id="timer-container" class="text-center text-sm font-medium text-gray-500 py-2" style="display: none;">
+                                Có thể gửi lại mã sau: <span id="timer" class="text-[#e11d48]">01:00</span>
+                            </div>
+
+                            <button id="resend-btn" onclick="resendEmail()" style="display: none;" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200 transition-all">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gửi lại mã
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="footer-note" class="px-8 py-4 text-center bg-gray-50 border-t border-gray-100">
+                        <p class="text-xs text-gray-400">Gặp sự cố? <a href="#" class="text-[#e11d48] font-semibold hover:underline">Liên hệ hỗ trợ</a></p>
+                    </div>
+                </div>
+                <p class="mt-5 text-center text-xs text-gray-400">&copy; 2026 EIU Computer &ndash; Bình Dương</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const statusTitle = document.getElementById('status-title');
+        const statusDesc = document.getElementById('status-desc');
+        const progressLabel = document.getElementById('progress-label');
+        const iconContainer = document.getElementById('icon-container');
+        const topBar = document.getElementById('top-bar');
+        const glowRing = document.getElementById('glow-ring');
+        
+        const timerContainer = document.getElementById('timer-container');
+        const timerText = document.getElementById('timer');
+        const resendBtn = document.getElementById('resend-btn');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const registeredEmail = urlParams.get('email'); 
+
+        let progress = 0;
+        let fakeInterval;
+        let countdownInterval;
+
+        function startCountdown() {
+            let timeLeft = 60;
+            timerContainer.style.display = 'block';
+            resendBtn.style.display = 'none';
+
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerText.innerText = `0${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerContainer.style.display = 'none';
+                    resendBtn.style.display = 'flex'; 
+                }
+            }, 1000);
+        }
+
+        function startFakeProgress() {
+            fakeInterval = setInterval(() => {
+                if (progress < 80) {
+                    progress += Math.random() * 5;
+                    if(progress > 80) progress = 80;
+                    progressBar.style.width = progress + '%';
+                    progressPercent.innerText = Math.round(progress) + '%';
+                }
+            }, 150);
+        }
+
+        async function verifyEmail() {
+            if (!token) {
+                statusTitle.innerText = "Chờ xác nhận Email...";
+                startCountdown(); 
+                return;
+            }
+
+            startFakeProgress();
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/verify-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccess();
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError("Lỗi kết nối đến máy chủ Backend!");
+            }
+        }
+
+        async function resendEmail() {
+            if (!registeredEmail) {
+                alert("Không tìm thấy email để gửi lại! Vui lòng đăng ký lại.");
+                return window.location.href = "auth.html";
+            }
+
+            resendBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Đang gửi lại...`;
+            lucide.createIcons();
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/resend-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: registeredEmail })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    startCountdown(); 
+                } else if (response.status === 429) {
+                    alert(data.message); 
+                } else {
+                    alert("Lỗi: " + data.message);
+                }
+            } catch (error) {
+                alert("Mất kết nối với Backend, không gửi lại được!");
+            } finally {
+                resendBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i> Gửi lại mã`;
+                lucide.createIcons();
+            }
+        }
+
+        function showSuccess() {
+            clearInterval(fakeInterval);
+            progressBar.style.width = '100%';
+            progressPercent.innerText = '100%';
+            progressLabel.innerText = "Hoàn tất!";
+            progressBar.style.backgroundColor = '#22c55e';
+            topBar.style.backgroundColor = '#22c55e';
+            
+            statusTitle.innerText = "Xác nhận thành công!";
+            statusTitle.style.color = '#16a34a';
+            statusDesc.innerHTML = 'Tài khoản của bạn đã được kích hoạt. <span class="text-green-600 font-semibold">Đang chuyển hướng...</span>';
+            
+            iconContainer.innerHTML = `<div class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center shadow-lg animate-bounce-in"><i data-lucide="check-circle-2" class="text-white w-9 h-9"></i></div>`;
+            glowRing.style.backgroundColor = 'rgba(34,197,94,0.1)';
+            glowRing.classList.remove('animate-pulse-custom');
+
+            timerContainer.style.display = 'none';
+            resendBtn.style.display = 'none';
+            document.getElementById('footer-note').style.display = 'none';
+            
+            lucide.createIcons();
+
+            setTimeout(() => { window.location.href = "auth.html"; }, 3000);
+        }
+
+        function showError(msg) {
+            clearInterval(fakeInterval);
+            progressBar.style.width = '100%';
+            progressPercent.innerText = 'Lỗi';
+            progressLabel.innerText = "Xác thực thất bại";
+            progressBar.style.backgroundColor = '#ef4444';
+            topBar.style.backgroundColor = '#ef4444';
+
+            statusTitle.innerText = "Ôi hỏng!";
+            statusTitle.style.color = '#dc2626';
+            statusDesc.innerText = msg;
+
+            iconContainer.innerHTML = `<div class="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center shadow-lg animate-bounce-in"><i data-lucide="x-circle" class="text-white w-9 h-9"></i></div>`;
+            glowRing.style.backgroundColor = 'rgba(239,68,68,0.1)';
+            lucide.createIcons();
+            
+            if (registeredEmail) {
+                timerContainer.style.display = 'none';
+                resendBtn.style.display = 'flex';
+            }
+        }
+
+        setTimeout(() => { verifyEmail(); }, 500); 
+    </script>
+</body>
+</html>

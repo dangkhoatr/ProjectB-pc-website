@@ -284,14 +284,14 @@
                         <label>Email của bạn</label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-envelope"></i>
-                            <input type="email" class="form-control" placeholder="Nhập email" required>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="Nhập email" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Mật khẩu</label>
                         <div class="input-wrapper">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu" required>
                         </div>
                     </div>
 
@@ -314,10 +314,24 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="tel" class="form-control" id="regPhone" placeholder="Nhập số điện thoại" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" class="form-control" id="regAddress" placeholder="Nhập địa chỉ giao hàng" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>Email</label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-envelope"></i>
-                            <input type="email" class="form-control" placeholder="Nhập email" required>
+                            <input type="email" class="form-control" id="regEmail" placeholder="Nhập email" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -356,46 +370,155 @@
     </div>
 
     <script>
+        // ==========================================
+        // CỖ MÁY TẠO THÔNG BÁO XỊN SÒ (TOAST)
+        // ==========================================
+        function showToast(message, type = 'success') {
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;';
+                document.body.appendChild(toastContainer);
+            }
+
+            const toast = document.createElement('div');
+            // Nếu type là error thì đổ màu đỏ, còn lại xanh
+            const bgColor = type === 'error' ? '#ef4444' : '#10b981'; 
+            const icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation"></i>' : '<i class="fa-solid fa-circle-check"></i>';
+
+            toast.style.cssText = `
+                background: ${bgColor};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                font-family: 'Inter', sans-serif;
+                font-size: 15px;
+                font-weight: 500;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transform: translateX(120%);
+                transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            `;
+
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            toastContainer.appendChild(toast);
+
+            // Hiệu ứng trượt vào
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 10);
+
+            // Tự động biến mất sau 3 giây
+            setTimeout(() => {
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
         function switchTab(tabName) {
+            // 1. Tắt màu đỏ ở tất cả các nút
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // 2. Bật màu đỏ cho đúng nút cần thiết
+            if (tabName === 'login') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else if (tabName === 'register') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            }
 
+            // 3. Đổi form hiển thị
             document.querySelectorAll('.form-pane').forEach(form => {
                 form.classList.remove('active');
             });
             document.getElementById(tabName + 'Form').classList.add('active');
         }
 
-        function handleLogin(e) {
+        // KẾT NỐI API ĐĂNG NHẬP THẬT
+        async function handleLogin(e) {
             e.preventDefault(); 
             
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userName', 'Nguyễn Gia Kiệt');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
-            alert('Đăng nhập thành công! Chào mừng quay trở lại.');
-            
-            window.location.href = 'account.html';
+            try {
+                const res = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast('Đăng nhập thành công! Chào mừng ' + data.user.name, 'success');
+                    
+                    // Lưu JWT Token và User Info vào LocalStorage
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Phân quyền chuyển trang (Sau 1s để kịp xem thông báo)
+                    setTimeout(() => {
+                        if (data.user.role === 'admin') {
+                            window.location.href = 'admin.html'; 
+                        } else {
+                            window.location.href = 'Account.html'; 
+                        }
+                    }, 1000);
+                } else {
+                    showToast('Lỗi: ' + data.message, 'error'); // Truyền 'error' vào đây để nó đỏ
+                }
+            } catch (error) {
+                console.error("Lỗi:", error);
+                showToast('Lỗi kết nối đến máy chủ Backend!', 'error'); // Và đây nữa
+            }
         }
 
-        function handleRegister(e) {
+        // KẾT NỐI API ĐĂNG KÝ THẬT (Đã bế thêm SĐT và Địa chỉ)
+        async function handleRegister(e) {
             e.preventDefault();
 
+            const name = document.getElementById('regName').value;
+            const phone = document.getElementById('regPhone').value;
+            const address = document.getElementById('regAddress').value;
+            const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
             const confirmPass = document.getElementById('regPassConfirm').value;
-            const name = document.getElementById('regName').value;
 
             if(pass !== confirmPass) {
-                alert('Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại!');
+                showToast('Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại!', 'error'); // Chỗ này nữa
                 return;
             }
 
-            alert(`Đăng ký thành công tài khoản cho ${name}! Vui lòng đăng nhập.`);
-            
-            document.querySelectorAll('.tab-btn')[0].click();
-            
-            document.getElementById('registerForm').reset();
+            try {
+                const res = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // Nhét thêm phone với address vào giỏ hàng gửi đi
+                    body: JSON.stringify({ 
+                        full_name: name, 
+                        email: email, 
+                        password: pass,
+                        phone: phone,
+                        address: address
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast(data.message, 'success'); 
+                    switchTab('login');
+                    document.getElementById('registerForm').reset();
+                } else {
+                    showToast('Lỗi: ' + data.message, 'error'); // Đỏ lòm đây
+                }
+            } catch (error) {
+                console.error("Lỗi:", error);
+                showToast('Lỗi kết nối đến máy chủ Backend!', 'error'); // Cả đây nữa
+            }
         }
     </script>
 </body>

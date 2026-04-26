@@ -25,4 +25,8 @@ app.use("/api/parts", partsRouter);
 app.listen(PORT, () => {
   console.log(`Server chạy tại http://localhost:${PORT}`);
 });
+// Khai báo Router mới
+const authRouter = require('./routes/auth');
 
+// Mở đường dẫn API
+app.use('/api/auth', authRouter);
