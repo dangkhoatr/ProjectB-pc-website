@@ -33,7 +33,6 @@
       color: #1f2937;
     }
 
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -46,7 +45,6 @@
       color: #2b90ef;
     }
 
-
     .page {
       max-width: 1600px;
       margin-left: auto;
@@ -54,12 +52,10 @@
       padding: 16px 0;
     }
 
-
     .title {
       font-size: 22px;
       font-weight: 700;
     }
-
 
     .row {
       display: flex;
@@ -80,7 +76,6 @@
     .row:hover {
       background-color: #e5f0ff;
     }
-
 
     .cell-left {
       width: 220px;
@@ -369,12 +364,10 @@
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(239, 43, 85, 0.28);
 
-      /* ❌ bỏ display none */
       display: flex;
       align-items: center;
       justify-content: center;
 
-      /* ✅ ẩn mượt */
       opacity: 0;
       visibility: hidden;
       transform: scale(0.7) translateY(20px);
@@ -393,34 +386,20 @@
       transform: scale(1) translateY(0);
     }
 
-    /* hover: zoom nhịp */
     .back-to-top:hover {
       animation: zoomPulse 0.8s ease-in-out infinite;
       filter: brightness(1.1);
     }
 
-    /* click */
     .back-to-top:active {
       transform: scale(0.9);
     }
 
-    /* animation */
     @keyframes zoomPulse {
-      0% {
-        transform: scale(1);
-      }
-
-      30% {
-        transform: scale(1.2);
-      }
-
-      60% {
-        transform: scale(0.95);
-      }
-
-      100% {
-        transform: scale(1.1);
-      }
+      0% { transform: scale(1); }
+      30% { transform: scale(1.2); }
+      60% { transform: scale(0.95); }
+      100% { transform: scale(1.1); }
     }
 
     /* NEWSLETTER */
@@ -473,7 +452,6 @@
       <div class="cost" id="total">Chi phí dự tính: 0 đ</div>
     </div>
 
-
     <div id="list"></div>
     <hr style="margin:40px 0">
 
@@ -481,6 +459,7 @@
     <div id="savedBuilds"></div>
 
   </div>
+  
   <div class="header-cart" onclick="openCart()">
     <span class="cart-circle">🛒</span>
     <span>Giỏ hàng (<span id="headerCartCount">0</span>)</span>
@@ -489,18 +468,14 @@
   <div class="overlay" id="cartOverlay">
     <div class="modal" style="width:600px; max-height:80vh; overflow:auto">
       <h3 style="margin-top:0">GIỎ HÀNG</h3>
-
       <div id="cartList"></div>
-
       <hr>
       <div id="cartTotal" style="font-weight:bold"></div>
-
       <div style="text-align:right;margin-top:15px">
         <button class="btn" style="background:#9ca3af" onclick="closeCart()">Đóng</button>
       </div>
     </div>
   </div>
-
 
   <div class="overlay" id="overlay">
     <div class="modal">
@@ -509,24 +484,22 @@
       <button class="btn" onclick="closeModal()">Đóng</button>
     </div>
   </div>
+  
   <div class="overlay" id="resetOverlay">
     <div class="modal">
       <h3 style="margin-top:0">LÀM MỚI</h3>
-      <p>
-        Cảnh báo: Toàn bộ linh kiện của bộ PC hiện tại sẽ bị xóa đi
-      </p>
-
+      <p>Cảnh báo: Toàn bộ linh kiện của bộ PC hiện tại sẽ bị xóa đi</p>
       <div style="text-align:right;margin-top:20px">
         <button class="btn" style="background:#9ca3af" onclick="closeReset()">HỦY</button>
         <button class="btn" style="background:#dc2626" onclick="confirmReset()">XÁC NHẬN</button>
       </div>
     </div>
   </div>
+  
   <div class="overlay" id="deleteOverlay">
     <div class="modal">
       <h3 style="margin-top:0">XÓA LINH KIỆN</h3>
       <p id="deleteText">Bạn có chắc muốn xóa linh kiện này?</p>
-
       <div style="text-align:right;margin-top:20px">
         <button class="btn" style="background:#9ca3af" onclick="closeDelete()">HỦY</button>
         <button class="btn" style="background:#dc2626" onclick="confirmDelete()">XÁC NHẬN</button>
@@ -534,37 +507,26 @@
     </div>
   </div>
 
-
-  <div id="exportImageArea" style="
-  position: fixed;
-  left: -9999px;
-  top: 0;
-  width: 800px;
-  background: #ffffff;
-  padding: 20px;
-  font-family: 'Times New Roman', serif;
-">
+  <div id="exportImageArea" style="position: fixed; left: -9999px; top: 0; width: 800px; background: #ffffff; padding: 20px; font-family: 'Times New Roman', serif;">
     <h2 style="margin-top:0">CẤU HÌNH PC ĐÃ CHỌN</h2>
     <div id="exportList"></div>
     <hr>
     <div id="exportTotal" style="font-weight:bold"></div>
   </div>
+  
   <section class="ref-section">
     <div class="ref-title">CẤU HÌNH THAM KHẢO</div>
-
     <div class="ref-grid" id="refGrid"></div>
   </section>
 
   <div class="newsletter">
-    <div class="newsletter-title">
-      ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ
-    </div>
-
+    <div class="newsletter-title">ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ</div>
     <div class="newsletter-box">
       <input type="email" placeholder="Email của bạn..." />
       <button>Gửi</button>
     </div>
   </div>
+  
   <div id="footer"></div>
 
   <script src="../components/header.js"></script>
@@ -580,13 +542,44 @@
     renderFooter("footer");
     renderFloatingIcons("floating-icons");
 
-    let PARTS = [];
-
+    // 1. ĐÓNG CỨNG KHUNG DANH MỤC CHO GIAO DIỆN
+    const PARTS = [
+      { key: "cpu", label: "Bộ vi xử lý" },
+      { key: "main", label: "Bo mạch chủ" },
+      { key: "ram", label: "RAM" },
+      { key: "ssd", label: "SSD" },
+      { key: "hdd", label: "HDD" },
+      { key: "vga", label: "VGA" },
+      { key: "psu", label: "Nguồn" },
+      { key: "case", label: "Vỏ case" },
+      { key: "monitor", label: "Màn hình" },
+      { key: "keyboard", label: "Bàn phím" },
+      { key: "mouse", label: "Chuột" },
+      { key: "headset", label: "Tai nghe" },
+      { key: "fan", label: "Fan case" },
+      { key: "aircool", label: "Tản nhiệt khí" },
+      { key: "aio", label: "Tản nhiệt nước AIO" },
+      { key: "custom", label: "Tản nhiệt nước Custom" },
+      { key: "windows", label: "Windows bản quyền" }
+    ];
 
     let DATA = {};
+    let PRESET_BUILDS = {};
     let build = {};
     let currentKey = "";
     let deleteKey = "";
+
+    // ẢNH MẶC ĐỊNH BẰNG BASE64 (Tuyệt đối không bao giờ bị lỗi 404 hay tốn kết nối mạng)
+    const FALLBACK_BASE64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzk5OSI+Tk8gSU1BR0U8L3RleHQ+PC9zdmc+";
+    const ONERROR_CODE = `this.onerror=null; this.src='${FALLBACK_BASE64}';`;
+
+    // Hàm xử lý đường dẫn ảnh mượt mà
+    function getSafeImageUrl(imgStr) {
+      if (!imgStr) return FALLBACK_BASE64;
+      if (imgStr.startsWith('http')) return imgStr;
+      if (imgStr.startsWith('uploads/')) return `../../${imgStr}`;
+      return `http://localhost:3000/${imgStr}`;
+    }
 
     try {
       build = JSON.parse(localStorage.getItem("pc_build")) || {};
@@ -600,17 +593,41 @@
       render();
       renderSavedBuilds();
       updateCartCount();
+      loadBackendData(); // Gọi API ngay khi vào trang
     }
 
-    init();
-    
+    // ===== GỌI API LẤY DỮ LIỆU =====
+    async function loadBackendData() {
+      try {
+        const postOptions = { method: "POST", headers: { "Content-Type": "application/json" } };
+
+        // 1. Fetch dữ liệu Linh kiện (phân loại theo cpu, ram...)
+        const partsRes = await fetch("http://localhost:3000/api/parts/items", postOptions);
+        if (partsRes.ok) {
+            DATA = await partsRes.json();
+            console.log("Đã load DATA Linh kiện thành công:", DATA);
+        }
+
+        // 2. Fetch dữ liệu Sản phẩm tham khảo
+        const productsRes = await fetch("http://localhost:3000/api/products", postOptions);
+        if (productsRes.ok) {
+            const products = await productsRes.json();
+            PRESET_BUILDS = {};
+            products.forEach((product, index) => {
+              PRESET_BUILDS[index + 1] = product.preset_json || {};
+            });
+            renderReferenceProducts(products);
+        }
+      } catch (error) {
+        console.error("Lỗi kết nối Backend:", error);
+      }
+    }
+
     function recalcCartQuantityFromBuild() {
       let totalQty = 0;
-
       for (const key in build) {
         totalQty += Number(build[key].qty || 1);
       }
-
       cartQuantity = totalQty;
       localStorage.setItem("cart_quantity", cartQuantity);
     }
@@ -621,47 +638,43 @@
 
       PARTS.forEach(p => {
         const selected = build[p.key];
-
         html += `
-      <div class="row">
-        <div class="cell-left">${p.label}</div>
-        <div class="cell-right">
-          <button class="pick" onclick="clickPart('${p.key}')">
-            ${selected ? `${selected.name} x${selected.qty || 1} ❌` : `+ Chọn ${p.label}`}
-          </button>
-        </div>
-      </div>
-    `;
-
+          <div class="row">
+            <div class="cell-left">${p.label}</div>
+            <div class="cell-right">
+              <button class="pick" onclick="clickPart('${p.key}')">
+                ${selected ? `${selected.name} x${selected.qty || 1} ❌` : `+ Chọn ${p.label}`}
+              </button>
+            </div>
+          </div>
+        `;
         if (selected) {
           total += Number(selected.price || 0) * Number(selected.qty || 1);
         }
       });
 
       html += `
-    <div class="row">
-      <div class="cell-right">
-        <div class="action-bar">
-          <button class="action-btn" onclick="saveBuild()">LƯU CẤU HÌNH</button>
-          <button class="action-btn" onclick="exportExcel()">TẢI FILE EXCEL CẤU HÌNH</button>
-          <button class="action-btn" onclick="exportImage()">TẢI ẢNH</button>
-          <button class="action-btn" onclick="shareBuild()">CHIA SẺ CẤU HÌNH</button>
-          <button class="action-btn" onclick="printBuild()">XEM VÀ IN</button>
+        <div class="row">
+          <div class="cell-right">
+            <div class="action-bar">
+              <button class="action-btn" onclick="saveBuild()">LƯU CẤU HÌNH</button>
+              <button class="action-btn" onclick="exportExcel()">TẢI FILE EXCEL CẤU HÌNH</button>
+              <button class="action-btn" onclick="exportImage()">TẢI ẢNH</button>
+              <button class="action-btn" onclick="shareBuild()">CHIA SẺ CẤU HÌNH</button>
+              <button class="action-btn" onclick="printBuild()">XEM VÀ IN</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  `;
+      `;
 
       document.getElementById("list").innerHTML = html;
-      document.getElementById("total").innerText =
-        "Chi phí dự tính: " + total.toLocaleString("vi-VN") + " đ";
+      document.getElementById("total").innerText = "Chi phí dự tính: " + total.toLocaleString("vi-VN") + " đ";
     }
 
     function clickPart(key) {
       if (build[key]) {
         deleteKey = key;
-        document.getElementById("deleteText").innerText =
-          "Bạn có chắc muốn xóa " + build[key].name + " ?";
+        document.getElementById("deleteText").innerText = "Bạn có chắc muốn xóa " + build[key].name + " ?";
         openDelete();
       } else {
         openModal(key);
@@ -674,24 +687,19 @@
       document.getElementById("modalTitle").innerText = "Chọn " + (partInfo ? partInfo.label : key);
 
       let list = "";
-      const itemsToRender = DATA[key] || []; // Lấy trực tiếp từ Object Grouped của bạn
+      const itemsToRender = DATA[key] || [];
 
       if (itemsToRender.length === 0) {
-          list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện.</div>";
+          list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện. Vui lòng thêm trong Admin.</div>";
       } else {
           itemsToRender.forEach((i, index) => {
             const qtyId = `qty_${key}_${index}`;
-            
-            // Xử lý đường dẫn ảnh từ DB: pi.image lưu 'uploads/parts/...'
-            // Nếu i.image đã có chữ 'uploads', ta chỉ cần nối với HOST
-            const imageSrc = i.image 
-                ? `http://localhost:3000/${i.image}` 
-                : "https://via.placeholder.com/100x100?text=No+Image";
+            const imageSrc = getSafeImageUrl(i.image);
 
             list += `
               <div class="item item-with-image">
                 <div class="item-thumb-wrap">
-                  <img src="${imageSrc}" alt="${i.name}" class="item-thumb" onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
+                  <img src="${imageSrc}" alt="${i.name}" class="item-thumb" onerror="${ONERROR_CODE}">
                 </div>
                 <div class="item-content">
                   <div class="item-name"><b>${i.name}</b> - ${Number(i.price).toLocaleString("vi-VN")} đ</div>
@@ -711,24 +719,15 @@
 
     function selectItem(name, price, qty) {
       qty = Number(qty) || 1;
-
-      build[currentKey] = {
-        name,
-        price,
-        qty
-      };
-
+      build[currentKey] = { name, price, qty };
       localStorage.setItem("pc_build", JSON.stringify(build));
       recalcCartQuantityFromBuild();
-
       render();
       updateCartCount();
       closeModal();
     }
 
-    function closeModal() {
-      document.getElementById("overlay").style.display = "none";
-    }
+    function closeModal() { document.getElementById("overlay").style.display = "none"; }
 
     function save() {
       localStorage.setItem("pc_build", JSON.stringify(build));
@@ -737,63 +736,48 @@
       updateCartCount();
     }
     
-    function openReset() {
-      document.getElementById("resetOverlay").style.display = "flex";
-    }
-
-    function closeReset() {
-      document.getElementById("resetOverlay").style.display = "none";
-    }
+    function openReset() { document.getElementById("resetOverlay").style.display = "flex"; }
+    function closeReset() { document.getElementById("resetOverlay").style.display = "none"; }
     
     function saveBuild() {
       if (Object.keys(build).length === 0) return;
-
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
-
       const newBuild = {
         id: Date.now(),
         time: new Date().toLocaleString(),
         build: JSON.parse(JSON.stringify(build))
       };
-
       saved.push(newBuild);
       localStorage.setItem("saved_builds", JSON.stringify(saved));
-
       renderSavedBuilds();
     }
 
     function renderSavedBuilds() {
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
       let html = "";
-
       if (saved.length === 0) {
-        document.getElementById("savedBuilds").innerHTML =
-          "<i>Chưa có cấu hình nào được lưu</i>";
+        document.getElementById("savedBuilds").innerHTML = "<i>Chưa có cấu hình nào được lưu</i>";
         return;
       }
-
       saved.forEach(s => {
         let total = 0;
         let items = "";
-
         for (const k in s.build) {
           total += s.build[k].price;
           items += `<div>- ${s.build[k].name}</div>`;
         }
-
         html += `
-      <div class="saved-item">
-        <b>Thời gian:</b> ${s.time}<br>
-        <b>Tổng tiền:</b> ${total.toLocaleString()} đ
-        ${items}
-        <div style="margin-top:8px">
-          <button class="btn-load" onclick="loadBuild(${s.id})">Xem lại</button>
-          <button class="btn-delete" onclick="deleteSavedBuild(${s.id})">Xóa</button>
-        </div>
-      </div>
-    `;
+          <div class="saved-item">
+            <b>Thời gian:</b> ${s.time}<br>
+            <b>Tổng tiền:</b> ${total.toLocaleString()} đ
+            ${items}
+            <div style="margin-top:8px">
+              <button class="btn-load" onclick="loadBuild(${s.id})">Xem lại</button>
+              <button class="btn-delete" onclick="deleteSavedBuild(${s.id})">Xóa</button>
+            </div>
+          </div>
+        `;
       });
-
       document.getElementById("savedBuilds").innerHTML = html;
     }
 
@@ -801,7 +785,6 @@
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
       const item = saved.find(s => s.id === id);
       if (!item) return;
-
       build = JSON.parse(JSON.stringify(item.build));
       save();
     }
@@ -813,32 +796,23 @@
       renderSavedBuilds();
     }
     
-    function openDelete() {
-      document.getElementById("deleteOverlay").style.display = "flex";
-    }
-
-    function closeDelete() {
-      document.getElementById("deleteOverlay").style.display = "none";
-      deleteKey = "";
-    }
+    function openDelete() { document.getElementById("deleteOverlay").style.display = "flex"; }
+    function closeDelete() { document.getElementById("deleteOverlay").style.display = "none"; deleteKey = ""; }
 
     function confirmDelete() {
       if (deleteKey && build[deleteKey]) {
         delete build[deleteKey];
         localStorage.setItem("pc_build", JSON.stringify(build));
-
         recalcCartQuantityFromBuild();
         render();
         updateCartCount();
       }
-
       closeDelete();
     }
 
     function confirmReset() {
       build = {};
       localStorage.setItem("pc_build", JSON.stringify(build));
-
       recalcCartQuantityFromBuild();
       render();
       updateCartCount();
@@ -848,67 +822,42 @@
 
     function exportExcel() {
       if (Object.keys(build).length === 0) return;
-
-      const rows = [
-        ["Danh mục", "Linh kiện", "Giá (VND)"]
-      ];
-
+      const rows = [ ["Danh mục", "Linh kiện", "Giá (VND)"] ];
       let total = 0;
-
       for (const key in build) {
         const part = PARTS.find(p => p.key === key);
-        rows.push([
-          part ? part.label : key,
-          build[key].name,
-          build[key].price
-        ]);
+        rows.push([ part ? part.label : key, build[key].name, build[key].price ]);
         total += build[key].price;
       }
-
       rows.push([]);
       rows.push(["", "TỔNG TIỀN", total]);
 
       const ws = XLSX.utils.aoa_to_sheet(rows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Cau_hinh_PC");
-
-      const fileName = "Cau_hinh_PC_" + Date.now() + ".xlsx";
-      XLSX.writeFile(wb, fileName);
+      XLSX.writeFile(wb, "Cau_hinh_PC_" + Date.now() + ".xlsx");
     }
     
     function exportImage() {
       const listEl = document.getElementById("exportList");
       const totalEl = document.getElementById("exportTotal");
-
       listEl.innerHTML = "";
       totalEl.innerHTML = "";
-
       let total = 0;
 
       for (const key in build) {
         const part = PARTS.find(p => p.key === key);
         const item = build[key];
-
         const row = document.createElement("div");
         row.style.marginBottom = "8px";
-        row.innerHTML = `
-      <b>${part ? part.label : key}:</b>
-      ${item.name}
-      <span style="float:right">${item.price.toLocaleString()} đ</span>
-    `;
-
+        row.innerHTML = `<b>${part ? part.label : key}:</b> ${item.name} <span style="float:right">${item.price.toLocaleString()} đ</span>`;
         listEl.appendChild(row);
         total += item.price;
       }
-
       totalEl.innerHTML = "TỔNG TIỀN: " + total.toLocaleString() + " đ";
 
       const target = document.getElementById("exportImageArea");
-
-      html2canvas(target, {
-        scale: 2,
-        backgroundColor: "#ffffff"
-      }).then(canvas => {
+      html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
         const link = document.createElement("a");
         link.download = "Cau_hinh_PC_da_chon.png";
         link.href = canvas.toDataURL("image/png");
@@ -921,39 +870,25 @@
         alert("Chưa có cấu hình để chia sẻ");
         return;
       }
-
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(build))));
       window.location.href = "share-build.html?config=" + encoded;
     }
 
-    function printBuild() {
-      window.print();
-    }
+    function printBuild() { window.print(); }
 
     function updateCartCount() {
       const count = Number(localStorage.getItem("cart_quantity") || 0);
-
-      const el1 = document.getElementById("headerCartCount");
-      if (el1) el1.innerText = count;
-
-      const el2 = document.getElementById("cartCount");
-      if (el2) el2.innerText = count;
-
-      const el3 = document.getElementById("sharedCartCount");
-      if (el3) el3.innerText = count;
+      const el1 = document.getElementById("headerCartCount"); if (el1) el1.innerText = count;
+      const el2 = document.getElementById("cartCount"); if (el2) el2.innerText = count;
+      const el3 = document.getElementById("sharedCartCount"); if (el3) el3.innerText = count;
     }
     
     function openCart(showEmptyMessage = true) {
       let html = "";
       let total = 0;
-
       const selectedItems = Object.keys(build).map(key => {
         const partInfo = PARTS.find(p => p.key === key);
-        return {
-          key,
-          label: partInfo ? partInfo.label : key,
-          ...build[key]
-        };
+        return { key, label: partInfo ? partInfo.label : key, ...build[key] };
       });
 
       if (selectedItems.length === 0) {
@@ -965,210 +900,85 @@
           total += lineTotal;
 
           html += `
-        <div style="display:flex; align-items:flex-start; padding:12px 0; border-bottom:1px solid #ddd; gap:12px;">
-          <div style="flex:1; min-width:0;">
-            <div style="font-weight:700;">${item.label}</div>
-            <div>${item.name || ""} x${qty}</div>
-          </div>
-
-          <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-left:auto;">
-            <div style="font-weight:700; color:#007bff; min-width:120px; text-align:right;">
-              ${lineTotal.toLocaleString("vi-VN")} đ
+            <div style="display:flex; align-items:flex-start; padding:12px 0; border-bottom:1px solid #ddd; gap:12px;">
+              <div style="flex:1; min-width:0;">
+                <div style="font-weight:700;">${item.label}</div>
+                <div>${item.name || ""} x${qty}</div>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-left:auto;">
+                <div style="font-weight:700; color:#007bff; min-width:120px; text-align:right;">${lineTotal.toLocaleString("vi-VN")} đ</div>
+                <button onclick="removeSelectedPart('${item.key}')" style="background:#dc2626; color:#fff; border:none; width:34px; height:34px; padding:0; cursor:pointer; font-weight:700;" title="Xóa linh kiện">✕</button>
+              </div>
             </div>
-
-            <button
-              onclick="removeSelectedPart('${item.key}')"
-              style="background:#dc2626; color:#fff; border:none; width:34px; height:34px; padding:0; cursor:pointer; font-weight:700;"
-              title="Xóa linh kiện"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      `;
+          `;
         });
       }
-
       document.getElementById("cartList").innerHTML = html;
-      document.getElementById("cartTotal").innerHTML =
-        selectedItems.length > 0
-          ? "TỔNG TIỀN: " + total.toLocaleString("vi-VN") + " đ"
-          : "";
-
+      document.getElementById("cartTotal").innerHTML = selectedItems.length > 0 ? "TỔNG TIỀN: " + total.toLocaleString("vi-VN") + " đ" : "";
       document.getElementById("cartOverlay").style.display = "flex";
     }
     
     function removeSelectedPart(key) {
       if (!build[key]) return;
-
       delete build[key];
-
       localStorage.setItem("pc_build", JSON.stringify(build));
-
-      try {
-        build = JSON.parse(localStorage.getItem("pc_build")) || {};
-      } catch {
-        build = {};
-      }
-
+      try { build = JSON.parse(localStorage.getItem("pc_build")) || {}; } catch { build = {}; }
       recalcCartQuantityFromBuild();
       updateCartCount();
       render();
-
       openCart(true);
     }
 
-    function closeCart() {
-      document.getElementById("cartOverlay").style.display = "none";
-    }
+    function closeCart() { document.getElementById("cartOverlay").style.display = "none"; }
 
-    /* ===== PRESET CẤU HÌNH THAM KHẢO ===== */
-    let PRESET_BUILDS = {};
-    
-    async function loadBackendData() {
-      try {
-        const postOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-        };
-
-        const [categoriesRes, partsRes, productsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/parts/categories", postOptions),
-          fetch("http://localhost:3000/api/parts/items", postOptions),
-          fetch("http://localhost:3000/api/products", postOptions)
-        ]);
-
-        if (!categoriesRes.ok || !partsRes.ok || !productsRes.ok) {
-          throw new Error("Lỗi kết nối Server");
-        }
-
-        const rawCategories = await categoriesRes.json();
-        
-        // QUAN TRỌNG: Map part_key từ DB thành key cho JS hiểu
-        PARTS = rawCategories.map(c => ({
-          key: c.part_key, 
-          label: c.label
-        }));
-
-        DATA = await partsRes.json();
-        const products = await productsRes.json();
-
-        PRESET_BUILDS = {};
-        products.forEach((product, index) => {
-          PRESET_BUILDS[index + 1] = product.preset_json || {};
-        });
-
-        renderReferenceProducts(products);
-        render(); 
-        renderSavedBuilds();
-        updateCartCount();
-        
-        console.log("Dữ liệu đã sẵn sàng!", { PARTS, DATA });
-      } catch (error) {
-        console.error("Lỗi load backend data:", error);
-        alert("Lỗi kết nối. Hãy đảm bảo bạn đã chạy 'npm start' ở thư mục backend!");
-      }
-    }
-    
     function renderReferenceProducts(products) {
       const refGrid = document.getElementById("refGrid");
       if (!refGrid) return;
-
       let html = "";
-
       products.forEach((product, index) => {
-        const productImage = product.image
-          ? `http://localhost:3000/${product.image}`
-          : "https://via.placeholder.com/300x200?text=No+Image";
+        const productImage = getSafeImageUrl(product.image);
 
         html += `
-      <div class="ref-card">
-        <div class="ref-badge">${product.badge || ""}</div>
-
-        <a href="product-detail.html?slug=${product.slug}">
-          <img 
-            src="${productImage}" 
-            alt="${product.name}" 
-            class="product-img"
-            onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'"
-          >
-        </a>
-
-        <div class="ref-name">${product.name}</div>
-
-        <div>
-          <span class="ref-price-new">${Number(product.price).toLocaleString("vi-VN")} đ</span>
-          ${product.old_price
-            ? `<span class="ref-price-old">${Number(product.old_price).toLocaleString("vi-VN")} đ</span>`
-            : ""
-          }
-        </div>
-
-        <div class="ref-actions">
-          <button>✔ Liên hệ</button>
-          <button onclick="loadPreset(${index + 1})">Thêm vào cấu hình</button>
-        </div>
-
-        <div class="ref-viewall">
-          <a href="product-detail.html?slug=${product.slug}" style="text-decoration:none; color:inherit;">
-            Xem chi tiết ›
-          </a>
-        </div>
-      </div>
-    `;
+          <div class="ref-card">
+            <div class="ref-badge">${product.badge || ""}</div>
+            <a href="product-detail.html?slug=${product.slug}">
+              <img src="${productImage}" alt="${product.name}" class="product-img" onerror="${ONERROR_CODE}">
+            </a>
+            <div class="ref-name">${product.name}</div>
+            <div>
+              <span class="ref-price-new">${Number(product.price).toLocaleString("vi-VN")} đ</span>
+              ${product.old_price ? `<span class="ref-price-old">${Number(product.old_price).toLocaleString("vi-VN")} đ</span>` : ""}
+            </div>
+            <div class="ref-actions">
+              <button>✔ Liên hệ</button>
+              <button onclick="loadPreset(${index + 1})">Thêm vào cấu hình</button>
+            </div>
+            <div class="ref-viewall">
+              <a href="product-detail.html?slug=${product.slug}" style="text-decoration:none; color:inherit;">Xem chi tiết ›</a>
+            </div>
+          </div>
+        `;
       });
-
       refGrid.innerHTML = html;
     }
 
     function loadPreset(id) {
       const preset = PRESET_BUILDS[id];
       if (!preset) return;
-
       build = { ...build, ...preset };
       save();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    recalcCartQuantityFromBuild();
-    loadBackendData();
-
-    function scrollToTop() {
-      const start = window.scrollY;
-      const duration = 700;
-      const startTime = performance.now();
-
-      function scrollStep(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        const ease =
-          progress < 0.5
-            ? 4 * progress * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-        window.scrollTo(0, start * (1 - ease));
-
-        if (progress < 1) {
-          requestAnimationFrame(scrollStep);
-        }
-      }
-
-      requestAnimationFrame(scrollStep);
-    }
-
     window.addEventListener("storage", () => {
-      try {
-        build = JSON.parse(localStorage.getItem("pc_build")) || {};
-      } catch {
-        build = {};
-      }
-
+      try { build = JSON.parse(localStorage.getItem("pc_build")) || {}; } catch { build = {}; }
       recalcCartQuantityFromBuild();
       updateCartCount();
       render();
     });
 
+    // Kích hoạt ngay
+    init();
   </script>
   
   <div id="floating-icons"></div>
