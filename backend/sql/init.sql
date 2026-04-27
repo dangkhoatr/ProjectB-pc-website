@@ -327,3 +327,4 @@ INSERT INTO part_items (category_id, name, price, image) VALUES
 (6, 'VGA RTX 3060 12GB', 7500000, 'uploads/parts/RTX 3060.jpg'),
 (6, 'VGA RTX 4060 8GB', 8500000, 'uploads/parts/RTX 4060.jpg'),
 (7, 'Nguồn 650W Bronze', 1100000, 'uploads/parts/650W Bronze.jpg');
+SELECT * FROM admins;

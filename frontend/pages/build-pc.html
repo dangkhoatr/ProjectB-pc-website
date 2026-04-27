@@ -62,17 +62,14 @@
       border-top: 1px solid var(--line);
     }
 
-    /* Dòng lẻ */
     .row:nth-child(odd) {
       background-color: #ffffff;
     }
 
-    /* Dòng chẵn */
     .row:nth-child(even) {
       background-color: #f3f4f6;
     }
 
-    /* Hover  */
     .row:hover {
       background-color: #e5f0ff;
     }
@@ -112,7 +109,6 @@
       font-weight: bold;
     }
 
-    /* Overlay */
     .overlay {
       position: fixed;
       inset: 0;
@@ -363,20 +359,13 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(239, 43, 85, 0.28);
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       opacity: 0;
       visibility: hidden;
       transform: scale(0.7) translateY(20px);
-
-      transition:
-        opacity 0.25s ease,
-        transform 0.3s ease,
-        visibility 0.25s;
-
+      transition: opacity 0.25s ease, transform 0.3s ease, visibility 0.25s;
       z-index: 10000;
     }
 
@@ -401,8 +390,6 @@
       60% { transform: scale(0.95); }
       100% { transform: scale(1.1); }
     }
-
-    /* NEWSLETTER */
 
     .newsletter {
       background: #f3f4f6;
@@ -452,6 +439,7 @@
       <div class="cost" id="total">Chi phí dự tính: 0 đ</div>
     </div>
 
+
     <div id="list"></div>
     <hr style="margin:40px 0">
 
@@ -459,7 +447,6 @@
     <div id="savedBuilds"></div>
 
   </div>
-  
   <div class="header-cart" onclick="openCart()">
     <span class="cart-circle">🛒</span>
     <span>Giỏ hàng (<span id="headerCartCount">0</span>)</span>
@@ -468,14 +455,18 @@
   <div class="overlay" id="cartOverlay">
     <div class="modal" style="width:600px; max-height:80vh; overflow:auto">
       <h3 style="margin-top:0">GIỎ HÀNG</h3>
+
       <div id="cartList"></div>
+
       <hr>
       <div id="cartTotal" style="font-weight:bold"></div>
+
       <div style="text-align:right;margin-top:15px">
         <button class="btn" style="background:#9ca3af" onclick="closeCart()">Đóng</button>
       </div>
     </div>
   </div>
+
 
   <div class="overlay" id="overlay">
     <div class="modal">
@@ -484,22 +475,22 @@
       <button class="btn" onclick="closeModal()">Đóng</button>
     </div>
   </div>
-  
   <div class="overlay" id="resetOverlay">
     <div class="modal">
       <h3 style="margin-top:0">LÀM MỚI</h3>
       <p>Cảnh báo: Toàn bộ linh kiện của bộ PC hiện tại sẽ bị xóa đi</p>
+
       <div style="text-align:right;margin-top:20px">
         <button class="btn" style="background:#9ca3af" onclick="closeReset()">HỦY</button>
         <button class="btn" style="background:#dc2626" onclick="confirmReset()">XÁC NHẬN</button>
       </div>
     </div>
   </div>
-  
   <div class="overlay" id="deleteOverlay">
     <div class="modal">
       <h3 style="margin-top:0">XÓA LINH KIỆN</h3>
       <p id="deleteText">Bạn có chắc muốn xóa linh kiện này?</p>
+
       <div style="text-align:right;margin-top:20px">
         <button class="btn" style="background:#9ca3af" onclick="closeDelete()">HỦY</button>
         <button class="btn" style="background:#dc2626" onclick="confirmDelete()">XÁC NHẬN</button>
@@ -513,20 +504,20 @@
     <hr>
     <div id="exportTotal" style="font-weight:bold"></div>
   </div>
-  
   <section class="ref-section">
     <div class="ref-title">CẤU HÌNH THAM KHẢO</div>
     <div class="ref-grid" id="refGrid"></div>
   </section>
 
   <div class="newsletter">
-    <div class="newsletter-title">ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ</div>
+    <div class="newsletter-title">
+      ĐĂNG KÝ NHẬN EMAIL THÔNG BÁO KHUYẾN MẠI HOẶC ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ
+    </div>
     <div class="newsletter-box">
       <input type="email" placeholder="Email của bạn..." />
       <button>Gửi</button>
     </div>
   </div>
-  
   <div id="footer"></div>
 
   <script src="../components/header.js"></script>
@@ -542,7 +533,9 @@
     renderFooter("footer");
     renderFloatingIcons("floating-icons");
 
-    // 1. ĐÓNG CỨNG KHUNG DANH MỤC CHO GIAO DIỆN
+    // ========================================================
+    // 1. ĐỊNH NGHĨA KHUNG GIAO DIỆN (Luôn hiển thị 17 Nút Bấm)
+    // ========================================================
     const PARTS = [
       { key: "cpu", label: "Bộ vi xử lý" },
       { key: "main", label: "Bo mạch chủ" },
@@ -569,15 +562,20 @@
     let currentKey = "";
     let deleteKey = "";
 
-    // ẢNH MẶC ĐỊNH BẰNG BASE64 (Tuyệt đối không bao giờ bị lỗi 404 hay tốn kết nối mạng)
+    // ẢNH MẶC ĐỊNH BẰNG BASE64 CHỐNG VÒNG LẶP LỖI MẠNG
     const FALLBACK_BASE64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzk5OSI+Tk8gSU1BR0U8L3RleHQ+PC9zdmc+";
     const ONERROR_CODE = `this.onerror=null; this.src='${FALLBACK_BASE64}';`;
 
-    // Hàm xử lý đường dẫn ảnh mượt mà
     function getSafeImageUrl(imgStr) {
       if (!imgStr) return FALLBACK_BASE64;
-      if (imgStr.startsWith('http')) return imgStr;
+      if (imgStr.startsWith('http') || imgStr.startsWith('data:')) return imgStr;
+      
+      // ĐÂY, TRẢ LẠI ĐÚNG LOGIC XỊN CỦA ÔNG, ĐÉO SỬA LINH TINH NỮA
       if (imgStr.startsWith('uploads/')) return `../../${imgStr}`;
+      
+      // Bổ sung thêm cái này đề phòng database có lưu đường dẫn bắt đầu bằng assets/ (như con chuột Razer)
+      if (imgStr.startsWith('assets/')) return `../${imgStr}`;
+      
       return `http://localhost:3000/${imgStr}`;
     }
 
@@ -593,30 +591,76 @@
       render();
       renderSavedBuilds();
       updateCartCount();
-      loadBackendData(); // Gọi API ngay khi vào trang
+      loadBackendData(); // Kéo API bơm vào nút
     }
 
-    // ===== GỌI API LẤY DỮ LIỆU =====
+    // ========================================================
+    // 2. GỌI API & KẾT HỢP DỮ LIỆU TỪ 2 BẢNG
+    // ========================================================
     async function loadBackendData() {
       try {
         const postOptions = { method: "POST", headers: { "Content-Type": "application/json" } };
 
-        // 1. Fetch dữ liệu Linh kiện (phân loại theo cpu, ram...)
-        const partsRes = await fetch("http://localhost:3000/api/parts/items", postOptions);
-        if (partsRes.ok) {
-            DATA = await partsRes.json();
-            console.log("Đã load DATA Linh kiện thành công:", DATA);
+        // Fetch ĐỒNG THỜI cả API Cũ (Top) và API Mới (Admin)
+        const [partsRes, productsRes] = await Promise.all([
+            fetch("http://localhost:3000/api/parts/items", postOptions).catch(() => null),
+            fetch("http://localhost:3000/api/products", postOptions).catch(() => null)
+        ]);
+
+        // Đổ dữ liệu từ bảng Cũ (CPU, RAM...)
+        if (partsRes && partsRes.ok) {
+            const rawData = await partsRes.json();
+            DATA = Object.assign({}, rawData);
         }
 
-        // 2. Fetch dữ liệu Sản phẩm tham khảo
-        const productsRes = await fetch("http://localhost:3000/api/products", postOptions);
-        if (productsRes.ok) {
+        // Đổ và Trộn dữ liệu từ bảng Mới (Chuột, Phím, Vỏ Case...)
+        if (productsRes && productsRes.ok) {
             const products = await productsRes.json();
+            
+            // Render Cấu hình tham khảo dưới cùng
             PRESET_BUILDS = {};
             products.forEach((product, index) => {
               PRESET_BUILDS[index + 1] = product.preset_json || {};
             });
             renderReferenceProducts(products);
+
+            // Thuật toán: Ánh xạ danh mục rác từ Admin về 17 Nút chuẩn
+            products.forEach(p => {
+                let catKey = p.category || ""; 
+                let targetKey = "";
+                const catStr = catKey.toLowerCase();
+                
+                if (catStr.includes('chuột') || catStr === 'mouse') targetKey = 'mouse';
+                else if (catStr.includes('phím') || catStr === 'keyboard') targetKey = 'keyboard';
+                else if (catStr.includes('màn') || catStr === 'monitor') targetKey = 'monitor';
+                else if (catStr.includes('vỏ') || catStr.includes('case')) targetKey = 'case';
+                else if (catStr.includes('cpu') || catStr.includes('vi xử lý')) targetKey = 'cpu';
+                else if (catStr.includes('main') || catStr.includes('bo mạch')) targetKey = 'main';
+                else if (catStr.includes('ram') || catStr.includes('bộ nhớ')) targetKey = 'ram';
+                else if (catStr.includes('vga') || catStr.includes('card')) targetKey = 'vga';
+                else if (catStr.includes('ssd')) targetKey = 'ssd';
+                else if (catStr.includes('hdd')) targetKey = 'hdd';
+                else if (catStr.includes('nguồn') || catStr === 'psu') targetKey = 'psu';
+                else if (catStr.includes('tai') || catStr === 'headset') targetKey = 'headset';
+                else if (catStr === 'fan') targetKey = 'fan';
+                else if (catStr.includes('khí') || catStr === 'aircool' || catStr === 'cooler_air') targetKey = 'aircool';
+                else if (catStr.includes('nước aio') || catStr === 'aio' || catStr === 'cooler_aio') targetKey = 'aio';
+                else if (catStr.includes('custom')) targetKey = 'custom';
+                else if (catStr.includes('win')) targetKey = 'windows';
+
+                // Nhét hàng mới vào danh sách nếu chưa có
+                if (targetKey) {
+                    if (!DATA[targetKey]) DATA[targetKey] = [];
+                    const exists = DATA[targetKey].find(item => item.name === p.name);
+                    if (!exists) {
+                        DATA[targetKey].push({
+                            name: p.name,
+                            price: p.price,
+                            image: p.image
+                        });
+                    }
+                }
+            });
         }
       } catch (error) {
         console.error("Lỗi kết nối Backend:", error);
@@ -625,9 +669,7 @@
 
     function recalcCartQuantityFromBuild() {
       let totalQty = 0;
-      for (const key in build) {
-        totalQty += Number(build[key].qty || 1);
-      }
+      for (const key in build) { totalQty += Number(build[key].qty || 1); }
       cartQuantity = totalQty;
       localStorage.setItem("cart_quantity", cartQuantity);
     }
@@ -648,9 +690,7 @@
             </div>
           </div>
         `;
-        if (selected) {
-          total += Number(selected.price || 0) * Number(selected.qty || 1);
-        }
+        if (selected) total += Number(selected.price || 0) * Number(selected.qty || 1);
       });
 
       html += `
@@ -690,7 +730,7 @@
       const itemsToRender = DATA[key] || [];
 
       if (itemsToRender.length === 0) {
-          list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện. Vui lòng thêm trong Admin.</div>";
+          list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện.</div>";
       } else {
           itemsToRender.forEach((i, index) => {
             const qtyId = `qty_${key}_${index}`;
@@ -722,32 +762,18 @@
       build[currentKey] = { name, price, qty };
       localStorage.setItem("pc_build", JSON.stringify(build));
       recalcCartQuantityFromBuild();
-      render();
-      updateCartCount();
-      closeModal();
+      render(); updateCartCount(); closeModal();
     }
 
     function closeModal() { document.getElementById("overlay").style.display = "none"; }
-
-    function save() {
-      localStorage.setItem("pc_build", JSON.stringify(build));
-      recalcCartQuantityFromBuild();
-      render();
-      updateCartCount();
-    }
-    
+    function save() { localStorage.setItem("pc_build", JSON.stringify(build)); recalcCartQuantityFromBuild(); render(); updateCartCount(); }
     function openReset() { document.getElementById("resetOverlay").style.display = "flex"; }
     function closeReset() { document.getElementById("resetOverlay").style.display = "none"; }
     
     function saveBuild() {
       if (Object.keys(build).length === 0) return;
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
-      const newBuild = {
-        id: Date.now(),
-        time: new Date().toLocaleString(),
-        build: JSON.parse(JSON.stringify(build))
-      };
-      saved.push(newBuild);
+      saved.push({ id: Date.now(), time: new Date().toLocaleString(), build: JSON.parse(JSON.stringify(build)) });
       localStorage.setItem("saved_builds", JSON.stringify(saved));
       renderSavedBuilds();
     }
@@ -756,21 +782,15 @@
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
       let html = "";
       if (saved.length === 0) {
-        document.getElementById("savedBuilds").innerHTML = "<i>Chưa có cấu hình nào được lưu</i>";
-        return;
+        document.getElementById("savedBuilds").innerHTML = "<i>Chưa có cấu hình nào được lưu</i>"; return;
       }
       saved.forEach(s => {
-        let total = 0;
-        let items = "";
-        for (const k in s.build) {
-          total += s.build[k].price;
-          items += `<div>- ${s.build[k].name}</div>`;
-        }
+        let total = 0; let items = "";
+        for (const k in s.build) { total += s.build[k].price; items += `<div>- ${s.build[k].name}</div>`; }
         html += `
           <div class="saved-item">
             <b>Thời gian:</b> ${s.time}<br>
-            <b>Tổng tiền:</b> ${total.toLocaleString()} đ
-            ${items}
+            <b>Tổng tiền:</b> ${total.toLocaleString()} đ ${items}
             <div style="margin-top:8px">
               <button class="btn-load" onclick="loadBuild(${s.id})">Xem lại</button>
               <button class="btn-delete" onclick="deleteSavedBuild(${s.id})">Xóa</button>
@@ -784,16 +804,13 @@
     function loadBuild(id) {
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
       const item = saved.find(s => s.id === id);
-      if (!item) return;
-      build = JSON.parse(JSON.stringify(item.build));
-      save();
+      if (!item) return; build = JSON.parse(JSON.stringify(item.build)); save();
     }
 
     function deleteSavedBuild(id) {
       let saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
       saved = saved.filter(s => s.id !== id);
-      localStorage.setItem("saved_builds", JSON.stringify(saved));
-      renderSavedBuilds();
+      localStorage.setItem("saved_builds", JSON.stringify(saved)); renderSavedBuilds();
     }
     
     function openDelete() { document.getElementById("deleteOverlay").style.display = "flex"; }
@@ -801,23 +818,15 @@
 
     function confirmDelete() {
       if (deleteKey && build[deleteKey]) {
-        delete build[deleteKey];
-        localStorage.setItem("pc_build", JSON.stringify(build));
-        recalcCartQuantityFromBuild();
-        render();
-        updateCartCount();
+        delete build[deleteKey]; localStorage.setItem("pc_build", JSON.stringify(build));
+        recalcCartQuantityFromBuild(); render(); updateCartCount();
       }
       closeDelete();
     }
 
     function confirmReset() {
-      build = {};
-      localStorage.setItem("pc_build", JSON.stringify(build));
-      recalcCartQuantityFromBuild();
-      render();
-      updateCartCount();
-      closeReset();
-      closeCart();
+      build = {}; localStorage.setItem("pc_build", JSON.stringify(build));
+      recalcCartQuantityFromBuild(); render(); updateCartCount(); closeReset(); closeCart();
     }
 
     function exportExcel() {
@@ -826,50 +835,33 @@
       let total = 0;
       for (const key in build) {
         const part = PARTS.find(p => p.key === key);
-        rows.push([ part ? part.label : key, build[key].name, build[key].price ]);
-        total += build[key].price;
+        rows.push([ part ? part.label : key, build[key].name, build[key].price ]); total += build[key].price;
       }
-      rows.push([]);
-      rows.push(["", "TỔNG TIỀN", total]);
+      rows.push([]); rows.push(["", "TỔNG TIỀN", total]);
 
-      const ws = XLSX.utils.aoa_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Cau_hinh_PC");
-      XLSX.writeFile(wb, "Cau_hinh_PC_" + Date.now() + ".xlsx");
+      const ws = XLSX.utils.aoa_to_sheet(rows); const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Cau_hinh_PC"); XLSX.writeFile(wb, "Cau_hinh_PC_" + Date.now() + ".xlsx");
     }
     
     function exportImage() {
-      const listEl = document.getElementById("exportList");
-      const totalEl = document.getElementById("exportTotal");
-      listEl.innerHTML = "";
-      totalEl.innerHTML = "";
-      let total = 0;
-
+      const listEl = document.getElementById("exportList"); const totalEl = document.getElementById("exportTotal");
+      listEl.innerHTML = ""; totalEl.innerHTML = ""; let total = 0;
       for (const key in build) {
-        const part = PARTS.find(p => p.key === key);
-        const item = build[key];
-        const row = document.createElement("div");
-        row.style.marginBottom = "8px";
+        const part = PARTS.find(p => p.key === key); const item = build[key];
+        const row = document.createElement("div"); row.style.marginBottom = "8px";
         row.innerHTML = `<b>${part ? part.label : key}:</b> ${item.name} <span style="float:right">${item.price.toLocaleString()} đ</span>`;
-        listEl.appendChild(row);
-        total += item.price;
+        listEl.appendChild(row); total += item.price;
       }
       totalEl.innerHTML = "TỔNG TIỀN: " + total.toLocaleString() + " đ";
 
       const target = document.getElementById("exportImageArea");
       html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "Cau_hinh_PC_da_chon.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        const link = document.createElement("a"); link.download = "Cau_hinh_PC_da_chon.png"; link.href = canvas.toDataURL("image/png"); link.click();
       });
     }
     
     function shareBuild() {
-      if (Object.keys(build).length === 0) {
-        alert("Chưa có cấu hình để chia sẻ");
-        return;
-      }
+      if (Object.keys(build).length === 0) { alert("Chưa có cấu hình để chia sẻ"); return; }
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(build))));
       window.location.href = "share-build.html?config=" + encoded;
     }
@@ -884,8 +876,7 @@
     }
     
     function openCart(showEmptyMessage = true) {
-      let html = "";
-      let total = 0;
+      let html = ""; let total = 0;
       const selectedItems = Object.keys(build).map(key => {
         const partInfo = PARTS.find(p => p.key === key);
         return { key, label: partInfo ? partInfo.label : key, ...build[key] };
@@ -895,10 +886,7 @@
         html = showEmptyMessage ? "<i>Giỏ hàng trống</i>" : "<i>Giỏ hàng trống</i>";
       } else {
         selectedItems.forEach(item => {
-          const qty = Number(item.qty || 1);
-          const lineTotal = Number(item.price || 0) * qty;
-          total += lineTotal;
-
+          const qty = Number(item.qty || 1); const lineTotal = Number(item.price || 0) * qty; total += lineTotal;
           html += `
             <div style="display:flex; align-items:flex-start; padding:12px 0; border-bottom:1px solid #ddd; gap:12px;">
               <div style="flex:1; min-width:0;">
@@ -913,20 +901,17 @@
           `;
         });
       }
+
       document.getElementById("cartList").innerHTML = html;
       document.getElementById("cartTotal").innerHTML = selectedItems.length > 0 ? "TỔNG TIỀN: " + total.toLocaleString("vi-VN") + " đ" : "";
       document.getElementById("cartOverlay").style.display = "flex";
     }
     
     function removeSelectedPart(key) {
-      if (!build[key]) return;
-      delete build[key];
+      if (!build[key]) return; delete build[key];
       localStorage.setItem("pc_build", JSON.stringify(build));
       try { build = JSON.parse(localStorage.getItem("pc_build")) || {}; } catch { build = {}; }
-      recalcCartQuantityFromBuild();
-      updateCartCount();
-      render();
-      openCart(true);
+      recalcCartQuantityFromBuild(); updateCartCount(); render(); openCart(true);
     }
 
     function closeCart() { document.getElementById("cartOverlay").style.display = "none"; }
@@ -965,23 +950,18 @@
     function loadPreset(id) {
       const preset = PRESET_BUILDS[id];
       if (!preset) return;
-      build = { ...build, ...preset };
-      save();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      build = { ...build, ...preset }; save(); window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     window.addEventListener("storage", () => {
       try { build = JSON.parse(localStorage.getItem("pc_build")) || {}; } catch { build = {}; }
-      recalcCartQuantityFromBuild();
-      updateCartCount();
-      render();
+      recalcCartQuantityFromBuild(); updateCartCount(); render();
     });
 
-    // Kích hoạt ngay
+    // Khởi động
     init();
   </script>
   
   <div id="floating-icons"></div>
-
 </body>
 </html>

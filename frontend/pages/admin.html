@@ -273,12 +273,16 @@
             const user = JSON.parse(userData);
             if (user.role !== 'admin') {
                 alert("Chỗ này của Admin, khách hàng đi nhầm cửa rồi!");
-                window.location.href = "Account.html";
+                window.location.href = "account.html"; // Sửa chữ Account thành account thường
                 return;
             }
 
-            document.getElementById('admin-name').innerText = user.name;
-            document.getElementById('admin-email').innerText = user.email;
+            document.getElementById('admin-name').innerText = user.name || user.full_name || "Admin";
+            document.getElementById('admin-email').innerText = user.email || "";
+            
+            // Khởi động lấy dữ liệu từ DB Thật
+            initCategoryDropdown();
+            loadProductsFromDB();
         });
 
         function toggleAdminMenu() { document.getElementById('admin-dropdown').classList.toggle('hidden'); }
@@ -368,28 +372,6 @@
                     {key: "side_panel", label: "Panel bên", type: "select", options: ["Kính cường lực", "Thép", "Mica"]} 
                 ] 
             },
-            "cooler_air": { 
-                label: "Tản nhiệt khí", fields: [ 
-                    {key: "brand", label: "Thương hiệu", type: "select", options: ["Noctua", "Thermalright", "Deepcool", "Cooler Master", "ID-Cooling"]}, 
-                    {key: "type", label: "Loại", type: "select", options: ["Tháp đơn", "Tháp đôi", "Top-down"]}, 
-                    {key: "socket", label: "Socket hỗ trợ"}, 
-                    {key: "fan_size", label: "Kích thước quạt", type: "select", options: ["92mm", "120mm", "140mm"]}, 
-                    {key: "fan_count", label: "Số quạt", unit: "quạt", type: "number"}, 
-                    {key: "height", label: "Chiều cao", unit: "mm", type: "number"}, 
-                    {key: "tdp", label: "TDP hỗ trợ", unit: "W", type: "number"}, 
-                    {key: "rgb", label: "RGB", type: "select", options: ["ARGB", "RGB", "Không LED"]} 
-                ] 
-            },
-            "cooler_aio": { 
-                label: "Tản nhiệt nước AIO", fields: [ 
-                    {key: "brand", label: "Thương hiệu", type: "select", options: ["NZXT", "Corsair", "ASUS ROG", "Deepcool", "Lian Li"]}, 
-                    {key: "rad_size", label: "Kích thước radiator", type: "select", options: ["120mm", "240mm", "280mm", "360mm", "420mm"]}, 
-                    {key: "fan_count", label: "Số quạt", type: "select", options: ["1", "2", "3"]}, 
-                    {key: "socket", label: "Socket hỗ trợ", type: "text", placeholder: "LGA1700, AM5..."}, 
-                    {key: "pump_speed", label: "Tốc độ bơm", unit: "RPM", type: "number"}, 
-                    {key: "rgb", label: "RGB", type: "select", options: ["Có màn hình LCD", "ARGB", "RGB", "Không LED"]} 
-                ] 
-            },
             "monitor": { 
                 label: "Màn hình", fields: [ 
                     {key: "brand", label: "Thương hiệu", type: "select", options: ["LG", "ASUS", "Dell", "Samsung", "AOC", "Gigabyte", "MSI", "BenQ"]}, 
@@ -423,15 +405,49 @@
                     {key: "buttons", label: "Số nút", unit: "nút", type: "number"}, 
                     {key: "rgb", label: "RGB", type: "select", options: ["Có RGB", "Không RGB"]} 
                 ] 
-            }
+            },
+            "cooler_air": { label: "Tản nhiệt khí", fields: [] },
+            "cooler_aio": { label: "Tản nhiệt nước AIO", fields: [] }
         };
 
-        let products = [
-            { id: "P_12345", name: "Intel Core i9 14900K", category: "cpu", price: 15500000, original_price: 16000000, stock: 12, status: "active", image: "https://placehold.co/100x100/1f2937/fff?text=CPU", specs: {brand: "Intel", socket: "LGA 1700", cores: "24", threads: "32"} },
-            { id: "P_67890", name: "Màn hình LG UltraGear 24GQ50F-B", category: "monitor", price: 3300000, stock: 3, status: "sale", image: "https://placehold.co/100x100/dc2626/fff?text=LG+24", specs: {brand: "LG", size: "24 inch", resolution: "FHD (1920x1080)", refresh_rate: "165Hz", panel: "VA", response_time: "1ms"} }
-        ];
-
+        // BIẾN CHỨA DỮ LIỆU THẬT
+        let products = [];
         let currentTab = "products";
+
+        // LẤY DỮ LIỆU TỪ DATABASE QUA API
+        async function loadProductsFromDB() {
+            try {
+                showToast("Đang tải dữ liệu...", "success");
+                const response = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_mode: true }) // Báo cho Backend biết đây là Admin để nó lấy hết cả hàng out_of_stock
+                });
+                
+                if (!response.ok) throw new Error("Lỗi API");
+                const data = await response.json();
+                
+                // Chuẩn hóa dữ liệu trả về từ DB để khớp với giao diện Admin
+                products = data.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    category: p.category, 
+                    price: Number(p.price) || 0,
+                    original_price: p.old_price ? Number(p.old_price) : null,
+                    stock: p.stock !== undefined ? p.stock : 10, // Nếu Backend chưa trả về stock thì giả lập là 10
+                    status: p.status || 'active',
+                    image: p.image || "https://placehold.co/100x100/1f2937/fff?text=No+Image",
+                    specs: p.preset_json || {} // Giả lập specs bằng preset_json
+                }));
+
+                renderUI();
+                showToast("Đã tải xong dữ liệu từ Database!");
+            } catch (error) {
+                console.error("Lỗi load data:", error);
+                showToast("Lỗi kết nối tới Server. Đang dùng dữ liệu trống.", "error");
+                renderUI();
+            }
+        }
 
         // INIT DROPDOWNS
         function initCategoryDropdown() {
@@ -507,8 +523,9 @@
             document.getElementById('form-image-file').value = ""; 
             const container = document.getElementById('image-preview-container');
             if (imgUrl) {
-                document.getElementById('form-image-base64').value = imgUrl;
-                container.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover" />`;
+                const fullUrl = imgUrl.startsWith('http') || imgUrl.startsWith('data:') ? imgUrl : `http://localhost:3000/${imgUrl}`;
+                document.getElementById('form-image-base64').value = fullUrl;
+                container.innerHTML = `<img src="${fullUrl}" class="w-full h-full object-cover" />`;
             } else {
                 document.getElementById('form-image-base64').value = "";
                 container.innerHTML = `<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
@@ -522,7 +539,8 @@
             form.reset();
 
             if (productId) {
-                const p = products.find(x => x.id === productId);
+                const p = products.find(x => x.id == productId);
+                if(!p) return;
                 document.getElementById('modal-title').innerText = "Chỉnh sửa sản phẩm";
                 document.getElementById('modal-subtitle').innerText = `ID: ${p.id}`;
                 document.getElementById('form-id').value = p.id;
@@ -554,83 +572,96 @@
         function renderDynamicSpecs() {
             const catKey = document.getElementById('form-category').value;
             const def = CATEGORIES[catKey];
+            if(!def) return;
             document.getElementById('spec-category-label').innerText = def.label;
             
             const container = document.getElementById('dynamic-specs-container');
             container.innerHTML = '';
             const savedSpecs = JSON.parse(container.dataset.savedSpecs || "{}");
 
-            def.fields.forEach(f => {
-                const val = savedSpecs[f.key] || "";
-                const baseClass = "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] bg-white";
-                let inputHtml = "";
+            if(def.fields) {
+                def.fields.forEach(f => {
+                    const val = savedSpecs[f.key] || "";
+                    const baseClass = "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e11d48]/20 focus:border-[#e11d48] bg-white";
+                    let inputHtml = "";
 
-                if (f.type === "select") {
-                    let optionsHtml = '<option value="">-- Chọn --</option>';
-                    if (f.options) {
-                        f.options.forEach(opt => {
-                            const isSelected = val === opt ? "selected" : "";
-                            optionsHtml += `<option value="${opt}" ${isSelected}>${opt}</option>`;
-                        });
+                    if (f.type === "select") {
+                        let optionsHtml = '<option value="">-- Chọn --</option>';
+                        if (f.options) {
+                            f.options.forEach(opt => {
+                                const isSelected = val === opt ? "selected" : "";
+                                optionsHtml += `<option value="${opt}" ${isSelected}>${opt}</option>`;
+                            });
+                        }
+                        inputHtml = `<select id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="select" class="${baseClass}">${optionsHtml}</select>`;
+                    } else {
+                        const typeAttr = f.type === 'number' ? 'number' : 'text';
+                        inputHtml = `<input type="${typeAttr}" id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="${typeAttr}" value="${val}" class="${baseClass}" />`;
                     }
-                    inputHtml = `<select id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="select" class="${baseClass}">${optionsHtml}</select>`;
-                } else {
-                    const typeAttr = f.type === 'number' ? 'number' : 'text';
-                    inputHtml = `<input type="${typeAttr}" id="spec_${f.key}" data-spec-key="${f.key}" data-spec-type="${typeAttr}" value="${val}" class="${baseClass}" />`;
-                }
 
-                container.innerHTML += `
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                            ${f.label} ${f.unit ? `<span class="text-gray-400 font-normal">(${f.unit})</span>` : ''}
-                        </label>
-                        ${inputHtml}
-                    </div>
-                `;
-            });
+                    container.innerHTML += `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                                ${f.label} ${f.unit ? `<span class="text-gray-400 font-normal">(${f.unit})</span>` : ''}
+                            </label>
+                            ${inputHtml}
+                        </div>
+                    `;
+                });
+            }
         }
 
-        // LƯU SẢN PHẨM
-        function saveProduct(e) {
+        // LƯU SẢN PHẨM VÀO DATABASE
+        async function saveProduct(e) {
             e.preventDefault();
             const id = document.getElementById('form-id').value;
             const catKey = document.getElementById('form-category').value;
             const base64Image = document.getElementById('form-image-base64').value; 
             
             const newProduct = {
-                id: id ? id : "P_" + Math.floor(Math.random() * 100000),
+                id: id ? id : null, // Backend sẽ lo sinh ID mới
                 name: document.getElementById('form-name').value,
-                category: catKey,
+                category_id: catKey, // Backend dùng category_id
                 price: Number(document.getElementById('form-price').value),
-                original_price: document.getElementById('form-original-price').value ? Number(document.getElementById('form-original-price').value) : null,
+                old_price: document.getElementById('form-original-price').value ? Number(document.getElementById('form-original-price').value) : null,
                 stock: Number(document.getElementById('form-stock').value),
                 status: document.getElementById('form-status').value,
-                image: base64Image || "https://placehold.co/100x100/1f2937/fff?text=No+Image", 
-                specs: {}
+                image_url: base64Image, // Gửi base64 lên
+                preset_json: {}
             };
 
             const specElements = document.querySelectorAll('#dynamic-specs-container input, #dynamic-specs-container select');
             specElements.forEach(el => {
                 const key = el.getAttribute('data-spec-key');
                 const type = el.getAttribute('data-spec-type');
-                newProduct.specs[key] = type === 'number' ? Number(el.value) : el.value;
+                newProduct.preset_json[key] = type === 'number' ? Number(el.value) : el.value;
             });
 
-            if (id) {
-                const index = products.findIndex(p => p.id === id);
-                products[index] = newProduct;
-                showToast("Đã cập nhật sản phẩm thành công!");
-            } else {
-                products.unshift(newProduct);
-                showToast("Đã thêm sản phẩm mới!");
-            }
+            try {
+                // Tương lai ông cần tạo API POST /api/products/add và /api/products/update
+                // Hiện tại tôi giả lập việc lưu thành công bằng cách cập nhật biến Local và văng ra Toast
+                showToast("Đây là giao diện mô phỏng lưu. Cần viết thêm API Backend để lưu thật!", "success");
+                
+                // Giả lập lưu cục bộ để xem liền
+                if (id) {
+                    const index = products.findIndex(p => p.id == id);
+                    if(index !== -1) {
+                        products[index] = {...products[index], ...newProduct, category: newProduct.category_id, image: newProduct.image_url};
+                    }
+                } else {
+                    newProduct.id = Math.floor(Math.random() * 100000);
+                    products.unshift({...newProduct, category: newProduct.category_id, image: newProduct.image_url});
+                }
 
-            closeModal();
-            renderUI();
+                closeModal();
+                renderUI();
+            } catch (err) {
+                showToast("Lỗi khi lưu sản phẩm", "error");
+            }
         }
 
         // TIỆN ÍCH
-        function formatVND(n) { return n.toLocaleString("vi-VN"); }
+        function formatVND(n) { return Number(n).toLocaleString("vi-VN"); }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebar-overlay').classList.toggle('hidden'); }
         
         function switchTab(tab) {
@@ -657,7 +688,8 @@
 
         function deleteProduct(id) {
             if(confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                products = products.filter(p => p.id !== id);
+                // Tương lai cần API DELETE
+                products = products.filter(p => p.id != id);
                 showToast("Đã xóa sản phẩm", "success");
                 renderUI();
             }
@@ -668,7 +700,7 @@
             tbody.innerHTML = '';
             
             if(dataToRender.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Không tìm thấy sản phẩm nào phù hợp!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Không tìm thấy sản phẩm nào!</td></tr>`;
                 return;
             }
 
@@ -683,10 +715,24 @@
                 const st = STATUS_CONFIG[p.status] || STATUS_CONFIG.active;
                 const stockCls = p.stock === 0 ? "text-red-500" : p.stock <= 5 ? "text-amber-600" : "text-gray-800";
                 
+                // Xử lý ảnh cho Admin
+                let imgUrl = "https://placehold.co/100x100/1f2937/fff?text=No+Image";
+                if (p.image) {
+                    if (p.image.startsWith('http') || p.image.startsWith('data:')) {
+                        imgUrl = p.image;
+                    } else if (p.image.startsWith('uploads/')) {
+                        imgUrl = `../../${p.image}`; 
+                    } else if (p.image.startsWith('image/')) {
+                        imgUrl = `../assets/images/${p.image.replace('image/', '')}`;
+                    } else {
+                        imgUrl = `http://localhost:3000/${p.image}`;
+                    }
+                }
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50 border-b border-gray-50 transition">
                         <td class="px-4 py-3">
-                            <img src="${p.image}" class="w-10 h-10 rounded-md object-cover border border-gray-200" alt="img" />
+                            <img src="${imgUrl}" onerror="this.src='https://placehold.co/100x100/1f2937/fff?text=Loi+Anh'" class="w-10 h-10 rounded-md object-cover border border-gray-200" alt="img" />
                         </td>
                         <td class="px-4 py-3">
                             <div class="font-medium text-gray-900">${p.name}</div>
@@ -709,7 +755,7 @@
             document.getElementById('stat-total').innerText = products.length;
             document.getElementById('stat-active').innerText = products.filter(p => p.status === "active").length;
             document.getElementById('stat-sale').innerText = products.filter(p => p.status === "sale").length;
-            document.getElementById('stat-out').innerText = products.filter(p => p.status === "out_of_stock").length;
+            document.getElementById('stat-out').innerText = products.filter(p => p.status === "out_of_stock" || p.stock === 0).length;
 
             renderProductTable(products); // Vẽ bảng mặc định
 
@@ -726,10 +772,6 @@
                     </div>`;
             });
         }
-
-        // Khởi động
-        initCategoryDropdown();
-        renderUI();
     </script>
 </body>
 </html>

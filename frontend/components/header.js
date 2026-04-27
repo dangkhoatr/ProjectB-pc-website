@@ -20,7 +20,10 @@ function renderHeader(elementId) {
     // ==========================================
     let userHtml = '';
     
-    if (user && user.full_name) {
+    // Tự động nhận diện dù backend trả về name hay full_name
+    const displayName = user ? (user.name || user.full_name) : null;
+    
+    if (displayName) {
         // ĐÃ ĐĂNG NHẬP: Bấm vào thì nhảy sang trang Quản trị (Admin) hoặc Hồ sơ (Customer)
         const profileLink = user.role === 'admin' ? 'admin.html' : 'account.html';
         
@@ -29,7 +32,7 @@ function renderHeader(elementId) {
                 <div style="width:32px; height:32px; border-radius:50%; background:#fff; color:#000; display:flex; align-items:center; justify-content:center;">
                     <i class="fa-solid fa-user"></i>
                 </div>
-                <span style="font-weight:600;">${user.full_name}</span>
+                <span style="font-weight:600;">${displayName}</span>
             </a>
         `;
     } else {
