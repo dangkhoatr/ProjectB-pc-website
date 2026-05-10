@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer'); 
+const nodemailer = require('nodemailer');
 const userRepo = require('../repositories/userRepo');
 require('dotenv').config();
 
-const JWT_SECRET = 'eiu_computer_secret_key_2026'; 
+const JWT_SECRET = 'eiu_computer_secret_key_2026';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -24,7 +24,7 @@ async function sendVerificationMail(email, fullName, token, isResend = false) {
 
     const mailOptions = {
         from: `"EIU COMPUTER" <${process.env.EMAIL_USER}>`,
-        to: email, 
+        to: email,
         subject: subject,
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #e11d48; border-radius: 10px; overflow: hidden;">
@@ -44,20 +44,35 @@ async function sendVerificationMail(email, fullName, token, isResend = false) {
 }
 
 const authController = {
-    // 1. ĐĂNG KÝ
+    // 1. ĐĂNG KÝ (Đã thêm SĐT, CCCD và sinh Mã KH)
     register: async (req, res) => {
-        const { full_name, email, password, phone, address } = req.body;
-        if (!full_name || !email || !password) return res.status(400).json({ message: 'Vui lòng điền đủ thông tin bắt buộc!' });
+        const { full_name, phone, cccd, email, address, password } = req.body;
+
+        // Bắt buộc phải có tên, sđt, email, pass
+        if (!full_name || !phone || !email || !password) {
+            return res.status(400).json({ message: 'Vui lòng điền đủ thông tin bắt buộc!' });
+        }
 
         try {
-            const existing = await userRepo.findByEmail(email);
-            if (existing) return res.status(400).json({ message: 'Email này có người dùng rồi con vợ ạ!' });
+            // Kiểm tra trùng Email
+            const existingEmail = await userRepo.findByEmail(email);
+            if (existingEmail) return res.status(400).json({ message: 'Email này đã được sử dụng!' });
+
+            // Kiểm tra trùng SĐT
+            const existingPhone = await userRepo.findByPhone(phone);
+            if (existingPhone) return res.status(400).json({ message: 'Số điện thoại này đã được đăng ký!' });
+
+            // Sinh Mã khách hàng tự động (Ví dụ: KH + 6 số cuối của timestamp)
+            const customerCode = 'KH' + Date.now().toString().slice(-6);
 
             const hashedPassword = await bcrypt.hash(password, 10);
             const verifyToken = crypto.randomBytes(32).toString('hex');
             const expiryTime = new Date(Date.now() + 60 * 1000); // 1 phút
 
-            await userRepo.createUser(email, hashedPassword, verifyToken, expiryTime, full_name, phone, address);
+            // Gọi hàm Repo mới để lưu toàn bộ dữ liệu (Bao gồm phone, cccd, customerCode)
+            await userRepo.createUser(email, phone, hashedPassword, verifyToken, expiryTime, full_name, cccd, address, customerCode);
+
+            // Gửi mail tới email họ nhập
             await sendVerificationMail(email, full_name, verifyToken, false);
 
             res.status(201).json({ message: 'Đăng ký thành công! Con vợ check mail để xác thực nhá.' });
@@ -67,7 +82,7 @@ const authController = {
         }
     },
 
-    // 2. XÁC THỰC EMAIL
+    // 2. XÁC THỰC EMAIL (Giữ nguyên, không cần sửa)
     verifyEmail: async (req, res) => {
         const { token } = req.body;
         if (!token) return res.status(400).json({ message: 'Không tìm thấy mã xác thực!' });
@@ -88,42 +103,55 @@ const authController = {
         }
     },
 
-    // 3. ĐĂNG NHẬP
+    // 3. ĐĂNG NHẬP (Chuyển sang Đăng nhập bằng SĐT)
     login: async (req, res) => {
-        const { email, password } = req.body;
-        if (!email || !password) return res.status(400).json({ message: 'Vui lòng nhập Email và Mật khẩu!' });
+        const { phone, password } = req.body; // Lấy phone thay vì email
+        if (!phone || !password) return res.status(400).json({ message: 'Vui lòng nhập Số điện thoại và Mật khẩu!' });
 
         try {
-            const user = await userRepo.findByEmail(email);
-            if (!user) return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng!' });
+            // Tìm user theo Số điện thoại
+            const user = await userRepo.findByPhone(phone);
+            if (!user) return res.status(401).json({ message: 'Số điện thoại hoặc mật khẩu không đúng!' });
 
             if (Number(user.is_verified) === 0) {
                 return res.status(403).json({ message: 'Tài khoản chưa được xác thực. Vui lòng kiểm tra Email!' });
             }
 
             const isMatch = await bcrypt.compare(password, user.password_hash);
-            if (!isMatch) return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng!' });
+            if (!isMatch) return res.status(401).json({ message: 'Số điện thoại hoặc mật khẩu không đúng!' });
 
-            let fullName = "Người dùng", phone = "", address = "";
+            let fullName = "Người dùng", userPhone = phone, address = "", cccd="";
             if (user.role === 'customer') {
                 const customerData = await userRepo.getCustomerInfo(user.id);
                 if (customerData) {
                     fullName = customerData.full_name;
-                    phone = customerData.phone || "";
                     address = customerData.address || "";
+                    cccd = customerData.cccd || "";
                 }
+            } else if (user.role === 'admin') {
+                const adminData = await userRepo.getAdminInfo(user.id); // Giả sử có hàm này, nếu chưa có tôi sẽ viết cho ông bên Repo
+                if (adminData) fullName = adminData.full_name;
             }
 
+            // Gói JWT Token trả về
             const token = jwt.sign(
-                { id: user.id, role: user.role, name: fullName, email: user.email },
+                { id: user.id, role: user.role, name: fullName, phone: user.phone },
                 JWT_SECRET,
                 { expiresIn: '24h' }
             );
 
-            res.json({ 
-                message: 'Đăng nhập thành công!', 
-                token, 
-                user: { id: user.id, name: fullName, email: user.email, role: user.role, phone, address } 
+            res.json({
+                message: 'Đăng nhập thành công!',
+                token,
+                user: {
+                    id: user.id,
+                    name: fullName,
+                    email: user.email,
+                    phone: user.phone,
+                    role: user.role,
+                    address: address,
+                    cccd: cccd   
+                }
             });
         } catch (error) {
             console.error('Lỗi đăng nhập:', error);
@@ -131,7 +159,7 @@ const authController = {
         }
     },
 
-    // 4. GỬI LẠI EMAIL
+    // 4. GỬI LẠI EMAIL (Giữ nguyên)
     resendEmail: async (req, res) => {
         const { email } = req.body;
         if (!email) return res.status(400).json({ message: 'Không tìm thấy Email để gửi lại!' });
@@ -148,7 +176,7 @@ const authController = {
             }
 
             const newVerifyToken = crypto.randomBytes(32).toString('hex');
-            const newExpiryTime = new Date(Date.now() + 60 * 1000); 
+            const newExpiryTime = new Date(Date.now() + 60 * 1000);
 
             await userRepo.updateVerifyToken(user.id, newVerifyToken, newExpiryTime);
 
@@ -157,7 +185,7 @@ const authController = {
             if (customerData) fullName = customerData.full_name;
 
             await sendVerificationMail(email, fullName, newVerifyToken, true);
-            
+
             res.json({ message: 'Đã gửi lại Email xác thực mới! Con vợ check lại nhé.' });
         } catch (error) {
             console.error('Lỗi Resend:', error);
@@ -165,13 +193,13 @@ const authController = {
         }
     },
 
-    // 5. CẬP NHẬT HỒ SƠ
+    // 5. CẬP NHẬT HỒ SƠ (Chỉnh lại chút)
     updateProfile: async (req, res) => {
         try {
-            const userId = req.user.id; // Lấy từ middleware bảo vệ
-            const { full_name, phone, address } = req.body;
+            const userId = req.user.id;
+            const { full_name, phone, address, cccd } = req.body; // Bổ sung CCCD
 
-            await userRepo.updateCustomerProfile(userId, full_name, phone, address);
+            await userRepo.updateCustomerProfile(userId, full_name, phone, address, cccd);
             res.json({ message: 'Cập nhật hồ sơ nét căng!' });
         } catch (error) {
             console.error('Lỗi cập nhật:', error);
