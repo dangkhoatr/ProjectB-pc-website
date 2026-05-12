@@ -1,62 +1,43 @@
 -- ==================================================
--- KHỞI TẠO DATABASE (BẢN MASTER TÍCH HỢP UUID, SĐT & EXCEL MIGRATION)
+-- KHỞI TẠO DATABASE: MASTER V3 (GỘP KHO & CHUẨN HÓA ADMIN)
 -- ==================================================
 CREATE DATABASE IF NOT EXISTS eiu_computer;
 USE eiu_computer;
 
--- Tạm tắt khóa ngoại để dọn dẹp sạch sẽ
+-- Tắt khóa ngoại để dọn dẹp sạch sẽ
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS admins;
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS users;
-
-DROP TABLE IF EXISTS product_tags;
-DROP TABLE IF EXISTS item_tags;
-DROP TABLE IF EXISTS tags;
-
-DROP TABLE IF EXISTS product_attribute_values;
-DROP TABLE IF EXISTS category_attributes;
-DROP TABLE IF EXISTS attributes;
-
-DROP TABLE IF EXISTS item_specifications;
-DROP TABLE IF EXISTS specifications;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS part_items;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS part_categories;
+DROP TABLE IF EXISTS product_bundles, order_items, orders, admins, customers, users;
+DROP TABLE IF EXISTS product_tags, item_tags, tags, product_attribute_values, category_attributes, attributes;
+DROP TABLE IF EXISTS item_specifications, specifications, products, part_items, categories, part_categories;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ==================================================
--- PHẦN 1: TÀI KHOẢN & HỒ SƠ (RBAC + LOGIN SĐT)
+-- PHẦN 1: TÀI KHOẢN & HỒ SƠ (CHỨA ADMIN BATMAN)
 -- ==================================================
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
-  phone VARCHAR(20) UNIQUE DEFAULT NULL, -- 🔥 THÊM SĐT ĐỂ ĐĂNG NHẬP
+  phone VARCHAR(20) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   role ENUM('admin', 'customer') DEFAULT 'customer',
   is_verified BOOLEAN DEFAULT FALSE,
-  verify_token VARCHAR(255) DEFAULT NULL,
-  token_expiry DATETIME NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE customers (
-  customer_id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()), -- 🔥 DÙNG UUID (TEXT)
-  user_id INT UNIQUE DEFAULT NULL, -- 🔥 Cho phép NULL để Import Excel khách mua trực tiếp chưa có acc Web
-  customer_code VARCHAR(20) UNIQUE, -- Mã khách hàng (VD: KH0001)
+  customer_id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+  user_id INT UNIQUE DEFAULT NULL,
+  customer_code VARCHAR(20) UNIQUE,
   full_name VARCHAR(255) NOT NULL,
-  phone VARCHAR(20) UNIQUE DEFAULT NULL, -- Truy xuất qua SĐT
-  cccd VARCHAR(20) UNIQUE DEFAULT NULL,  -- Truy xuất qua CCCD
+  phone VARCHAR(20) UNIQUE DEFAULT NULL,
+  cccd VARCHAR(20) UNIQUE DEFAULT NULL,
   address TEXT DEFAULT NULL,
-  loyalty_points INT DEFAULT 0, 
-  note TEXT DEFAULT NULL, -- 🔥 Ghi chú nguồn gốc (Ví dụ: "Import từ Excel ngày 10/5")
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 🔥 Theo dõi thời gian tạo
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 🔥 Theo dõi lần sửa cuối
+  loyalty_points INT UNSIGNED DEFAULT 0,
+  note TEXT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -69,7 +50,7 @@ CREATE TABLE admins (
 );
 
 -- ==================================================
--- PHẦN 2: DANH MỤC & SẢN PHẨM (EAV CORE)
+-- PHẦN 2: DANH MỤC & SẢN PHẨM NHẤT QUÁN (EAV CORE)
 -- ==================================================
 CREATE TABLE categories (
     id VARCHAR(50) PRIMARY KEY, 
@@ -82,48 +63,35 @@ CREATE TABLE products (
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE, 
   image_url LONGTEXT,       
-  price INT NOT NULL DEFAULT 0,
-  old_price INT DEFAULT NULL,
-  stock INT NOT NULL DEFAULT 0,
+  price INT UNSIGNED NOT NULL DEFAULT 0,
+  old_price INT UNSIGNED DEFAULT NULL,
+  stock INT UNSIGNED NOT NULL DEFAULT 0,
   status VARCHAR(50) NOT NULL DEFAULT 'active', 
   badge VARCHAR(20),
   description TEXT,
   preset_json JSON,         
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
 );
 
--- (Bảng cũ dùng cho Build PC - Giữ nguyên)
-CREATE TABLE part_categories (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  part_key VARCHAR(50) NOT NULL UNIQUE,
-  label VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE part_items (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  category_id INT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  price INT NOT NULL,
-  image VARCHAR(255) DEFAULT NULL,
-  FOREIGN KEY (category_id) REFERENCES part_categories(id) ON DELETE CASCADE
+-- Bảng Bundle cho PC bộ sau này
+CREATE TABLE product_bundles (
+  parent_id INT NOT NULL,
+  child_id INT NOT NULL,
+  quantity INT UNSIGNED DEFAULT 1,
+  PRIMARY KEY (parent_id, child_id),
+  FOREIGN KEY (parent_id) REFERENCES products(id) ON DELETE CASCADE,
+  FOREIGN KEY (child_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- ==================================================
--- PHẦN 3: THÔNG SỐ ĐỘNG (EAV PATTERN)
+-- PHẦN 3: THÔNG SỐ ĐỘNG (EAV PATTERN) & ĐƠN HÀNG
 -- ==================================================
 CREATE TABLE attributes (
     id VARCHAR(50) PRIMARY KEY, 
     name VARCHAR(100) NOT NULL, 
     unit VARCHAR(20) NULL       
-);
-
-CREATE TABLE category_attributes (
-    category_id VARCHAR(50) NOT NULL,
-    attribute_id VARCHAR(50) NOT NULL,
-    PRIMARY KEY (category_id, attribute_id),
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-    FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE CASCADE
 );
 
 CREATE TABLE product_attribute_values (
@@ -135,152 +103,81 @@ CREATE TABLE product_attribute_values (
     FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE specifications (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL, 
-  unit VARCHAR(20)            
-);
-
-CREATE TABLE item_specifications (
-  item_id INT NOT NULL,
-  spec_id INT NOT NULL,
-  spec_value VARCHAR(255) NOT NULL,
-  PRIMARY KEY (item_id, spec_id),
-  FOREIGN KEY (item_id) REFERENCES part_items(id) ON DELETE CASCADE,
-  FOREIGN KEY (spec_id) REFERENCES specifications(id) ON DELETE CASCADE
-);
-
--- ==================================================
--- PHẦN 4: TEM KHUYẾN MÃI (TAGS)
--- ==================================================
-CREATE TABLE tags (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  tag_name VARCHAR(50) NOT NULL UNIQUE, 
-  bg_color VARCHAR(20) DEFAULT '#dc2626', 
-  text_color VARCHAR(20) DEFAULT '#ffffff',
-  discount_percent INT DEFAULT 0 
-);
-
-CREATE TABLE item_tags (
-  item_id INT NOT NULL,
-  tag_id INT NOT NULL,
-  PRIMARY KEY (item_id, tag_id),
-  FOREIGN KEY (item_id) REFERENCES part_items(id) ON DELETE CASCADE,
-  FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
-
-CREATE TABLE product_tags (
-  product_id INT NOT NULL,
-  tag_id INT NOT NULL,
-  PRIMARY KEY (product_id, tag_id),
-  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-  FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
-
--- ==================================================
--- PHẦN 5: ĐƠN HÀNG (TRANSACTIONS)
--- ==================================================
 CREATE TABLE orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  customer_id VARCHAR(36) NOT NULL, -- 🔥 Đổi thành VARCHAR(36) để khớp UUID
+  customer_id CHAR(36) NOT NULL,
   order_code VARCHAR(50) NOT NULL UNIQUE,
   order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT 'Đang xử lý',
-  total_amount INT NOT NULL DEFAULT 0,
+  total_amount INT UNSIGNED NOT NULL DEFAULT 0,
   FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
+  product_id INT DEFAULT NULL,
   product_name VARCHAR(255) NOT NULL,
   category_name VARCHAR(100),
-  quantity INT NOT NULL DEFAULT 1,
-  price INT NOT NULL, 
+  quantity INT UNSIGNED NOT NULL DEFAULT 1,
+  price INT UNSIGNED NOT NULL, 
   product_image LONGTEXT,
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 
 -- ==================================================
--- PHẦN 6: BƠM DỮ LIỆU MẪU CƠ BẢN
+-- PHẦN 4: BƠM DỮ LIỆU SIÊU SẠCH (CỨU TOÀN BỘ DATA CŨ)
 -- ==================================================
--- 1. Data Admin (Pass: 123456)
+
+-- 1. TẠO TÀI KHOẢN ADMIN BATMAN NGAY TỪ ĐẦU (Không cần update lòng vòng)
 INSERT INTO users (email, phone, password_hash, role, is_verified) VALUES 
-('admin@eiu.edu.vn', '0999999999', '$2b$10$XU.sQYtZ9vQyG1xI81XFHuF.40E.M6t0QoI/Gi7xWf5f8b9Q5qu6a', 'admin', TRUE);
+('batman@eiu.edu.vn', '012345678', '$2b$10$XU.sQYtZ9vQyG1xI81XFHuF.40E.M6t0QoI/Gi7xWf5f8b9Q5qu6a', 'admin', TRUE);
 
 INSERT INTO admins (user_id, full_name, employee_code) VALUES 
-(1, 'Quản Trị Viên', 'EMP-001');
+(1, 'Batman', 'EMP-BATMAN');
 
--- 2. 17 Danh mục Build PC (Bảng part_categories)
-INSERT INTO part_categories (id, part_key, label) VALUES 
-(1, 'cpu', 'Bộ vi xử lý'), (2, 'main', 'Bo mạch chủ'), (3, 'ram', 'RAM'), 
-(4, 'ssd', 'SSD'), (5, 'hdd', 'HDD'), (6, 'vga', 'VGA'), 
-(7, 'psu', 'Nguồn'), (8, 'case', 'Vỏ case'), (9, 'monitor', 'Màn hình'), 
-(10, 'keyboard', 'Bàn phím'), (11, 'mouse', 'Chuột'), (12, 'headset', 'Tai nghe'), 
-(13, 'fan', 'Fan case'), (14, 'aircool', 'Tản nhiệt khí'), (15, 'aio', 'Tản nhiệt nước AIO'), 
-(16, 'custom', 'Tản nhiệt nước Custom'), (17, 'windows', 'Windows bản quyền');
-
--- 3. Bơm danh mục hệ thống mới (Categories)
+-- 2. ĐỊNH NGHĨA DANH MỤC TỔNG HỢP
 INSERT IGNORE INTO categories (id, name) VALUES 
-('cpu', 'Vi xử lý (CPU)'), ('vga', 'Card màn hình (VGA)'), ('ram', 'Bộ nhớ trong (RAM)'),
-('mainboard', 'Bo mạch chủ'), ('monitor', 'Màn hình'), ('case', 'Vỏ Case'), ('ssd', 'Ổ cứng SSD'),
-('keyboard', 'Bàn phím'), ('mouse', 'Chuột'), ('fan', 'Quạt tản nhiệt');
+('cpu', 'Vi xử lý (CPU)'), ('mainboard', 'Bo mạch chủ'), ('ram', 'Bộ nhớ trong (RAM)'),
+('ssd', 'Ổ cứng SSD'), ('hdd', 'Ổ cứng HDD'), ('vga', 'Card màn hình (VGA)'),
+('psu', 'Nguồn (PSU)'), ('case', 'Vỏ Case'), ('monitor', 'Màn hình'),
+('keyboard', 'Bàn phím'), ('mouse', 'Chuột'), ('fan', 'Quạt tản nhiệt'), 
+('pc_set', 'PC Lắp Ráp Sẵn');
 
--- 4. Bơm Thuộc tính chuẩn (Attributes)
-INSERT INTO attributes (id, name, unit) VALUES
-('brand', 'Thương hiệu', NULL), ('socket', 'Socket hỗ trợ', NULL), ('cores', 'Số nhân', NULL),
-('capacity', 'Dung lượng', 'GB'), ('size', 'Kích thước', 'inch'), ('refresh_rate', 'Tần số quét', 'Hz');
+-- 3. CỨU DỮ LIỆU TỪ BẢNG PRODUCTS CŨ (Giữ nguyên)
+INSERT INTO products (id, category_id, name, slug, image_url, price, old_price, stock, status, badge, description, preset_json) VALUES
+(1, 'cpu', 'Intel Core i5-12400F', 'intel-core-i5-12400f', 'uploads/parts/Intel Core i5-12400F.jpg', 3500000, 3900000, 20, 'sale', 'HOT', 'CPU quốc dân cho nhu cầu Gaming tầm trung.', '{"brand":"Intel"}'),
+(2, 'vga', 'Card màn hình RTX 4060', 'vga-rtx-4060', 'uploads/parts/RTX 4060.jpg', 8500000, 9500000, 5, 'sale', 'SALE', 'Hiệu năng đồ họa vượt trội với kiến trúc Ada Lovelace.', '{"brand":"Nvidia"}'),
+(3, 'ram', 'RAM 32GB DDR4', 'ram-32gb-ddr4', 'uploads/parts/32GB DDR4.jpg', 2200000, NULL, 15, 'active', NULL, 'Đa nhiệm mượt mà, phù hợp mọi bo mạch chủ DDR4.', '{}'),
+(4, 'mainboard', 'Asus ROG STRIX B550-F GAMING', 'asus-rog-strix-b550-f-gaming', 'image/mainboard-asus-rog-strix-b550-f-gaming.jpg', 4990000, 5500000, 8, 'sale', 'HOT', 'Bo mạch chủ cao cấp, hỗ trợ PCIe 4.0 và Wi-Fi 6.', '{}'),
+(5, 'monitor', 'LG UltraGear 27GS75Q-B 27 inch', 'lg-ultragear-27gs75q-b', 'image/LG UltraGear 27GS75Q-B .jpg', 6990000, 7500000, 10, 'active', 'NEW', 'Màn hình IPS 2K 144Hz chuyên game cực mượt.', '{}'),
+(6, 'mouse', 'Chuột RAZER DeathAdder V2', 'razer-deathadder-v2', 'image/RAZER DeathAdder V2.jpg', 1490000, 1890000, 12, 'sale', 'SALE', 'Huyền thoại form cầm công thái học của dân FPS.', '{}'),
+(7, 'case', 'Vỏ case Inwin 925 Black Full Tower', 'inwin-925-black', 'image/vo-case-Inwin-925-Black - Full Tower.jpg', 10990000, 11900000, 2, 'active', NULL, 'Case Full Tower nhôm kính cực kỳ sang trọng.', '{}'),
+(8, 'keyboard', 'Bàn phím FANTECH MAXFIT 67 WHITE', 'fantech-maxfit-67', 'image/FANTECH MAXFIT 67 WHITE.jpg', 1600000, 1800000, 20, 'sale', 'HOT', 'Bàn phím cơ layout 65% nhỏ gọn, switch gõ siêu êm.', '{}'),
+(9, 'fan', 'Tản nhiệt khí JONSBO CR-1000 EVO', 'jonsbo-cr-1000-evo', 'image/tan-nhiet-khi-cpu-jonsbo-cr-1000-evo-black-color-rgb.jpg', 389000, 590000, 30, 'sale', 'HOT', 'Quạt tản nhiệt quốc dân, LED RGB rực rỡ.', '{}');
 
--- 5. Nối Thuộc tính vào Danh mục
-INSERT INTO category_attributes (category_id, attribute_id) VALUES
-('cpu', 'brand'), ('cpu', 'socket'), ('cpu', 'cores'),
-('ram', 'brand'), ('ram', 'capacity'),
-('monitor', 'brand'), ('monitor', 'size'), ('monitor', 'refresh_rate');
-
--- 6. Bơm Sản Phẩm xịn xò
-INSERT INTO products (id, category_id, name, slug, image_url, price, old_price, stock, status, badge, description) VALUES
-(1, 'cpu', 'Intel Core i5-12400F', 'intel-core-i5-12400f', 'uploads/parts/Intel Core i5-12400F.jpg', 3500000, 3900000, 20, 'sale', 'HOT', 'CPU quốc dân cho nhu cầu Gaming tầm trung.'),
-(2, 'vga', 'Card màn hình RTX 4060', 'vga-rtx-4060', 'uploads/parts/RTX 4060.jpg', 8500000, 9500000, 5, 'sale', 'SALE', 'Hiệu năng đồ họa vượt trội với kiến trúc Ada Lovelace.'),
-(3, 'ram', 'RAM 32GB DDR4', 'ram-32gb-ddr4', 'uploads/parts/32GB DDR4.jpg', 2200000, NULL, 15, 'active', NULL, 'Đa nhiệm mượt mà, phù hợp mọi bo mạch chủ DDR4.'),
-(4, 'mainboard', 'Asus ROG STRIX B550-F GAMING', 'asus-rog-strix-b550-f-gaming', 'image/mainboard-asus-rog-strix-b550-f-gaming.jpg', 4990000, 5500000, 8, 'sale', 'HOT', 'Bo mạch chủ cao cấp, hỗ trợ PCIe 4.0 và Wi-Fi 6.'),
-(5, 'monitor', 'LG UltraGear 27GS75Q-B 27 inch', 'lg-ultragear-27gs75q-b', 'image/LG UltraGear 27GS75Q-B .jpg', 6990000, 7500000, 10, 'active', 'NEW', 'Màn hình IPS 2K 144Hz chuyên game cực mượt.'),
-(6, 'mouse', 'Chuột RAZER DeathAdder V2', 'razer-deathadder-v2', 'image/RAZER DeathAdder V2.jpg', 1490000, 1890000, 12, 'sale', 'SALE', 'Huyền thoại form cầm công thái học của dân FPS.'),
-(7, 'case', 'Vỏ case Inwin 925 Black Full Tower', 'inwin-925-black', 'image/vo-case-Inwin-925-Black - Full Tower.jpg', 10990000, 11900000, 2, 'active', NULL, 'Case Full Tower nhôm kính cực kỳ sang trọng.'),
-(8, 'keyboard', 'Bàn phím FANTECH MAXFIT 67 WHITE', 'fantech-maxfit-67', 'image/FANTECH MAXFIT 67 WHITE.jpg', 1600000, 1800000, 20, 'sale', 'HOT', 'Bàn phím cơ layout 65% nhỏ gọn, switch gõ siêu êm.'),
-(9, 'fan', 'Tản nhiệt khí JONSBO CR-1000 EVO', 'jonsbo-cr-1000-evo', 'image/tan-nhiet-khi-cpu-jonsbo-cr-1000-evo-black-color-rgb.jpg', 389000, 590000, 30, 'sale', 'HOT', 'Quạt tản nhiệt quốc dân, LED RGB rực rỡ.');
-
--- 7. Bơm Giá trị Thuộc Tính (EAV)
-INSERT INTO product_attribute_values (product_id, attribute_id, value) VALUES
-(1, 'brand', 'Intel'), (1, 'socket', 'LGA 1700'), (1, 'cores', '6'),
-(3, 'brand', 'Corsair'), (3, 'capacity', '32'),
-(5, 'brand', 'LG'), (5, 'size', '27'), (5, 'refresh_rate', '144');
-
--- 8. Bơm linh kiện cho Build PC cũ
-INSERT INTO part_items (category_id, name, price, image) VALUES 
-(1, 'Intel Core i5-12400F', 3500000, 'uploads/parts/Intel Core i5-12400F.jpg'),
-(1, 'AMD Ryzen 5 5600X', 3900000, 'uploads/parts/AMD Ryzen 5 5600X.jpg'),
-(2, 'Mainboard B660M', 2200000, 'uploads/parts/B660M.jpg'),
-(2, 'Mainboard B760M', 2900000, 'uploads/parts/B760M.jpg'),
-(3, 'RAM 16GB DDR4', 1200000, 'uploads/parts/16GB DDR4.jpg'),
-(3, 'RAM 32GB DDR4', 2200000, 'uploads/parts/32GB DDR4.jpg'),
-(4, 'SSD 512GB NVMe', 1300000, 'uploads/parts/SSD 512GB.jpg'),
-(4, 'SSD 1TB NVMe', 2300000, 'uploads/parts/SSD 1TB.jpg'),
-(5, 'HDD 1TB WD Blue', 950000, 'uploads/parts/HDD 1TB.jpg'),
-(5, 'HDD 2TB Seagate', 1450000, 'uploads/parts/HDD 2TB.jpg'),
-(6, 'VGA RTX 3060 12GB', 7500000, 'uploads/parts/RTX 3060.jpg'),
-(6, 'VGA RTX 4060 8GB', 8500000, 'uploads/parts/RTX 4060.jpg'),
-(7, 'Nguồn 650W Bronze', 1100000, 'uploads/parts/650W Bronze.jpg');
-SELECT * FROM users;
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE admins;
-TRUNCATE TABLE customers;
-TRUNCATE TABLE users;
-SET FOREIGN_KEY_CHECKS = 1;
+-- 4. CỨU DỮ LIỆU TỪ BẢNG PART_ITEMS CŨ VÀO CHUNG BẢNG PRODUCTS MỚI
+-- (Tự cấp ID nối tiếp, tự gán danh mục chữ, tự set kho mặc định là 10 để Admin thấy được)
+INSERT INTO products (category_id, name, slug, price, stock, image_url, preset_json) VALUES 
+('cpu', 'AMD Ryzen 5 5600X', 'amd-ryzen-5-5600x', 3900000, 10, 'uploads/parts/AMD Ryzen 5 5600X.jpg', '{}'),
+('mainboard', 'Mainboard B660M', 'mainboard-b660m', 2200000, 10, 'uploads/parts/B660M.jpg', '{}'),
+('mainboard', 'Mainboard B760M', 'mainboard-b760m', 2900000, 10, 'uploads/parts/B760M.jpg', '{}'),
+('ram', 'RAM 16GB DDR4', 'ram-16gb-ddr4', 1200000, 15, 'uploads/parts/16GB DDR4.jpg', '{}'),
+('ssd', 'SSD 512GB NVMe', 'ssd-512gb-nvme', 1300000, 20, 'uploads/parts/SSD 512GB.jpg', '{}'),
+('ssd', 'SSD 1TB NVMe', 'ssd-1tb-nvme', 2300000, 10, 'uploads/parts/SSD 1TB.jpg', '{}'),
+('hdd', 'HDD 1TB WD Blue', 'hdd-1tb-wd-blue', 950000, 10, 'uploads/parts/HDD 1TB.jpg', '{}'),
+('hdd', 'HDD 2TB Seagate', 'hdd-2tb-seagate', 1450000, 5, 'uploads/parts/HDD 2TB.jpg', '{}'),
+('vga', 'VGA RTX 3060 12GB', 'vga-rtx-3060-12gb', 7500000, 5, 'uploads/parts/RTX 3060.jpg', '{}'),
+('psu', 'Nguồn 650W Bronze', 'nguon-650w-bronze', 1100000, 10, 'uploads/parts/650W Bronze.jpg', '{}');
 USE eiu_computer;
-UPDATE users 
-SET role = 'admin', is_verified = 1 
-WHERE phone = '012345678';
+
+-- Trả lại 2 cột xác thực cho bảng users
+ALTER TABLE users ADD COLUMN verify_token VARCHAR(255) DEFAULT NULL;
+ALTER TABLE users ADD COLUMN token_expiry DATETIME DEFAULT NULL;
+UPDATE users SET role = 'admin', is_verified = 1 WHERE email = 'giakiet189@gmail.com';
+
+-- Gắn luôn thẻ nhân viên cho ngầu
 INSERT INTO admins (user_id, full_name, employee_code) 
-SELECT id, 'Batman', 'EMP-BATMAN' 
-FROM users 
-WHERE phone = '012345678';
+SELECT id, 'Gia Kiệt', 'EMP-VIP' FROM users WHERE email = 'giakiet189@gmail.com';
+USE eiu_computer;
+ALTER TABLE products ADD COLUMN description TEXT NULL AFTER name;

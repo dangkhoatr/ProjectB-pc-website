@@ -6,13 +6,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="../assets/css/style.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Chương trình khuyến mãi | EIU Computer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <style>
         :root {
             --primary: #e11d48;
@@ -454,7 +454,8 @@
 
         <section class="promo-intro">
             <div class="promo-banner">
-                <img src="../assets/images/-banner-mu-pc-tng-mn-tintuc.jpg" alt="Banner khuyến mại" onerror="this.style.display='none'" />
+                <img src="../assets/images/-banner-mu-pc-tng-mn-tintuc.jpg" alt="Banner khuyến mại"
+                    onerror="this.style.display='none'" />
             </div>
 
             <div class="promo-commitments">
@@ -487,7 +488,7 @@
                 <a href="#" class="link-card">Chính sách vận chuyển</a>
                 <a href="#" class="link-card">Chính sách bảo hành</a>
                 <a href="#" class="link-card">Hướng dẫn mua hàng</a>
-                
+
                 <a href="build-pc.html" class="link-card">Tư vấn build PC</a>
             </div>
         </section>
@@ -621,129 +622,95 @@
             </div>
         </section>
     </main>
-    <script>
-        function scrollToTop() {
-            const start = window.scrollY;
-            const duration = 700;
-            const startTime = performance.now();
 
-            function scrollStep(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
-                const ease =
-                    progress < 0.5
-                        ? 4 * progress * progress * progress
-                        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-                window.scrollTo(0, start * (1 - ease));
-
-                if (progress < 1) {
-                    requestAnimationFrame(scrollStep);
-                }
-            }
-
-            requestAnimationFrame(scrollStep);
-        }
-
-        window.addEventListener("storage", () => {
-            try {
-                build = JSON.parse(localStorage.getItem("pc_build")) || {};
-            } catch {
-                build = {};
-            }
-
-            recalcCartQuantityFromBuild();
-            updateCartCount();
-            render();
-        });
-    </script>
-    
     <div id="footer"></div>
-    
+
     <script src="../components/header.js"></script>
     <script src="../components/footer.js"></script>
-    
+
     <script>
         renderHeader("header");
         renderFooter("footer");
     </script>
-    
+
     <div id="floating-icons"></div>
     <script src="../components/floating-icons.js"></script>
     <script>
         renderFloatingIcons("floating-icons");
     </script>
-    
+
     <script>
-        async function loadPromoProducts(containerId, categoryName) {
+        // Hàm xịn đã được bọc thép (Chỉ giữ 1 hàm duy nhất này thôi)
+        async function loadPromoProducts(containerId, payload) {
             const container = document.getElementById(containerId);
-            const SERVER_URL = 'http://localhost:3000';
-            const API_URL = 'http://localhost:3000/api/products/promo'; 
+            if (!container) return;
 
             try {
-                const response = await fetch(API_URL, {
+                const res = await fetch('http://localhost:3000/api/products/promo', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ category: categoryName })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-                
-                const products = await response.json();
+
+                const products = await res.json();
 
                 if (!products || products.length === 0) {
-                    container.innerHTML = '<p>Đang cập nhật sản phẩm khuyến mãi...</p>';
+                    container.innerHTML = '<p style="color: #6b7280; font-style: italic;">Chưa có sản phẩm khuyến mãi cho danh mục này.</p>';
                     return;
                 }
 
                 const htmlContent = products.map(product => {
                     const priceNew = Number(product.price).toLocaleString('vi-VN');
                     const priceOld = product.old_price ? Number(product.old_price).toLocaleString('vi-VN') : '';
-                    
-                    let badgeHtml = '';
-                    if (product.badge) {
-                        const isHot = (product.badge.toUpperCase() === 'HOT' || product.badge.toUpperCase() === 'SALE');
-                        badgeHtml = `<span class="discount-badge ${isHot ? 'hot' : ''}">${product.badge}</span>`;
+
+                    let imgUrl = "https://placehold.co/300x300/1f2937/fff?text=No+Image";
+                    if (product.image) {
+                        imgUrl = product.image.startsWith('http') || product.image.startsWith('data:')
+                            ? product.image
+                            : `http://localhost:3000/${product.image}`;
                     }
 
-                    const fullImageUrl = `${SERVER_URL}/${product.image}`;
-
                     return `
-                        <article class="product-card">
-                            <div class="product-thumb">
-                                <img src="${fullImageUrl}" alt="${product.name}" onerror="this.src='../assets/images/default.jpg'">
-                                ${badgeHtml}
+                    <article class="product-card">
+                        <span class="discount-badge hot">HOT SALE</span>
+                        <div class="product-thumb">
+                            <img src="${imgUrl}" alt="${product.name}" onerror="this.src='https://placehold.co/300x300/1f2937/fff?text=Loi+Anh'">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">${product.specs?.brand || 'Khuyến mại'}</div>
+                            <h3 class="product-name">${product.name}</h3>
+                            <div class="product-price-row">
+                                <span class="price-new">${priceNew} đ</span>
+                                ${priceOld ? `<span class="price-old">${priceOld} đ</span>` : ''}
                             </div>
-                            <div class="product-body">
-                                <div class="product-category">${product.category_name || 'Khuyến mại'}</div>
-                                <h3 class="product-name">${product.name}</h3>
-                                <p class="product-desc">${product.description || ''}</p>
-                                <div class="product-price-row">
-                                    <span class="price-new">${priceNew}đ</span>
-                                    ${priceOld ? `<span class="price-old">${priceOld}đ</span>` : ''}
-                                </div>
-                                <button onclick="window.location.href='product-detail.html?slug=${product.slug}'" class="product-btn">
-                                    Xem chi tiết
-                                </button>
+                            <div class="product-actions">
+                                <button onclick="addToCart('${product.id}')" class="product-btn" style="margin-bottom: 8px;">Mua ngay</button>
+                                <button onclick="window.location.href='product-detail.html?id=${product.id}'" class="product-btn" style="background: #f1f5f9; color: #111827;">Xem chi tiết</button>
                             </div>
-                        </article>
+                        </div>
+                    </article>
                     `;
                 }).join('');
 
                 container.innerHTML = htmlContent;
 
-            } catch (error) {
-                console.error(`Lỗi render ${containerId}:`, error);
-                container.innerHTML = '<p>Lỗi kết nối máy chủ.</p>';
+            } catch (err) {
+                console.error(`Lỗi tải dữ liệu cho ${containerId}:`, err);
+                container.innerHTML = '<p style="color: #ef4444;">Lỗi kết nối máy chủ. Hãy kiểm tra Backend!</p>';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPromoProducts('promo-monitors', 'monitor');
-            loadPromoProducts('promo-gears', 'gear');
-            loadPromoProducts('promo-cooling', 'cooling');
+        document.addEventListener("DOMContentLoaded", () => {
+            // Nhóm đúng theo logic Backend
+            loadPromoProducts('promo-monitors', { category: 'monitor' });
+            loadPromoProducts('promo-gears', { group: 'gears' });
+            loadPromoProducts('promo-cooling', { group: 'cooling' });
         });
+
+        function addToCart(id) {
+            alert("Đã thêm sản phẩm ID " + id + " vào giỏ hàng!");
+        }
     </script>
 </body>
+
 </html>

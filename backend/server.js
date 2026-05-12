@@ -4,32 +4,38 @@ const path = require("path");
 require("dotenv").config();
 
 const pool = require("./db");
-const productsRouter = require("./routes/products");
-const partsRouter = require("./routes/parts");
-const authRouter = require('./routes/auth'); // Di chuyển lên trên cho gọn
+
+// 1. NHÚNG CÁC ROUTER XỊN VÀO ĐÂY (Đã xóa sổ partsRouter)
+const productsRouter = require("./routes/productsRoutes");
+const authRouter = require('./routes/authRoutes');
+const excelRoutes = require('./routes/excelRoutes'); // Kéo Excel lên đây cho chuẩn bài
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 2. MIDDLEWARE CƠ BẢN
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// SỬA TẠI ĐÂY: Thêm __ trước dirname
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// 3. XỬ LÝ ẢNH TĨNH
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/image", express.static(path.join(__dirname, "../frontend/assets/images")));
 
+// 4. API TEST CƠ BẢN
 app.get("/", (req, res) => {
   res.json({ message: "EIU Computer Backend is running" });
 });
 
+// 5. GẮN ĐƯỜNG DẪN API (Đã xóa sổ /api/parts)
 app.use("/api/products", productsRouter);
-app.use("/api/parts", partsRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/excel', excelRoutes);
 
+// 6. KHỞI ĐỘNG SERVER
 app.listen(PORT, async () => {
-  // SỬA TẠI ĐÂY: Dùng dấu backtick ` thay vì dấu ' hoặc "
-  console.log("Server chạy tại");
+  console.log(`🚀 Server đang chạy ngon lành tại cổng ${PORT}`);
 
   // Kiểm tra kết nối MySQL
   try {
@@ -38,7 +44,5 @@ app.listen(PORT, async () => {
     connection.release();
   } catch (err) {
     console.error("❌ Kết nối MySQL thất bại:", err.message);
-    // Nếu bạn gặp lỗi "Access denied" hay "Password expired" ở đây, 
-    // hãy dùng lệnh ALTER USER như mình đã hướng dẫn ở trên nhé!
   }
 });

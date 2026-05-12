@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="../assets/css/style.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -590,6 +591,7 @@
             font-size: 13px;
             color: #64748b;
         }
+
         .about-section {
             background-color: #f1f5f9;
             padding: 80px 0;
@@ -632,7 +634,8 @@
         }
 
         .about-list li::before {
-            content: "\f058"; /* Icon check-circle của FontAwesome */
+            content: "\f058";
+            /* Icon check-circle của FontAwesome */
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
             position: absolute;
@@ -692,19 +695,22 @@
             font-size: 15px;
             color: #64748b;
         }
-        
+
         @media (max-width: 991px) {
             .promo-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .about-box {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+
             .highlight-card:hover {
                 transform: translateY(-5px);
             }
         }
+
         @media (max-width: 576px) {
             .promo-grid {
                 grid-template-columns: 1fr;
@@ -751,7 +757,7 @@
 
 <body>
     <div id="header"></div>
-    
+
     <section class="hero-slider">
         <div class="hero-slides" id="heroSlides">
             <div class="hero-slide active">
@@ -759,26 +765,26 @@
                     <h1>Máy tính mạnh mẽ cho học tập, làm việc và gaming</h1>
                     <p> Khám phá các dòng PC, mainboard, VGA, RAM và linh kiện chính hãng với giá tốt, bảo hành uy tín
                         và hỗ trợ build cấu hình theo nhu cầu. </p>
-                    <div class="hero-actions"> 
-                        <a href="#" class="hero-btn primary">Mua ngay</a> 
-                        
-                        <a href="build-pc.html" class="hero-btn secondary">Xây dựng cấu hình</a> 
+                    <div class="hero-actions">
+                        <a href="#" class="hero-btn primary">Mua ngay</a>
+
+                        <a href="build-pc.html" class="hero-btn secondary">Xây dựng cấu hình</a>
                     </div>
                 </div>
-                
+
                 <div class="hero-image"> <img src="../assets/images/pc.jpg" alt="PC Gaming"> </div>
             </div>
             <div class="hero-slide">
                 <div class="hero-content"> <span class="hero-tag">HIỆU NĂNG CAO</span>
                     <h1>Build PC tối ưu hiệu năng cho designer và creator</h1>
                     <p> Cấu hình mạnh, xử lý mượt các tác vụ đồ họa, render, edit video và công việc chuyên sâu. </p>
-                    <div class="hero-actions"> 
-                        <a href="#" class="hero-btn primary">Xem sản phẩm</a> 
-                        
-                        <a href="build-pc.html" class="hero-btn secondary">Tự build ngay</a> 
+                    <div class="hero-actions">
+                        <a href="#" class="hero-btn primary">Xem sản phẩm</a>
+
+                        <a href="build-pc.html" class="hero-btn secondary">Tự build ngay</a>
                     </div>
                 </div>
-                
+
                 <div class="hero-image"> <img src="../assets/images/pcworkstation.jpg" alt="PC Workstation"> </div>
             </div>
             <div class="hero-slide">
@@ -786,18 +792,19 @@
                     <h1>Linh kiện chính hãng, giá tốt, hỗ trợ toàn quốc</h1>
                     <p> Đầy đủ CPU, mainboard, RAM, SSD, VGA, PSU và phụ kiện với nhiều chương trình ưu đãi hấp dẫn.
                     </p>
-                    <div class="hero-actions"> 
-                        <a href="#" class="hero-btn primary">Khám phá ngay</a> 
-                        
-                        <a href="build-pc.html" class="hero-btn secondary">Build cấu hình</a> 
+                    <div class="hero-actions">
+                        <a href="#" class="hero-btn primary">Khám phá ngay</a>
+
+                        <a href="build-pc.html" class="hero-btn secondary">Build cấu hình</a>
                     </div>
                 </div>
-                
-                <div class="hero-image"> <img src="../assets/images/linhkienmaytinh.jpg" alt="Linh kiện máy tính"> </div>
+
+                <div class="hero-image"> <img src="../assets/images/linhkienmaytinh.jpg" alt="Linh kiện máy tính">
+                </div>
             </div>
-        </div> 
-        
-        <button class="hero-nav prev" id="heroPrev">&#10094;</button> 
+        </div>
+
+        <button class="hero-nav prev" id="heroPrev">&#10094;</button>
         <button class="hero-nav next" id="heroNext">&#10095;</button>
         <div class="hero-dots" id="heroDots"></div>
     </section>
@@ -843,7 +850,7 @@
             </div>
 
             <div class="product-grid" id="featured-products">
-                </div>
+            </div>
         </div>
     </section>
 
@@ -888,7 +895,8 @@
                 <h2>Tại sao chọn EIU COMPUTER?</h2>
                 <p>
                     Chúng tôi cung cấp giải pháp máy tính đồng bộ từ linh kiện đến cấu hình hoàn chỉnh,
-                    được tối ưu hóa hiệu năng dành riêng cho sinh viên, dân văn phòng, designer và game thủ chuyên nghiệp.
+                    được tối ưu hóa hiệu năng dành riêng cho sinh viên, dân văn phòng, designer và game thủ chuyên
+                    nghiệp.
                 </p>
                 <ul class="about-list">
                     <li>Tư vấn cấu hình chuẩn xác, phù hợp nhu cầu thực tế</li>
@@ -940,7 +948,7 @@
             </form>
         </div>
     </section>
-    
+
     <script>
         const slides = document.querySelectorAll(".hero-slide");
         const dotsWrap = document.getElementById("heroDots");
@@ -1058,28 +1066,29 @@
             render();
         });
     </script>
-    
+
     <div id="footer"></div>
-    
+
     <script src="../components/header.js"></script>
     <script src="../components/footer.js"></script>
-    
+
     <script>
         renderHeader("header");
         renderFooter("footer");
     </script>
-    
+
     <script>
         async function fetchFeaturedProducts() {
             const productGrid = document.getElementById('featured-products');
 
             try {
-                const response = await fetch('http://localhost:3000/api/products', {
+                // Đã chuyển lại thành POST theo ý chủ tịch
+                const response = await fetch('http://localhost:3000/api/products/public', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ limit: 4 }) 
+                    body: JSON.stringify({}) // Cứ gửi body rỗng hoặc mốt truyền tham số lọc vào đây
                 });
-                
+
                 const products = await response.json();
 
                 if (products.length === 0) {
@@ -1087,7 +1096,8 @@
                     return;
                 }
 
-                const featuredProducts = products;
+                // Cắt lấy 4 sản phẩm đầu tiên để show ra trang chủ
+                const featuredProducts = products.slice(0, 8);
 
                 const htmlContent = featuredProducts.map(product => {
                     const priceNew = Number(product.price).toLocaleString('vi-VN');
@@ -1095,28 +1105,39 @@
 
                     let badgeHtml = '';
                     if (product.badge) {
-                        const badgeClass = product.badge.toUpperCase() === 'HOT' ? 'hot' : '';
-                        badgeHtml = `<span class="discount-badge ${badgeClass}">${product.badge}</span>`;
+                        // Ưu tiên 1: Đã gắn Tag đặc biệt từ Admin (Đổi màu theo loại Tag)
+                        const bg = product.badge === 'HOT' ? '#ef233c' : (product.badge === 'NEW' ? '#3b82f6' : '#f59e0b');
+                        badgeHtml = `<span class="discount-badge" style="background: ${bg}; color: #fff;">${product.badge}</span>`;
+                    } else if (product.status === 'sale') {
+                        // Ưu tiên 2: Không gắn Tag nhưng trạng thái là đang giảm giá
+                        badgeHtml = `<span class="discount-badge hot" style="background: #ef233c; color: #fff;">SALE</span>`;
+                    }
+
+                    let imgUrl = "https://placehold.co/300x300/1f2937/fff?text=No+Image";
+                    if (product.image) {
+                        imgUrl = product.image.startsWith('http') || product.image.startsWith('data:')
+                            ? product.image
+                            : `http://localhost:3000/${product.image}`;
                     }
 
                     return `
                     <article class="product-card">
                         ${badgeHtml}
                         <div class="product-thumb">
-                            <img src="http://localhost:3000/${product.image}" alt="${product.name}">
+                            <img src="${imgUrl}" alt="${product.name}" onerror="this.src='https://placehold.co/300x300/1f2937/fff?text=Loi+Anh'">
                         </div>
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">
                             <span class="price-new">${priceNew} đ</span>
                             ${priceOld ? `<span class="price-old">${priceOld} đ</span>` : ''}
                         </div>
-                        <div class="product-meta">${product.description || 'Linh kiện chính hãng'}</div>
+                        <div class="product-meta">${product.specs?.brand ? `Thương hiệu: ${product.specs.brand}` : 'Linh kiện chính hãng'}</div>
                         <div class="product-actions">
-                            <button onclick="addToCart('${product.slug}')" class="btn btn-small btn-primary">Mua ngay</button>
-                            <a href="product-detail.html?slug=${product.slug}" class="btn btn-small btn-light">Xem chi tiết</a>
+                            <button onclick="addToCart('${product.id}')" class="btn btn-small btn-primary">Mua ngay</button>
+                            <a href="product-detail.html?id=${product.id}" class="btn btn-small btn-light">Xem chi tiết</a>
                         </div>
                     </article>
-                `;
+                    `;
                 }).join('');
 
                 productGrid.innerHTML = htmlContent;
@@ -1129,11 +1150,12 @@
 
         document.addEventListener('DOMContentLoaded', fetchFeaturedProducts);
     </script>
-    
+
     <div id="floating-icons"></div>
     <script src="../components/floating-icons.js"></script>
     <script>
         renderFloatingIcons("floating-icons");
     </script>
 </body>
+
 </html>

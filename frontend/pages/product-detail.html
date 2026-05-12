@@ -4,11 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chi tiết sản phẩm</title>
+  <title>Chi tiết sản phẩm | EIU COMPUTER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../assets/css/style.css">
 
   <style>
@@ -24,10 +23,6 @@
       --white: #ffffff;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       font-family: "Inter", sans-serif;
@@ -38,53 +33,6 @@
     a {
       text-decoration: none;
       color: inherit;
-    }
-
-    .top-bar {
-      background: #fff;
-      border-top: 10px solid #000;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .top-inner {
-      max-width: 1600px;
-      margin: 0 auto;
-      min-height: 38px;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .menu-title {
-      color: var(--red);
-      font-weight: 800;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-
-    .hotline-box {
-      position: relative;
-      background: var(--red);
-      color: #fff;
-      font-weight: 800;
-      padding: 8px 28px 8px 42px;
-      min-width: 300px;
-      text-align: center;
-      font-size: 16px;
-    }
-
-    .hotline-box::before {
-      content: "";
-      position: absolute;
-      left: -32px;
-      top: 0;
-      width: 0;
-      height: 0;
-      border-top: 19px solid transparent;
-      border-bottom: 19px solid transparent;
-      border-right: 32px solid var(--red);
     }
 
     .page {
@@ -103,15 +51,18 @@
       color: var(--red);
     }
 
+    /* Top Section */
     .product-box {
       background: #fff;
-      padding: 14px 14px 18px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
     .product-title {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 800;
-      line-height: 1.35;
+      line-height: 1.3;
       margin: 4px 0 10px;
       color: #1f2937;
     }
@@ -125,782 +76,162 @@
       color: #9ca3af;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 14px;
+      margin-bottom: 20px;
     }
 
     .stars {
-      color: #d1d5db;
+      color: #f59e0b;
       font-size: 18px;
-      letter-spacing: 1px;
     }
 
-    .meta strong {
-      color: #ef4444;
-      font-weight: 700;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 640px 1fr;
-      gap: 34px;
-      align-items: start;
-    }
-
-    .left-col {
-      min-width: 0;
-    }
-
-    .image-top-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .warranty-badge {
-      width: 88px;
-      min-width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fcd34d, #b91c1c 68%);
-      color: #fff7cc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-weight: 800;
-      line-height: 1.05;
-      font-size: 12px;
-      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.25);
-      padding: 8px;
-    }
-
-    .main-image-wrap {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .main-image {
-      width: 100%;
-      max-width: 520px;
-      display: block;
-      margin: 0 auto;
-      object-fit: contain;
-    }
-
-    .logo-row {
-      margin-top: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .logo-pill {
-      height: 54px;
-      min-width: 72px;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #374151;
-      border-radius: 4px;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.1;
-    }
-
-    .zoom-text {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .right-col {
-      min-width: 0;
-      padding-top: 6px;
-    }
-
-    .section-heading {
-      font-size: 18px;
-      font-weight: 800;
-      margin: 0 0 18px;
-      color: #1f2937;
-    }
-
-    .highlight-text {
-      font-size: 15px;
-      line-height: 1.75;
-      color: #1f2937;
-      margin-bottom: 18px;
-      white-space: pre-line;
-    }
-
-    .warranty-text {
-      font-size: 15px;
-      margin-bottom: 18px;
-      color: #9ca3af;
-    }
-
-    .warranty-text span {
-      color: #ef4444;
-    }
-
-    .price-panel {
-      background: #f5f5f5;
-      padding: 22px 24px;
-      border-radius: 4px;
-      margin-bottom: 14px;
-    }
-
-    .price-row {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .price-label {
-      font-size: 15px;
-      color: #1f2937;
-      min-width: 120px;
-    }
-
-    .price-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: #111827;
-    }
-
-    .vat-text {
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .buy-now-btn,
-    .cart-btn,
-    .installment-btn {
-      border: none;
-      width: 100%;
-      cursor: pointer;
-      border-radius: 4px;
-      color: #fff;
-      font-weight: 800;
-      font-family: inherit;
-    }
-
-    .buy-now-btn {
-      background: var(--red-strong);
-      padding: 13px 16px 10px;
-      margin-bottom: 10px;
-    }
-
-    .buy-now-btn .big {
-      display: block;
-      font-size: 20px;
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-
-    .buy-now-btn .small {
-      display: block;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    .bottom-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .cart-btn {
-      background: var(--orange);
-      padding: 13px 12px 10px;
-    }
-
-    .installment-btn {
-      background: var(--blue);
-      padding: 13px 12px 10px;
-    }
-
-    .cart-btn .big,
-    .installment-btn .big {
-      display: block;
-      font-size: 18px;
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-
-    .cart-btn .small,
-    .installment-btn .small {
-      display: block;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    .error-box,
-    .loading-box {
-      background: #fff;
-      padding: 30px;
-      text-align: center;
-      font-size: 18px;
-      border: 1px solid var(--line);
-    }
-
-    /* ===== PRODUCT DETAIL PRO STYLE ===== */
-
-    .product-box {
-      background: #fff;
-      padding: 20px;
-      border-radius: 6px;
-    }
-
-    /* Title */
-    .product-title {
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    /* Meta */
-    .meta {
-      font-size: 13px;
-      color: #9ca3af;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-
-    /* Layout */
     .detail-grid {
       display: grid;
       grid-template-columns: 600px 1fr;
       gap: 40px;
     }
 
-    /* Image */
     .main-image {
       width: 100%;
-      max-width: 500px;
+      max-height: 500px;
       object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
 
-    /* ===== RIGHT SIDE ===== */
-
-    .section-heading {
-      font-size: 18px;
+    .warranty-badge {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fcd34d, #b91c1c);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       font-weight: 800;
-      margin-bottom: 10px;
+      font-size: 11px;
+      line-height: 1.2;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Description */
-    .highlight-text {
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .highlight-text h3 {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .highlight-text h4 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-top: 14px;
-    }
-
-    .highlight-text ul {
-      padding-left: 18px;
-      margin-top: 8px;
-    }
-
-    .highlight-text li {
-      margin-bottom: 6px;
-    }
-
-    /* ===== PRICE BOX ===== */
-
+    /* Price & Actions */
     .price-panel {
       background: #f9fafb;
+      padding: 20px;
+      border-radius: 8px;
       border: 1px solid #eee;
-      padding: 18px;
-      border-radius: 6px;
-      margin: 15px 0;
+      margin: 20px 0;
     }
 
     .price-value {
-      font-size: 30px;
+      font-size: 36px;
       font-weight: 800;
       color: #e11d48;
     }
 
-    /* ===== BUTTON ===== */
-
     .buy-now-btn {
       background: linear-gradient(135deg, #ff1e2d, #d90429);
-      padding: 14px;
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 15px;
       border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
       margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .bottom-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .cart-btn {
       background: #f59e0b;
+      color: #fff;
+      border: none;
+      padding: 12px;
       border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .installment-btn {
       background: #1e3a8a;
-      border-radius: 6px;
-    }
-
-    .buy-now-btn:hover,
-    .cart-btn:hover,
-    .installment-btn:hover {
-      opacity: 0.9;
-    }
-
-    /* ===== SPEC TABLE ===== */
-
-    .spec-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    .spec-table td {
-      padding: 10px;
-      border: 1px solid #eee;
-      font-size: 14px;
-    }
-
-    .spec-table tr:nth-child(even) {
-      background: #f9fafb;
-    }
-
-    .product-info-section {
-      padding: 32px 16px;
-      background: #f5f7fb;
-    }
-
-    .product-info-card {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: #ffffff;
-      border: 1px solid #e8ecf3;
-      border-radius: 20px;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
-      padding: 32px;
-      font-family: "Inter", sans-serif;
-      color: #1f2937;
-    }
-
-    .product-info-header {
-      margin-bottom: 24px;
-    }
-
-    .product-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #111827, #374151);
       color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    .product-title {
-      margin: 0 0 14px;
-      font-size: 32px;
-      line-height: 1.3;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .product-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 24px;
-      font-size: 14px;
-      color: #4b5563;
-    }
-
-    .product-meta span {
-      position: relative;
-    }
-
-    .product-meta strong {
-      color: #111827;
-    }
-
-    .product-price-box {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: linear-gradient(135deg, #fff7ed, #fffbeb);
-      border: 1px solid #fed7aa;
-      border-radius: 18px;
-      padding: 20px 22px;
-      margin-bottom: 22px;
-    }
-
-    .price-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: #9a3412;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .price-current {
-      font-size: 38px;
-      font-weight: 800;
-      line-height: 1;
-      color: #dc2626;
-    }
-
-    .price-note {
-      font-size: 14px;
-      color: #6b7280;
-    }
-
-    .product-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .btn {
-      min-width: 180px;
-      height: 48px;
-      padding: 0 22px;
-      border-radius: 12px;
       border: none;
-      font-size: 15px;
+      padding: 12px;
+      border-radius: 6px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.25s ease;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
+    /* Info Section (The Dynamic Parts) */
+    .product-info-section {
+      padding: 30px 0;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: #fff;
-      box-shadow: 0 10px 22px rgba(220, 38, 38, 0.24);
-    }
-
-    .btn-outline {
+    .info-card {
       background: #fff;
-      color: #111827;
-      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .btn-dark {
-      background: #111827;
-      color: #fff;
-    }
-
-    .product-highlight {
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      padding: 22px;
-      margin-bottom: 28px;
-    }
-
-    .product-highlight h2 {
-      margin: 0 0 12px;
-      font-size: 20px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .product-highlight p {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.75;
-      color: #475569;
-    }
-
-    .product-grid {
+    .info-grid {
       display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 22px;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      margin-top: 25px;
     }
 
     .info-block {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      padding: 22px;
+      border: 1px solid #f0f0f0;
+      padding: 20px;
+      border-radius: 12px;
     }
 
     .info-block h3 {
-      margin: 0 0 16px;
+      margin-top: 0;
       font-size: 18px;
       font-weight: 800;
-      color: #0f172a;
-    }
-
-    .info-block ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .info-block ul li {
-      margin-bottom: 10px;
-      color: #475569;
-      line-height: 1.6;
+      border-left: 4px solid var(--red);
+      padding-left: 10px;
     }
 
     .spec-table {
       width: 100%;
       border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 12px;
-    }
-
-    .spec-table tr:not(:last-child) td {
-      border-bottom: 1px solid #e5e7eb;
     }
 
     .spec-table td {
-      padding: 14px 12px;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
       font-size: 14px;
-      vertical-align: top;
     }
 
     .spec-table td:first-child {
-      width: 38%;
       font-weight: 700;
-      color: #111827;
-      background: #f8fafc;
-    }
-
-    .spec-table td:last-child {
-      color: #475569;
-    }
-
-    .product-review-section {
-      max-width: 1200px;
-      margin: 24px auto 0;
-      padding: 0 16px 32px;
-      font-family: "Inter", sans-serif;
-    }
-
-    .review-box {
-      background: #fff;
-      border: 1px solid #dcdcdc;
-      padding: 14px 16px 18px;
-    }
-
-    .review-title {
-      margin: 0 0 12px;
-      font-size: 26px;
-      font-weight: 700;
-      color: #222;
-      line-height: 1.35;
-    }
-
-    .review-overview {
-      display: grid;
-      grid-template-columns: 220px 1fr 230px;
-      border: 1px solid #dcdcdc;
       background: #fafafa;
-      min-height: 150px;
-    }
-
-    .review-summary,
-    .review-breakdown,
-    .review-action {
-      padding: 18px 20px;
-    }
-
-    .review-summary {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #e3e3e3;
-      text-align: center;
-    }
-
-    .review-score {
-      font-size: 28px;
-      font-weight: 700;
-      color: #003b8b;
-      margin-bottom: 6px;
-    }
-
-    .review-stars {
-      font-size: 18px;
-      color: #cfcfcf;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
-
-    .review-count {
-      font-size: 14px;
-      color: #444;
-      line-height: 1.5;
-    }
-
-    .review-breakdown {
-      border-right: 1px solid #e3e3e3;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .review-row {
-      display: grid;
-      grid-template-columns: 48px 1fr 16px;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .review-label {
-      font-size: 14px;
+      width: 35%;
       color: #333;
     }
 
-    .review-bar {
-      width: 100%;
-      height: 10px;
-      background: #e5e5e5;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .review-bar-fill {
-      height: 100%;
-      background: #d70000;
-      width: 0;
-    }
-
-    .review-value {
-      font-size: 14px;
-      color: #666;
-      text-align: right;
-    }
-
-    .review-action {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .loading-box,
+    .error-box {
+      background: #fff;
+      padding: 50px;
       text-align: center;
+      border-radius: 12px;
     }
 
-    .review-action-text {
-      margin: 0 0 12px;
-      font-size: 14px;
-      color: #333;
-    }
+    @media (max-width: 1100px) {
 
-    .review-btn {
-      min-width: 155px;
-      height: 38px;
-      border: none;
-      background: #d60000;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .review-btn:hover {
-      background: #b80000;
-    }
-
-
-    @media (max-width: 991px) {
-      .product-title {
-        font-size: 26px;
-      }
-
-      .price-current {
-        font-size: 32px;
-      }
-
-      .product-grid {
+      .detail-grid,
+      .info-grid {
         grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .product-info-card {
-        padding: 22px 16px;
-        border-radius: 16px;
-      }
-
-      .product-title {
-        font-size: 22px;
-      }
-
-      .product-actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 1200px) {
-      .detail-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .top-inner {
-        flex-direction: column;
-        align-items: stretch;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-
-      .hotline-box {
-        min-width: auto;
-      }
-
-      .detail-grid {
-        gap: 20px;
-      }
-
-      .image-top-row {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .bottom-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .product-title {
-        font-size: 20px;
-      }
-
-      .price-value {
-        font-size: 24px;
       }
     }
   </style>
@@ -908,317 +239,181 @@
 
 <body>
   <div id="header"></div>
-  <div class="page">
+
+  <main class="page">
     <div class="breadcrumb" id="breadcrumb">
-      <a href="index.html">Trang chủ</a> ›
-      <a href="#">Linh Kiện Máy Tính</a> ›
-      <span>Đang tải...</span>
+      <a href="index.html">Trang chủ</a> › <span>Sản phẩm</span>
     </div>
 
-    <div id="productContent" class="loading-box">Đang tải sản phẩm...</div>
-  </div>
-  <section class="product-info-section">
-    <div class="product-info-card">
-      <div class="product-highlight">
-        <h2>Đặc điểm nổi bật</h2>
-        <p>
-          ROG Strix B550 Gaming series motherboards offer a feature-set usually
-          found in the higher-end ROG Strix X570 Gaming series, including the latest
-          PCIe 4.0. With robust power delivery and effective cooling, ROG Strix B550
-          Gaming is well-equipped to handle 3rd Gen AMD Ryzen CPUs. Boasting futuristic
-          aesthetics and intuitive ROG software, ROG Strix B550-F Gaming (Wi-Fi) gives
-          you a head start on your dream build.
-        </p>
-      </div>
+    <div id="productContent" class="loading-box">Đang tải dữ liệu sản phẩm...</div>
 
-      <div class="product-grid">
-        <div class="info-block">
-          <h3>Thông tin nhanh</h3>
-          <ul>
-            <li>Chipset AMD B550</li>
-            <li>Hỗ trợ AMD Ryzen thế hệ 3</li>
-            <li>Hỗ trợ PCIe 4.0</li>
-            <li>Tích hợp Wi-Fi</li>
-            <li>Thiết kế ROG Strix cao cấp</li>
-          </ul>
+    <section class="product-info-section" id="dynamicInfoSection" style="display: none;">
+      <div class="info-card">
+        <div class="product-highlight">
+          <h2 style="font-weight: 800;">Đặc điểm nổi bật</h2>
+          <p id="dynamic-description" style="line-height: 1.8; color: #4b5563;"></p>
         </div>
 
-        <div class="info-block">
-          <h3>Thông số kỹ thuật</h3>
-          <table class="spec-table">
-            <tr>
-              <td>Tên sản phẩm</td>
-              <td>ASUS ROG STRIX B550-F GAMING (WI-FI)</td>
-            </tr>
-            <tr>
-              <td>Thương hiệu</td>
-              <td>ASUS</td>
-            </tr>
-            <tr>
-              <td>Chipset</td>
-              <td>AMD B550</td>
-            </tr>
-            <tr>
-              <td>Kết nối nổi bật</td>
-              <td>PCIe 4.0, Wi-Fi</td>
-            </tr>
-            <tr>
-              <td>Bảo hành</td>
-              <td>36 tháng</td>
-            </tr>
-            <tr>
-              <td>Tình trạng</td>
-              <td>Liên hệ</td>
-            </tr>
-          </table>
+        <div class="info-grid">
+          <div class="info-block">
+            <h3>Thông tin nhanh</h3>
+            <ul id="dynamic-quick-info" style="padding-left: 20px; color: #4b5563; line-height: 2;">
+              <li>Đang cập nhật...</li>
+            </ul>
+          </div>
+
+          <div class="info-block">
+            <h3>Thông số kỹ thuật chi tiết</h3>
+            <table class="spec-table">
+              <tbody id="dynamic-spec-table">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="product-review-section">
-    <div class="review-box">
-      <h2 class="review-title">
-        Đánh giá &amp; Nhận xét về Mainboard Asus ROG STRIX B550-F GAMING(WI-FI)
-      </h2>
+    </section>
 
-      <div class="review-overview">
-        <div class="review-summary">
-          <div class="review-score">0/5</div>
-          <div class="review-stars">☆ ☆ ☆ ☆ ☆</div>
-          <div class="review-count">0 đánh giá &amp; nhận xét</div>
-        </div>
-
-        <div class="review-breakdown">
-          <div class="review-row">
-            <span class="review-label">5 sao</span>
-            <div class="review-bar">
-              <div class="review-bar-fill" style="width: 0%;"></div>
-            </div>
-            <span class="review-value">0</span>
-          </div>
-
-          <div class="review-row">
-            <span class="review-label">4 sao</span>
-            <div class="review-bar">
-              <div class="review-bar-fill" style="width: 0%;"></div>
-            </div>
-            <span class="review-value">0</span>
-          </div>
-
-          <div class="review-row">
-            <span class="review-label">3 sao</span>
-            <div class="review-bar">
-              <div class="review-bar-fill" style="width: 0%;"></div>
-            </div>
-            <span class="review-value">0</span>
-          </div>
-
-          <div class="review-row">
-            <span class="review-label">2 sao</span>
-            <div class="review-bar">
-              <div class="review-bar-fill" style="width: 0%;"></div>
-            </div>
-            <span class="review-value">0</span>
-          </div>
-
-          <div class="review-row">
-            <span class="review-label">1 sao</span>
-            <div class="review-bar">
-              <div class="review-bar-fill" style="width: 0%;"></div>
-            </div>
-            <span class="review-value">0</span>
-          </div>
-        </div>
-
-        <div class="review-action">
-          <p class="review-action-text">Bạn đã dùng sản phẩm này?</p>
-          <button class="review-btn">Gửi đánh giá của bạn</button>
+    <section class="product-review-section" id="reviewSection" style="display: none; margin-top: 20px;">
+      <div class="info-card">
+        <h2 id="dynamic-review-title" style="font-weight: 800; margin-bottom: 20px;">Đánh giá & Nhận xét</h2>
+        <div style="padding: 40px; text-align: center; background: #fafafa; border-radius: 10px; color: #9ca3af;">
+          Chưa có đánh giá nào cho sản phẩm này.
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
+
   <div id="footer"></div>
-  
+
   <script src="../components/header.js"></script>
   <script src="../components/footer.js"></script>
-  
+
   <script>
     renderHeader("header");
     renderFooter("footer");
-  </script>
 
-  <script>
-    function formatPrice(value) {
-      return Number(value || 0).toLocaleString("vi-VN") + " đ";
+    // 1. Hàm xử lý ảnh thông minh
+    function getSafeImageUrl(imgStr) {
+      if (!imgStr) return "https://placehold.co/500x500/1f2937/fff?text=No+Image";
+      if (imgStr.startsWith('http') || imgStr.startsWith('data:')) return imgStr;
+      return `http://localhost:3000/${imgStr}`;
     }
 
-    function buildDescription(product) {
-      if (product.description && product.description.trim()) {
-        return product.description;
-      }
+    // 2. Hàm định dạng tiền
+    function formatPrice(v) { return Number(v || 0).toLocaleString("vi-VN") + " đ"; }
 
-      return `${product.name} là sản phẩm phù hợp cho nhu cầu build PC, gaming và làm việc. Thiết kế hiện đại, hiệu năng ổn định và tương thích tốt với nhiều cấu hình phổ biến hiện nay.`;
-    }
-
-    function buildSpecs(product) {
-      const name = product.name || "";
-      const lower = name.toLowerCase();
-
-      if (lower.includes("mainboard") || lower.includes("b550")) {
-        return {
-          warranty: "36 Tháng",
-          category: "Mainboard",
-          sku: "SP005272",
-          views: "550"
-        };
-      }
-
-      if (lower.includes("case")) {
-        return {
-          warranty: "24 Tháng",
-          category: "Vỏ case",
-          sku: "SP008888",
-          views: "420"
-        };
-      }
-
-      return {
-        warranty: "12 Tháng",
-        category: "Linh Kiện Máy Tính",
-        sku: "SP000001",
-        views: "300"
-      };
-    }
-
-    function createLogoRowHtml() {
-      return `
-        <div class="logo-row">
-          <div class="logo-pill">AMD<br>READY</div>
-          <div class="logo-pill">RYZEN</div>
-          <div class="logo-pill">PCIe<br>4.0</div>
-          <div class="logo-pill">Wi-Fi 6</div>
-          <div class="logo-pill">AURA<br>SYNC</div>
-        </div>
-        <div class="zoom-text">🖵 Click xem album ảnh lớn</div>
-      `;
-    }
-
+    // 3. Hàm chính Render dữ liệu
     function renderProduct(product) {
-      const specs = buildSpecs(product);
-      const desc = buildDescription(product);
+      const specs = product.specs || {};
+      const imgUrl = getSafeImageUrl(product.image);
 
-      document.title = product.name || "Chi tiết sản phẩm";
+      // Hiển thị các section ẩn
+      document.getElementById("dynamicInfoSection").style.display = "block";
+      document.getElementById("reviewSection").style.display = "block";
 
+      // Cập nhật Tiêu đề trang
+      document.title = product.name + " | EIU COMPUTER";
+
+      // Cập nhật Breadcrumb
       document.getElementById("breadcrumb").innerHTML = `
-        <a href="index.html">Trang chủ</a> ›
-        <a href="#">${specs.category}</a> ›
+        <a href="index.html">Trang chủ</a> › 
+        <a href="build-pc.html">Linh kiện</a> › 
         <span>${product.name}</span>
       `;
 
-      // Thêm http://localhost:3000/ vào src của ảnh để load đúng đường dẫn
-      const imgUrl = product.image ? `http://localhost:3000/${product.image}` : 'https://via.placeholder.com/500x500?text=No+Image';
-
-      document.getElementById("productContent").className = "product-box";
-      document.getElementById("productContent").innerHTML = `
+      // Đổ dữ liệu Nửa Trên
+      const topContent = document.getElementById("productContent");
+      topContent.className = "product-box";
+      topContent.innerHTML = `
         <h1 class="product-title">${product.name}</h1>
-
         <div class="meta">
           <span class="stars">★★★★★</span>
-          <span>(0 lượt đánh giá)</span>
-          <span>Mã hàng: ${specs.sku}</span>
-          <span>Lượt xem: <strong style="color:#6b7280">${specs.views}</strong></span>
-          <span>Tình trạng hàng: <strong>Liên hệ</strong></span>
+          <span>Mã hàng: <b>SP${product.id.toString().padStart(4, '0')}</b></span>
+          <span>Tình trạng: <strong style="color: ${product.stock > 0 ? '#10b981' : '#ef4444'}">${product.stock > 0 ? 'Còn hàng' : 'Hết hàng'}</strong></span>
         </div>
 
         <div class="detail-grid">
           <div class="left-col">
-            <div class="image-top-row">
-              <div class="warranty-badge">3<br>Năm<br>Bảo Hành</div>
-
-              <div class="main-image-wrap">
-                <img class="main-image" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/500x500?text=No+Image'" alt="${product.name}">
-              </div>
+            <div style="display: flex; gap: 20px;">
+                <div class="warranty-badge">BẢO HÀNH<br>${specs.warranty || '36 THÁNG'}</div>
+                <img class="main-image" src="${imgUrl}" onerror="this.src='https://placehold.co/500x500/1f2937/fff?text=Loi+Anh'">
             </div>
-
-            ${createLogoRowHtml()}
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <div style="padding: 5px 15px; border: 1px solid #ddd; font-weight: 800; font-size: 12px;">GENUINE</div>
+                <div style="padding: 5px 15px; border: 1px solid #ddd; font-weight: 800; font-size: 12px;">NEW 100%</div>
+            </div>
           </div>
 
           <div class="right-col">
-            <h2 class="section-heading">Đặc điểm nổi bật:</h2>
-
-            <div class="highlight-text">${desc}</div>
-
-            <div class="warranty-text">Bảo hành: <span>${specs.warranty}</span></div>
-
             <div class="price-panel">
-              <div class="price-row">
-                <div class="price-label">Giá khuyến mãi:</div>
-                <div class="price-value">${formatPrice(product.price)}</div>
-                <div class="vat-text">[Giá đã có VAT]</div>
-              </div>
+              <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Giá khuyến mãi:</div>
+              <div class="price-value">${formatPrice(product.price)}</div>
+              <div style="font-size: 12px; color: #999;">(Đã bao gồm thuế VAT)</div>
             </div>
 
-            <button class="buy-now-btn" type="button">
-              <span class="big">ĐẶT MUA NGAY</span>
-              <span class="small">Giao hàng tận nơi nhanh chóng</span>
+            <button class="buy-now-btn" onclick="addToCart()">
+                <span style="display: block; font-size: 20px;">ĐẶT MUA NGAY</span>
+                <span style="font-size: 12px; font-weight: 400;">Giao hàng tận nơi miễn phí nội thành</span>
             </button>
 
             <div class="bottom-actions">
-              <button class="cart-btn" type="button" onclick="addToCart()">
-                <span class="big">THÊM VÀO GIỎ HÀNG</span>
-                <span class="small">Thêm vào giỏ hàng để chọn tiếp</span>
-              </button>
-
-              <button class="installment-btn" type="button">
-                <span class="big">MUA TRẢ GÓP</span>
-                <span class="small">Lãi suất 0%</span>
-              </button>
+              <button class="cart-btn" onclick="addToCart()">THÊM VÀO GIỎ</button>
+              <button class="installment-btn">MUA TRẢ GÓP 0%</button>
             </div>
           </div>
         </div>
       `;
+
+      // Đổ dữ liệu Nửa Dưới (Dynamic Specs)
+      document.getElementById("dynamic-description").innerText = product.description || `${product.name} là sản phẩm linh kiện chính hãng, được phân phối bởi EIU Computer với chính sách bảo hành dài hạn và hậu mãi chu đáo.`;
+      document.getElementById("dynamic-review-title").innerText = `Đánh giá & Nhận xét về ${product.name}`;
+
+      // Vẽ Bảng thông số từ preset_json
+      const specTable = document.getElementById("dynamic-spec-table");
+      const quickInfo = document.getElementById("dynamic-quick-info");
+
+      if (Object.keys(specs).length > 0) {
+        // 1. Vẽ bảng chi tiết
+        specTable.innerHTML = Object.entries(specs).map(([key, value]) => {
+          if (!value) return '';
+          return `<tr><td>${key.toUpperCase()}</td><td>${value}</td></tr>`;
+        }).join('');
+
+        // 2. Vẽ list thông tin nhanh (5 cái đầu)
+        quickInfo.innerHTML = Object.entries(specs).slice(0, 6).map(([key, value]) => {
+          if (!value) return '';
+          return `<li><b>${key.toUpperCase()}:</b> ${value}</li>`;
+        }).join('');
+      } else {
+        specTable.innerHTML = "<tr><td colspan='2'>Thông số đang được cập nhật...</td></tr>";
+        quickInfo.innerHTML = "<li>Liên hệ để biết thêm chi tiết</li>";
+      }
     }
 
-    async function loadProductDetail() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get("slug");
-
-      if (!slug) {
-        document.getElementById("productContent").className = "error-box";
-        document.getElementById("productContent").innerHTML = "Không có mã sản phẩm.";
+    // 4. Gọi API lấy data
+    async function loadData() {
+      const id = new URLSearchParams(window.location.search).get("id");
+      if (!id) {
+        document.getElementById("productContent").innerHTML = "<div class='error-box'>Lỗi: Không tìm thấy ID sản phẩm!</div>";
         return;
       }
 
       try {
-        const res = await fetch("http://localhost:3000/api/products/detail", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ slug: slug })
-        });
-
-        if (!res.ok) {
-          throw new Error("Không tìm thấy sản phẩm");
-        }
-
+        const res = await fetch(`http://localhost:3000/api/products/detail/${id}`, { method: "POST" });
+        if (!res.ok) throw new Error();
         const product = await res.json();
-        window.currentProduct = product; 
-        renderProduct(product); 
-      } catch (error) {
-        console.error(error);
-        document.getElementById("productContent").className = "error-box";
-        document.getElementById("productContent").innerHTML = "Không tải được thông tin sản phẩm.";
+        renderProduct(product);
+      } catch (err) {
+        document.getElementById("productContent").innerHTML = "<div class='error-box'>Sản phẩm không tồn tại hoặc lỗi kết nối Server!</div>";
       }
     }
 
     function addToCart() {
-      if (!window.currentProduct) return;
-
-      alert("Đã thêm vào giỏ hàng: " + window.currentProduct.name);
+      alert("Đã thêm sản phẩm vào giỏ hàng thành công!");
     }
 
-    loadProductDetail();
+    loadData();
   </script>
 </body>
+
 </html>
