@@ -9,7 +9,6 @@ const pool = require("./db");
 const productsRouter = require("./routes/productsRoutes");
 const authRouter = require('./routes/authRoutes');
 const excelRoutes = require('./routes/excelRoutes'); // Kéo Excel lên đây cho chuẩn bài
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -18,7 +17,9 @@ app.use(cors());
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
+//lấy dữ liệu khách hàng
+const customerRoutes = require('./routes/customerRoutes');
+app.use("/api/customers", customerRoutes);
 // 3. XỬ LÝ ẢNH TĨNH
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/image", express.static(path.join(__dirname, "../frontend/assets/images")));
