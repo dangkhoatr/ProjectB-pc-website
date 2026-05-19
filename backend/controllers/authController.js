@@ -104,8 +104,8 @@ const authController = {
             const isMatch = await bcrypt.compare(password, user.password_hash);
             if (!isMatch) return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng!' });
 
-            let fullName = "Người dùng", phone = "", address = "";
-            if (user.role === 'customer') {
+            let fullName = "", phone = "", address = "";
+            if (user === 'customer') {
                 const customerData = await userRepo.getCustomerInfo(user.id);
                 if (customerData) {
                     fullName = customerData.full_name;

@@ -204,8 +204,8 @@ CREATE TABLE order_items (
 -- ==================================================
 -- 1. Data Admin (Pass: 123456)
 INSERT INTO users (email, password_hash, role, is_verified) VALUES 
-('admin@eiu.edu.vn', '$2b$10$XU.sQYtZ9vQyG1xI81XFHuF.40E.M6t0QoI/Gi7xWf5f8b9Q5qu6a', 'admin', TRUE),
-('khoa.tran.cit20@eiu.edu.vn', '$2b$10$XU.sQYtZ9vQyG1xI81XFHuF.40E.M6t0QoI/Gi7xWf5f8b9Q5qu6a', 'admin', TRUE);
+('admin@eiu.edu.vn', '$2b$10$KeFX7Orb6uyPfoPbkVJCcupfxBQo1KJtt8UCHPHc0xmFN4J6k0NNi', 'admin', TRUE),
+('khoa.tran.cit20@eiu.edu.vn', '$2b$10$KeFX7Orb6uyPfoPbkVJCcupfxBQo1KJtt8UCHPHc0xmFN4J6k0NNi', 'admin', TRUE);
 
 INSERT INTO admins (user_id, full_name, employee_code) VALUES 
 (1, 'Quản Trị Viên', 'EMP-001');
