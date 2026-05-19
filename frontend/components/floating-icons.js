@@ -13,7 +13,7 @@ function renderFloatingIcons(targetId) {
         <i class="fab fa-youtube"></i>
       </a>
 
-      <a href="https://www.tiktok.com/@eiu_vietnam" class="icon tiktok">
+      <a href="https://www.tiktok.com/@eiu_vietnam" target="_blank" class="icon tiktok">
         <i class="fab fa-tiktok"></i>
       </a>
 
@@ -21,7 +21,7 @@ function renderFloatingIcons(targetId) {
         <i class="fas fa-phone"></i>
       </a>
 
-      <a href="https://www.messenger.com/" class="icon chat">
+      <a href="https://www.messenger.com/" target="_blank" class="icon chat">
         <i class="fas fa-comment-dots"></i>
       </a>
 

@@ -6,9 +6,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="../assets/css/style.css">
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Xây dựng cấu hình</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -385,10 +385,21 @@
     }
 
     @keyframes zoomPulse {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.2); }
-      60% { transform: scale(0.95); }
-      100% { transform: scale(1.1); }
+      0% {
+        transform: scale(1);
+      }
+
+      30% {
+        transform: scale(1.2);
+      }
+
+      60% {
+        transform: scale(0.95);
+      }
+
+      100% {
+        transform: scale(1.1);
+      }
     }
 
     .newsletter {
@@ -498,7 +509,8 @@
     </div>
   </div>
 
-  <div id="exportImageArea" style="position: fixed; left: -9999px; top: 0; width: 800px; background: #ffffff; padding: 20px; font-family: 'Times New Roman', serif;">
+  <div id="exportImageArea"
+    style="position: fixed; left: -9999px; top: 0; width: 800px; background: #ffffff; padding: 20px; font-family: 'Times New Roman', serif;">
     <h2 style="margin-top:0">CẤU HÌNH PC ĐÃ CHỌN</h2>
     <div id="exportList"></div>
     <hr>
@@ -569,13 +581,13 @@
     function getSafeImageUrl(imgStr) {
       if (!imgStr) return FALLBACK_BASE64;
       if (imgStr.startsWith('http') || imgStr.startsWith('data:')) return imgStr;
-      
+
       // ĐÂY, TRẢ LẠI ĐÚNG LOGIC XỊN CỦA ÔNG, ĐÉO SỬA LINH TINH NỮA
       if (imgStr.startsWith('uploads/')) return `../../${imgStr}`;
-      
+
       // Bổ sung thêm cái này đề phòng database có lưu đường dẫn bắt đầu bằng assets/ (như con chuột Razer)
       if (imgStr.startsWith('assets/')) return `../${imgStr}`;
-      
+
       return `http://localhost:3000/${imgStr}`;
     }
 
@@ -583,9 +595,7 @@
       build = JSON.parse(localStorage.getItem("pc_build")) || {};
     } catch {
       build = {};
-    } 
-
-    let cartQuantity = Number(localStorage.getItem("cart_quantity") || 0);
+    }
 
     function init() {
       render();
@@ -603,64 +613,64 @@
 
         // Fetch ĐỒNG THỜI cả API Cũ (Top) và API Mới (Admin)
         const [partsRes, productsRes] = await Promise.all([
-            fetch("http://localhost:3000/api/parts/items", postOptions).catch(() => null),
-            fetch("http://localhost:3000/api/products", postOptions).catch(() => null)
+          fetch("http://localhost:3000/api/parts/items", postOptions).catch(() => null),
+          fetch("http://localhost:3000/api/products", postOptions).catch(() => null)
         ]);
 
         // Đổ dữ liệu từ bảng Cũ (CPU, RAM...)
         if (partsRes && partsRes.ok) {
-            const rawData = await partsRes.json();
-            DATA = Object.assign({}, rawData);
+          const rawData = await partsRes.json();
+          DATA = Object.assign({}, rawData);
         }
 
         // Đổ và Trộn dữ liệu từ bảng Mới (Chuột, Phím, Vỏ Case...)
         if (productsRes && productsRes.ok) {
-            const products = await productsRes.json();
-            
-            // Render Cấu hình tham khảo dưới cùng
-            PRESET_BUILDS = {};
-            products.forEach((product, index) => {
-              PRESET_BUILDS[index + 1] = product.preset_json || {};
-            });
-            renderReferenceProducts(products);
+          const products = await productsRes.json();
 
-            // Thuật toán: Ánh xạ danh mục rác từ Admin về 17 Nút chuẩn
-            products.forEach(p => {
-                let catKey = p.category || ""; 
-                let targetKey = "";
-                const catStr = catKey.toLowerCase();
-                
-                if (catStr.includes('chuột') || catStr === 'mouse') targetKey = 'mouse';
-                else if (catStr.includes('phím') || catStr === 'keyboard') targetKey = 'keyboard';
-                else if (catStr.includes('màn') || catStr === 'monitor') targetKey = 'monitor';
-                else if (catStr.includes('vỏ') || catStr.includes('case')) targetKey = 'case';
-                else if (catStr.includes('cpu') || catStr.includes('vi xử lý')) targetKey = 'cpu';
-                else if (catStr.includes('main') || catStr.includes('bo mạch')) targetKey = 'main';
-                else if (catStr.includes('ram') || catStr.includes('bộ nhớ')) targetKey = 'ram';
-                else if (catStr.includes('vga') || catStr.includes('card')) targetKey = 'vga';
-                else if (catStr.includes('ssd')) targetKey = 'ssd';
-                else if (catStr.includes('hdd')) targetKey = 'hdd';
-                else if (catStr.includes('nguồn') || catStr === 'psu') targetKey = 'psu';
-                else if (catStr.includes('tai') || catStr === 'headset') targetKey = 'headset';
-                else if (catStr === 'fan') targetKey = 'fan';
-                else if (catStr.includes('khí') || catStr === 'aircool' || catStr === 'cooler_air') targetKey = 'aircool';
-                else if (catStr.includes('nước aio') || catStr === 'aio' || catStr === 'cooler_aio') targetKey = 'aio';
-                else if (catStr.includes('custom')) targetKey = 'custom';
-                else if (catStr.includes('win')) targetKey = 'windows';
+          // Render Cấu hình tham khảo dưới cùng
+          PRESET_BUILDS = {};
+          products.forEach((product, index) => {
+            PRESET_BUILDS[index + 1] = product.preset_json || {};
+          });
+          renderReferenceProducts(products);
 
-                // Nhét hàng mới vào danh sách nếu chưa có
-                if (targetKey) {
-                    if (!DATA[targetKey]) DATA[targetKey] = [];
-                    const exists = DATA[targetKey].find(item => item.name === p.name);
-                    if (!exists) {
-                        DATA[targetKey].push({
-                            name: p.name,
-                            price: p.price,
-                            image: p.image
-                        });
-                    }
-                }
-            });
+          // Thuật toán: Ánh xạ danh mục rác từ Admin về 17 Nút chuẩn
+          products.forEach(p => {
+            let catKey = p.category || "";
+            let targetKey = "";
+            const catStr = catKey.toLowerCase();
+
+            if (catStr.includes('chuột') || catStr === 'mouse') targetKey = 'mouse';
+            else if (catStr.includes('phím') || catStr === 'keyboard') targetKey = 'keyboard';
+            else if (catStr.includes('màn') || catStr === 'monitor') targetKey = 'monitor';
+            else if (catStr.includes('vỏ') || catStr.includes('case')) targetKey = 'case';
+            else if (catStr.includes('cpu') || catStr.includes('vi xử lý')) targetKey = 'cpu';
+            else if (catStr.includes('main') || catStr.includes('bo mạch')) targetKey = 'main';
+            else if (catStr.includes('ram') || catStr.includes('bộ nhớ')) targetKey = 'ram';
+            else if (catStr.includes('vga') || catStr.includes('card')) targetKey = 'vga';
+            else if (catStr.includes('ssd')) targetKey = 'ssd';
+            else if (catStr.includes('hdd')) targetKey = 'hdd';
+            else if (catStr.includes('nguồn') || catStr === 'psu') targetKey = 'psu';
+            else if (catStr.includes('tai') || catStr === 'headset') targetKey = 'headset';
+            else if (catStr === 'fan') targetKey = 'fan';
+            else if (catStr.includes('khí') || catStr === 'aircool' || catStr === 'cooler_air') targetKey = 'aircool';
+            else if (catStr.includes('nước aio') || catStr === 'aio' || catStr === 'cooler_aio') targetKey = 'aio';
+            else if (catStr.includes('custom')) targetKey = 'custom';
+            else if (catStr.includes('win')) targetKey = 'windows';
+
+            // Nhét hàng mới vào danh sách nếu chưa có
+            if (targetKey) {
+              if (!DATA[targetKey]) DATA[targetKey] = [];
+              const exists = DATA[targetKey].find(item => item.name === p.name);
+              if (!exists) {
+                DATA[targetKey].push({
+                  name: p.name,
+                  price: p.price,
+                  image: p.image
+                });
+              }
+            }
+          });
         }
       } catch (error) {
         console.error("Lỗi kết nối Backend:", error);
@@ -668,10 +678,9 @@
     }
 
     function recalcCartQuantityFromBuild() {
-      let totalQty = 0;
-      for (const key in build) { totalQty += Number(build[key].qty || 1); }
-      cartQuantity = totalQty;
-      localStorage.setItem("cart_quantity", cartQuantity);
+
+      updateCartCount();
+
     }
 
     function render() {
@@ -730,13 +739,13 @@
       const itemsToRender = DATA[key] || [];
 
       if (itemsToRender.length === 0) {
-          list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện.</div>";
+        list = "<div style='padding: 20px; text-align: center; color: red;'>Danh mục này hiện chưa có linh kiện.</div>";
       } else {
-          itemsToRender.forEach((i, index) => {
-            const qtyId = `qty_${key}_${index}`;
-            const imageSrc = getSafeImageUrl(i.image);
+        itemsToRender.forEach((i, index) => {
+          const qtyId = `qty_${key}_${index}`;
+          const imageSrc = getSafeImageUrl(i.image);
 
-            list += `
+          list += `
               <div class="item item-with-image">
                 <div class="item-thumb-wrap">
                   <img src="${imageSrc}" alt="${i.name}" class="item-thumb" onerror="${ONERROR_CODE}">
@@ -750,7 +759,7 @@
                 </div>
               </div>
             `;
-          });
+        });
       }
 
       document.getElementById("modalList").innerHTML = list;
@@ -769,7 +778,7 @@
     function save() { localStorage.setItem("pc_build", JSON.stringify(build)); recalcCartQuantityFromBuild(); render(); updateCartCount(); }
     function openReset() { document.getElementById("resetOverlay").style.display = "flex"; }
     function closeReset() { document.getElementById("resetOverlay").style.display = "none"; }
-    
+
     function saveBuild() {
       if (Object.keys(build).length === 0) return;
       const saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
@@ -808,11 +817,41 @@
     }
 
     function deleteSavedBuild(id) {
-      let saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
-      saved = saved.filter(s => s.id !== id);
-      localStorage.setItem("saved_builds", JSON.stringify(saved)); renderSavedBuilds();
+
+      let saved =
+        JSON.parse(
+          localStorage.getItem(
+            "saved_builds"
+          )
+        ) || [];
+
+      saved =
+        saved.filter(
+          s => s.id !== id
+        );
+
+      localStorage.setItem(
+        "saved_builds",
+        JSON.stringify(saved)
+      );
+
+
+      // XÓA CẤU HÌNH ĐANG BUILD
+      localStorage.setItem(
+        "pc_build",
+        JSON.stringify({})
+      );
+      build = {};
+
+      // cập nhật số giỏ hàng
+      updateCartCount();
+
+      // render lại header
+      renderHeader("header");
+
+      renderSavedBuilds();
     }
-    
+
     function openDelete() { document.getElementById("deleteOverlay").style.display = "flex"; }
     function closeDelete() { document.getElementById("deleteOverlay").style.display = "none"; deleteKey = ""; }
 
@@ -831,18 +870,18 @@
 
     function exportExcel() {
       if (Object.keys(build).length === 0) return;
-      const rows = [ ["Danh mục", "Linh kiện", "Giá (VND)"] ];
+      const rows = [["Danh mục", "Linh kiện", "Giá (VND)"]];
       let total = 0;
       for (const key in build) {
         const part = PARTS.find(p => p.key === key);
-        rows.push([ part ? part.label : key, build[key].name, build[key].price ]); total += build[key].price;
+        rows.push([part ? part.label : key, build[key].name, build[key].price]); total += build[key].price;
       }
       rows.push([]); rows.push(["", "TỔNG TIỀN", total]);
 
       const ws = XLSX.utils.aoa_to_sheet(rows); const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Cau_hinh_PC"); XLSX.writeFile(wb, "Cau_hinh_PC_" + Date.now() + ".xlsx");
     }
-    
+
     function exportImage() {
       const listEl = document.getElementById("exportList"); const totalEl = document.getElementById("exportTotal");
       listEl.innerHTML = ""; totalEl.innerHTML = ""; let total = 0;
@@ -859,7 +898,7 @@
         const link = document.createElement("a"); link.download = "Cau_hinh_PC_da_chon.png"; link.href = canvas.toDataURL("image/png"); link.click();
       });
     }
-    
+
     function shareBuild() {
       if (Object.keys(build).length === 0) { alert("Chưa có cấu hình để chia sẻ"); return; }
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(build))));
@@ -869,12 +908,57 @@
     function printBuild() { window.print(); }
 
     function updateCartCount() {
-      const count = Number(localStorage.getItem("cart_quantity") || 0);
-      const el1 = document.getElementById("headerCartCount"); if (el1) el1.innerText = count;
-      const el2 = document.getElementById("cartCount"); if (el2) el2.innerText = count;
-      const el3 = document.getElementById("sharedCartCount"); if (el3) el3.innerText = count;
+
+      let buildCart =
+        JSON.parse(
+          localStorage.getItem(
+            "pc_build"
+          )
+        ) || {};
+
+      let regularCart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          )
+        ) || [];
+
+      const count =
+        Object.keys(
+          buildCart
+        ).length
+        +
+        regularCart.length;
+
+
+      const el1 =
+        document.getElementById(
+          "headerCartCount"
+        );
+
+      if (el1)
+        el1.innerText = count;
+
+
+      const el2 =
+        document.getElementById(
+          "cartCount"
+        );
+
+      if (el2)
+        el2.innerText = count;
+
+
+      const el3 =
+        document.getElementById(
+          "sharedCartCount"
+        );
+
+      if (el3)
+        el3.innerText = count;
+
     }
-    
+
     function openCart(showEmptyMessage = true) {
       let html = ""; let total = 0;
       const selectedItems = Object.keys(build).map(key => {
@@ -906,7 +990,7 @@
       document.getElementById("cartTotal").innerHTML = selectedItems.length > 0 ? "TỔNG TIỀN: " + total.toLocaleString("vi-VN") + " đ" : "";
       document.getElementById("cartOverlay").style.display = "flex";
     }
-    
+
     function removeSelectedPart(key) {
       if (!build[key]) return; delete build[key];
       localStorage.setItem("pc_build", JSON.stringify(build));
@@ -961,7 +1045,8 @@
     // Khởi động
     init();
   </script>
-  
+
   <div id="floating-icons"></div>
 </body>
+
 </html>
