@@ -129,9 +129,14 @@ CREATE TABLE order_items (
 -- PHẦN 4: BƠM DỮ LIỆU SIÊU SẠCH (CỨU TOÀN BỘ DATA CŨ)
 -- ==================================================
 
--- 1. TẠO TÀI KHOẢN ADMIN BATMAN NGAY TỪ ĐẦU (Không cần update lòng vòng)
+-- 1. TẠO TÀI KHOẢN ADMIN BATMAN NGAY TỪ ĐẦU 
 INSERT INTO users (email, phone, password_hash, role, is_verified) VALUES 
 ('batman@eiu.edu.vn', '012345678', '$2b$10$XU.sQYtZ9vQyG1xI81XFHuF.40E.M6t0QoI/Gi7xWf5f8b9Q5qu6a', 'admin', TRUE);
+
+-- Data Admin của Khoa (Đã thêm sđt ảo để chống lỗi)
+INSERT INTO users (email, phone, password_hash, role, is_verified) VALUES 
+('admin@eiu.edu.vn', '000000001', '$2b$10$KeFX7Orb...', 'admin', TRUE),
+('khoa.tran.cit20@eiu.edu.vn', '000000002', '$2b$10$KeFX7Orb...', 'admin', TRUE);
 
 INSERT INTO admins (user_id, full_name, employee_code) VALUES 
 (1, 'Batman', 'EMP-BATMAN');

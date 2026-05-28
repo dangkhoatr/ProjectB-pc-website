@@ -597,8 +597,6 @@
       build = {};
     }
 
-    let cartQuantity = Number(localStorage.getItem("cart_quantity") || 0);
-
     function init() {
       render();
       renderSavedBuilds();
@@ -694,10 +692,9 @@
     }
 
     function recalcCartQuantityFromBuild() {
-      let totalQty = 0;
-      for (const key in build) { totalQty += Number(build[key].qty || 1); }
-      cartQuantity = totalQty;
-      localStorage.setItem("cart_quantity", cartQuantity);
+
+      updateCartCount();
+
     }
 
     function render() {
@@ -834,9 +831,39 @@
     }
 
     function deleteSavedBuild(id) {
-      let saved = JSON.parse(localStorage.getItem("saved_builds")) || [];
-      saved = saved.filter(s => s.id !== id);
-      localStorage.setItem("saved_builds", JSON.stringify(saved)); renderSavedBuilds();
+
+      let saved =
+        JSON.parse(
+          localStorage.getItem(
+            "saved_builds"
+          )
+        ) || [];
+
+      saved =
+        saved.filter(
+          s => s.id !== id
+        );
+
+      localStorage.setItem(
+        "saved_builds",
+        JSON.stringify(saved)
+      );
+
+
+      // XÓA CẤU HÌNH ĐANG BUILD
+      localStorage.setItem(
+        "pc_build",
+        JSON.stringify({})
+      );
+      build = {};
+
+      // cập nhật số giỏ hàng
+      updateCartCount();
+
+      // render lại header
+      renderHeader("header");
+
+      renderSavedBuilds();
     }
 
     function openDelete() { document.getElementById("deleteOverlay").style.display = "flex"; }
@@ -895,10 +922,55 @@
     function printBuild() { window.print(); }
 
     function updateCartCount() {
-      const count = Number(localStorage.getItem("cart_quantity") || 0);
-      const el1 = document.getElementById("headerCartCount"); if (el1) el1.innerText = count;
-      const el2 = document.getElementById("cartCount"); if (el2) el2.innerText = count;
-      const el3 = document.getElementById("sharedCartCount"); if (el3) el3.innerText = count;
+
+      let buildCart =
+        JSON.parse(
+          localStorage.getItem(
+            "pc_build"
+          )
+        ) || {};
+
+      let regularCart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          )
+        ) || [];
+
+      const count =
+        Object.keys(
+          buildCart
+        ).length
+        +
+        regularCart.length;
+
+
+      const el1 =
+        document.getElementById(
+          "headerCartCount"
+        );
+
+      if (el1)
+        el1.innerText = count;
+
+
+      const el2 =
+        document.getElementById(
+          "cartCount"
+        );
+
+      if (el2)
+        el2.innerText = count;
+
+
+      const el3 =
+        document.getElementById(
+          "sharedCartCount"
+        );
+
+      if (el3)
+        el3.innerText = count;
+
     }
 
     function openCart(showEmptyMessage = true) {

@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <link rel="stylesheet" href="../assets/css/style.css">
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Giỏ hàng của bạn</title>
   <style>
@@ -29,7 +30,7 @@
     h1 {
       margin-top: 0;
       font-size: 28px;
-      color: #2563eb; 
+      color: #2563eb;
     }
 
     .cart-table {
@@ -38,7 +39,8 @@
       margin-top: 20px;
     }
 
-    .cart-table th, .cart-table td {
+    .cart-table th,
+    .cart-table td {
       padding: 16px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
@@ -111,7 +113,7 @@
       padding: 60px 20px;
       color: #6b7280;
     }
-    
+
     .empty-cart i {
       font-size: 48px;
       margin-bottom: 16px;
@@ -119,22 +121,23 @@
     }
   </style>
 </head>
+
 <body>
   <div id="header"></div>
-  
+
   <div class="container">
     <h1><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG CỦA BẠN</h1>
-    
+
     <div id="cartContent">
-      </div>
+    </div>
 
   </div>
 
   <div id="footer"></div>
-  
+
   <script src="../components/header.js"></script>
   <script src="../components/footer.js"></script>
-  
+
   <script>
     renderHeader("header");
     renderFooter("footer");
@@ -151,12 +154,12 @@
       const cartContent = document.getElementById("cartContent");
 
       let buildCart = JSON.parse(localStorage.getItem("pc_build")) || {};
-   
-      let regularCart = JSON.parse(localStorage.getItem("cart")) || []; 
-   
+
+      let regularCart = JSON.parse(localStorage.getItem("cart")) || [];
+
       let regularItems = Array.isArray(regularCart) ? regularCart : Object.values(regularCart);
 
-    
+
       const hasBuildItems = Object.keys(buildCart).length > 0;
       const hasRegularItems = regularItems.length > 0;
 
@@ -187,7 +190,7 @@
 
       let totalAmount = 0;
 
-  
+
       for (const key in buildCart) {
         const item = buildCart[key];
         const qty = Number(item.qty || 1);
@@ -210,7 +213,7 @@
         `;
       }
 
-     
+
       regularItems.forEach(item => {
         const qty = Number(item.qty || item.quantity || 1);
         const price = Number(item.price || 0);
@@ -252,27 +255,45 @@
     }
 
     function clearCart() {
-      if(confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?")) {
-        localStorage.removeItem("pc_build");
-        localStorage.removeItem("cart"); 
-        localStorage.removeItem("cartItems"); 
-        loadCart(); 
-        
-        if(typeof updateCartCount === 'function') updateCartCount();
+
+      if (confirm(
+        "Bạn có chắc chắn muốn xóa?"
+      )) {
+
+        localStorage.removeItem(
+          "pc_build"
+        );
+
+        localStorage.removeItem(
+          "cart"
+        );
+
+        localStorage.removeItem(
+          "cartItems"
+        );
+
+        loadCart();
+
+        updateCartCount();
+
+        renderHeader("header");
+
       }
+
     }
 
     function checkout() {
       alert("Cảm ơn bạn đã đặt hàng! Tính năng thanh toán đang được phát triển.");
-      localStorage.removeItem("pc_build"); 
-      localStorage.removeItem("cart"); 
-      
+      localStorage.removeItem("pc_build");
+      localStorage.removeItem("cart");
+
       // SỬA ĐƯỜNG DẪN TRANG CHỦ
-      window.location.href = "index.html"; 
+      window.location.href = "index.html";
     }
 
     // Chạy hàm loadCart ngay khi mở trang
     loadCart();
   </script>
 </body>
+
 </html>

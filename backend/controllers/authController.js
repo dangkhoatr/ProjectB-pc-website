@@ -120,11 +120,12 @@ const authController = {
             const isMatch = await bcrypt.compare(password, user.password_hash);
             if (!isMatch) return res.status(401).json({ message: 'Số điện thoại hoặc mật khẩu không đúng!' });
 
-            let fullName = "Người dùng", userPhone = phone, address = "", cccd="";
+            let fullName = "", userPhone = "", address = "", cccd = "";
             if (user.role === 'customer') {
                 const customerData = await userRepo.getCustomerInfo(user.id);
                 if (customerData) {
                     fullName = customerData.full_name;
+                    userPhone = customerData.phone || "";
                     address = customerData.address || "";
                     cccd = customerData.cccd || "";
                 }
@@ -150,7 +151,7 @@ const authController = {
                     phone: user.phone,
                     role: user.role,
                     address: address,
-                    cccd: cccd   
+                    cccd: cccd
                 }
             });
         } catch (error) {
