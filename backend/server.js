@@ -11,8 +11,9 @@ const authRouter = require('./routes/authRoutes');
 const excelRoutes = require('./routes/excelRoutes'); // Kéo Excel lên đây cho chuẩn bài
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const orderRoutes = require('./routes/orderRoutes');
 // 2. MIDDLEWARE CƠ BẢN
+app.use('/api/orders', orderRoutes);
 app.use(cors());
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));

@@ -1,48 +1,62 @@
 const db = require('../db');
 
 const orderRepo = {
-    // GHI NHẬN ĐƠN HÀNG VÀ TRỪ KHO (Cực kỳ an toàn)
-    createOrderRecord: async (customerUuid, totalAmount, cartItems) => {
+    // GHI NHẬN ĐƠN HÀNG VÀ TRỪ KHO (Đã vá lỗ hổng Hack Giá)
+    createOrderRecord: async (customerUuid, cartItems) => { 
+        // Lưu ý: Đã bỏ tham số totalAmount từ Frontend
         const connection = await db.getConnection();
         try {
-            // Bắt đầu Transaction: Nếu 1 bước lỗi, toàn bộ sẽ bị hủy (Rollback)
             await connection.beginTransaction();
 
             const orderCode = 'ORD-' + Date.now().toString().slice(-6);
 
-            // 1. Tạo Hóa đơn tổng
+            // 1. Tạo Hóa đơn tổng (Tạm thời để giá 0 đồng)
             const [orderResult] = await connection.query(
                 'INSERT INTO orders (customer_id, order_code, total_amount, status) VALUES (?, ?, ?, ?)',
-                [customerUuid, orderCode, totalAmount, 'Đang xử lý']
+                [customerUuid, orderCode, 0, 'Đang xử lý']
             );
             
             const orderId = orderResult.insertId;
+            let realTotalAmount = 0;
 
-            // 2. Quét giỏ hàng: Ghi chi tiết VÀ Trừ kho
+            // 2. Quét giỏ hàng: Lấy giá thật -> Trừ kho -> Ghi chi tiết
             for (let item of cartItems) {
-                // 🔥 CHIÊU THỨC TRỪ KHO AN TOÀN: Chỉ trừ khi stock >= số lượng mua
+                // 🔥 LẤY GIÁ THẬT TỪ DATABASE (Tuyệt đối không dùng item.price của Frontend)
+                const [productDb] = await connection.query('SELECT price FROM products WHERE id = ?', [item.id]);
+                
+                if (productDb.length === 0) {
+                    throw new Error(`Sản phẩm "${item.name}" không tồn tại trong hệ thống!`);
+                }
+                
+                const realPrice = productDb[0].price;
+                realTotalAmount += (realPrice * item.qty);
+
+                // Trừ kho an toàn
                 const [updateResult] = await connection.query(
                     'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
                     [item.qty, item.id, item.qty]
                 );
 
-                // Nếu affectedRows = 0 nghĩa là kho không đủ hàng -> Báo lỗi ngay lập tức
                 if (updateResult.affectedRows === 0) {
                     throw new Error(`Sản phẩm "${item.name}" đã hết hoặc không đủ số lượng trong kho!`);
                 }
 
-                // Nếu trừ kho thành công, mới ghi vào lịch sử mua hàng
+                // Ghi vào order_items VỚI GIÁ THẬT
                 await connection.query(
                     'INSERT INTO order_items (order_id, product_id, product_name, category_name, quantity, price, product_image) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    [orderId, item.id, item.name, item.category || 'Linh kiện', item.qty, item.price, item.image || '']
+                    [orderId, item.id, item.name, item.category || 'Linh kiện', item.qty, realPrice, item.image || '']
                 );
             }
 
-            // Hoàn tất không có lỗi -> Lưu vĩnh viễn vào DB
+            // 3. Cập nhật lại tổng tiền chính xác cho Hóa đơn
+            await connection.query(
+                'UPDATE orders SET total_amount = ? WHERE id = ?',
+                [realTotalAmount, orderId]
+            );
+
             await connection.commit();
             return orderCode;
         } catch (error) {
-            // Bất kỳ lỗi nào xảy ra (kể cả vụ hết hàng ở trên), hoàn tác (nhả lại kho) ngay lập tức
             await connection.rollback();
             throw error; 
         } finally {

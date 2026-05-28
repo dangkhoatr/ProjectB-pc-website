@@ -119,6 +119,100 @@
       margin-bottom: 16px;
       color: #d1d5db;
     }
+
+    /* MODAL XÓA GIỎ HÀNG */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      animation: fadeInModal 0.2s forwards;
+    }
+
+    .modal-box {
+      background: #fff;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(0.95);
+      animation: scaleUpModal 0.2s forwards;
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      background: #fee2e2;
+      color: #dc2626;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-box h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #111827;
+      font-weight: 800;
+    }
+
+    .modal-box p {
+      margin: 0 0 24px;
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 15px;
+    }
+
+    @keyframes fadeInModal {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleUpModal {
+      to {
+        transform: scale(1);
+      }
+    }
+    /* CUSTOM CHECKBOX SHOPEE STYLE */
+    .checkbox-cell {
+      width: 50px;
+      text-align: center;
+    }
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #dc2626; /* Màu đỏ chủ đạo */
+    }
+    .custom-checkbox:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 
@@ -134,7 +228,19 @@
   </div>
 
   <div id="footer"></div>
-
+  <div id="clear-cart-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3>Xóa toàn bộ giỏ hàng?</h3>
+      <p>Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng? Hành động này không thể hoàn tác.</p>
+      <div class="modal-actions">
+        <button class="btn btn-clear" onclick="closeClearModal()">Hủy bỏ</button>
+        <button class="btn btn-checkout" onclick="executeClearCart()">Đồng ý Xóa</button>
+      </div>
+    </div>
+  </div>
   <script src="../components/header.js"></script>
   <script src="../components/footer.js"></script>
 
@@ -154,11 +260,8 @@
       const cartContent = document.getElementById("cartContent");
 
       let buildCart = JSON.parse(localStorage.getItem("pc_build")) || {};
-
       let regularCart = JSON.parse(localStorage.getItem("cart")) || [];
-
       let regularItems = Array.isArray(regularCart) ? regularCart : Object.values(regularCart);
-
 
       const hasBuildItems = Object.keys(buildCart).length > 0;
       const hasRegularItems = regularItems.length > 0;
@@ -175,10 +278,14 @@
         return;
       }
 
+      // THÊM CỘT CHECKBOX VÀO TIÊU ĐỀ
       let html = `
         <table class="cart-table">
           <thead>
             <tr>
+              <th class="checkbox-cell">
+                <input type="checkbox" id="check-all" class="custom-checkbox" checked onchange="toggleAll(this)">
+              </th>
               <th>Sản phẩm</th>
               <th style="text-align: center;">Số lượng</th>
               <th style="text-align: right;">Đơn giá</th>
@@ -188,20 +295,19 @@
           <tbody>
       `;
 
-      let totalAmount = 0;
-
-
+      // Render Cấu hình Build PC
       for (const key in buildCart) {
         const item = buildCart[key];
         const qty = Number(item.qty || 1);
         const price = Number(item.price || 0);
         const lineTotal = price * qty;
-        totalAmount += lineTotal;
-
         const categoryName = PARTS[key] || "Linh kiện PC";
 
         html += `
           <tr>
+            <td class="checkbox-cell">
+              <input type="checkbox" class="custom-checkbox item-check" value="${item.id}" data-source="build" data-key="${key}" data-price="${price}" data-qty="${qty}" checked onchange="calculateTotal()">
+            </td>
             <td>
               <div class="item-name">${item.name}</div>
               <div class="item-category">${categoryName} (Từ cấu hình ráp máy)</div>
@@ -213,15 +319,17 @@
         `;
       }
 
-
-      regularItems.forEach(item => {
+      // Render Mua lẻ
+      regularItems.forEach((item, index) => {
         const qty = Number(item.qty || item.quantity || 1);
         const price = Number(item.price || 0);
         const lineTotal = price * qty;
-        totalAmount += lineTotal;
 
         html += `
           <tr>
+            <td class="checkbox-cell">
+              <input type="checkbox" class="custom-checkbox item-check" value="${item.id}" data-source="regular" data-index="${index}" data-price="${price}" data-qty="${qty}" checked onchange="calculateTotal()">
+            </td>
             <td>
               <div class="item-name">${item.name || 'Sản phẩm'}</div>
               <div class="item-category">Mua lẻ</div>
@@ -237,61 +345,182 @@
           </tbody>
         </table>
         
-        <div class="total-row">
-          TỔNG THANH TOÁN: ${totalAmount.toLocaleString("vi-VN")} đ
+        <div class="total-row" id="total-display">
+          TỔNG THANH TOÁN: 0 đ
         </div>
 
         <div class="actions">
           <button class="btn btn-clear" onclick="clearCart()">
             <i class="fa-solid fa-trash"></i> Xóa giỏ hàng
           </button>
-          <button class="btn btn-checkout" onclick="checkout()">
+          <button class="btn btn-checkout" onclick="checkout()" id="btn-checkout">
             Tiến hành Đặt hàng <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
       `;
 
       cartContent.innerHTML = html;
+      calculateTotal(); // Chạy tính tiền lần đầu
     }
 
-    function clearCart() {
+    // LOGIC CHECKBOX: Chọn tất cả / Bỏ chọn tất cả
+    function toggleAll(source) {
+      const checkboxes = document.querySelectorAll('.item-check');
+      checkboxes.forEach(cb => cb.checked = source.checked);
+      calculateTotal();
+    }
 
-      if (confirm(
-        "Bạn có chắc chắn muốn xóa?"
-      )) {
+    // LOGIC TÍNH TIỀN: Chỉ tính những ô được tích
+    function calculateTotal() {
+      const checkboxes = document.querySelectorAll('.item-check');
+      let total = 0;
+      let allChecked = true;
+      let anyChecked = false;
 
-        localStorage.removeItem(
-          "pc_build"
-        );
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const price = Number(cb.getAttribute('data-price'));
+          const qty = Number(cb.getAttribute('data-qty'));
+          total += (price * qty);
+          anyChecked = true;
+        } else {
+          allChecked = false;
+        }
+      });
 
-        localStorage.removeItem(
-          "cart"
-        );
+      // Tự động gỡ dấu tick "Chọn tất cả" nếu có 1 ô bị bỏ chọn
+      const checkAll = document.getElementById('check-all');
+      if (checkAll) checkAll.checked = allChecked && checkboxes.length > 0;
 
-        localStorage.removeItem(
-          "cartItems"
-        );
-
-        loadCart();
-
-        updateCartCount();
-
-        renderHeader("header");
-
+      // Cập nhật giá tiền
+      const totalDisplay = document.getElementById('total-display');
+      if (totalDisplay) totalDisplay.innerHTML = `TỔNG THANH TOÁN: ${total.toLocaleString("vi-VN")} đ`;
+      
+      // Khóa nút thanh toán nếu không chọn món nào
+      const btnCheckout = document.getElementById('btn-checkout');
+      if (btnCheckout) {
+        btnCheckout.disabled = !anyChecked;
+        btnCheckout.style.opacity = anyChecked ? "1" : "0.5";
+        btnCheckout.style.cursor = anyChecked ? "pointer" : "not-allowed";
       }
-
     }
 
-    function checkout() {
-      alert("Cảm ơn bạn đã đặt hàng! Tính năng thanh toán đang được phát triển.");
+    // Xóa Popup cũ (Vẫn giữ nguyên chức năng của ông)
+    function clearCart() {
+      document.getElementById('clear-cart-modal').style.display = 'flex';
+    }
+    function closeClearModal() {
+      document.getElementById('clear-cart-modal').style.display = 'none';
+    }
+    function executeClearCart() {
       localStorage.removeItem("pc_build");
       localStorage.removeItem("cart");
-
-      // SỬA ĐƯỜNG DẪN TRANG CHỦ
-      window.location.href = "index.html";
+      localStorage.removeItem("cartItems");
+      closeClearModal();
+      loadCart();
+      if (typeof updateCartCount === "function") updateCartCount();
+      renderHeader("header");
     }
 
-    // Chạy hàm loadCart ngay khi mở trang
+    // THANH TOÁN (CHỈ MUA NHỮNG MÓN ĐƯỢC TÍCH CHỌN)
+    async function checkout() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert("Vui lòng đăng nhập để tiến hành thanh toán!");
+        window.location.href = "auth.html";
+        return;
+      }
+
+      // Lọc ra các ô được đánh dấu
+      const checkedBoxes = document.querySelectorAll('.item-check:checked');
+      if (checkedBoxes.length === 0) return;
+
+      let buildCart = JSON.parse(localStorage.getItem("pc_build")) || {};
+      let regularCart = JSON.parse(localStorage.getItem("cart")) || [];
+      let regularItems = Array.isArray(regularCart) ? regularCart : Object.values(regularCart);
+
+      let cartItems = [];
+      let totalAmount = 0;
+
+      // Gom data của những món được tích
+      checkedBoxes.forEach(cb => {
+        const source = cb.getAttribute('data-source');
+        const qty = Number(cb.getAttribute('data-qty'));
+        const price = Number(cb.getAttribute('data-price'));
+
+        if (source === 'build') {
+          const key = cb.getAttribute('data-key');
+          const item = buildCart[key];
+          if(item) {
+            cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: key });
+            totalAmount += (price * qty);
+          }
+        } else if (source === 'regular') {
+          const index = cb.getAttribute('data-index');
+          const item = regularItems[index];
+          if(item) {
+            cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: item.category });
+            totalAmount += (price * qty);
+          }
+        }
+      });
+
+      const btnCheckout = document.getElementById('btn-checkout');
+      const originalText = btnCheckout.innerHTML;
+      btnCheckout.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+      btnCheckout.disabled = true;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/orders/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ cartItems: cartItems, totalAmount: totalAmount })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(`🎉 Đặt hàng thành công!\nMã đơn hàng của bạn: ${data.order_code}`);
+          
+          // CHIÊU CUỐI: CHỈ XÓA NHỮNG MÓN ĐÃ MUA KHỎI GIỎ HÀNG
+          checkedBoxes.forEach(cb => {
+            const source = cb.getAttribute('data-source');
+            if (source === 'build') {
+              const key = cb.getAttribute('data-key');
+              delete buildCart[key]; // Xóa món trong Build
+            } else if (source === 'regular') {
+              const index = cb.getAttribute('data-index');
+              regularItems[index] = null; // Đánh dấu mảng lẻ là null để xóa
+            }
+          });
+
+          // Lọc rác
+          regularItems = regularItems.filter(item => item !== null);
+
+          // Cập nhật lại bộ nhớ
+          localStorage.setItem("pc_build", JSON.stringify(buildCart));
+          localStorage.setItem("cart", JSON.stringify(regularItems));
+          
+          // Load lại UI
+          loadCart();
+          if(typeof updateCartCount === 'function') updateCartCount();
+          renderHeader("header");
+
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      } catch (error) {
+        console.error("Lỗi Checkout:", error);
+        alert("Mất kết nối đến máy chủ. Hãy kiểm tra xem Backend đã bật chưa!");
+      } finally {
+        btnCheckout.innerHTML = originalText;
+        btnCheckout.disabled = false;
+      }
+    }
+
     loadCart();
   </script>
 </body>

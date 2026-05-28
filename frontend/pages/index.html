@@ -1055,15 +1055,18 @@
     </script>
 
     <script>
+        // Khai báo 1 biến toàn cục để lưu tạm danh sách sản phẩm vừa tải về
+        // Phục vụ cho việc bấm "Mua ngay" nó biết lấy thông tin gì bỏ vào giỏ
+        window.loadedProducts = [];
+
         async function fetchFeaturedProducts() {
             const productGrid = document.getElementById('featured-products');
 
             try {
-                // Đã chuyển lại thành POST theo ý chủ tịch
                 const response = await fetch('http://localhost:3000/api/products/public', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}) // Cứ gửi body rỗng hoặc mốt truyền tham số lọc vào đây
+                    body: JSON.stringify({})
                 });
 
                 const products = await response.json();
@@ -1073,8 +1076,11 @@
                     return;
                 }
 
-                // Cắt lấy 4 sản phẩm đầu tiên để show ra trang chủ
+                // Cắt lấy 8 sản phẩm đầu tiên
                 const featuredProducts = products.slice(0, 8);
+                
+                // Lưu vào biến toàn cục để xài cho hàm buyNow
+                window.loadedProducts = featuredProducts;
 
                 const htmlContent = featuredProducts.map(product => {
                     const priceNew = Number(product.price).toLocaleString('vi-VN');
@@ -1082,11 +1088,9 @@
 
                     let badgeHtml = '';
                     if (product.badge) {
-                        // Ưu tiên 1: Đã gắn Tag đặc biệt từ Admin (Đổi màu theo loại Tag)
                         const bg = product.badge === 'HOT' ? '#ef233c' : (product.badge === 'NEW' ? '#3b82f6' : '#f59e0b');
                         badgeHtml = `<span class="discount-badge" style="background: ${bg}; color: #fff;">${product.badge}</span>`;
                     } else if (product.status === 'sale') {
-                        // Ưu tiên 2: Không gắn Tag nhưng trạng thái là đang giảm giá
                         badgeHtml = `<span class="discount-badge hot" style="background: #ef233c; color: #fff;">SALE</span>`;
                     }
 
@@ -1100,17 +1104,19 @@
                     return `
                     <article class="product-card">
                         ${badgeHtml}
-                        <div class="product-thumb">
-                            <img src="${imgUrl}" alt="${product.name}" onerror="this.src='https://placehold.co/300x300/1f2937/fff?text=Loi+Anh'">
-                        </div>
-                        <h3 class="product-name">${product.name}</h3>
+                        <a href="product-detail.html?id=${product.id}" class="product-thumb" style="display: block; overflow: hidden;">
+                            <img src="${imgUrl}" alt="${product.name}" onerror="this.src='https://placehold.co/300x300/1f2937/fff?text=Loi+Anh'" style="transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        </a>
+                        <h3 class="product-name">
+                            <a href="product-detail.html?id=${product.id}" class="hover:text-[#e11d48] transition">${product.name}</a>
+                        </h3>
                         <div class="product-price">
                             <span class="price-new">${priceNew} đ</span>
                             ${priceOld ? `<span class="price-old">${priceOld} đ</span>` : ''}
                         </div>
                         <div class="product-meta">${product.specs?.brand ? `Thương hiệu: ${product.specs.brand}` : 'Linh kiện chính hãng'}</div>
                         <div class="product-actions">
-                            <button onclick="addToCart('${product.id}')" class="btn btn-small btn-primary">Mua ngay</button>
+                            <button onclick="buyNow('${product.id}')" class="btn btn-small btn-primary" style="cursor: pointer; border: none;">Mua ngay</button>
                             <a href="product-detail.html?id=${product.id}" class="btn btn-small btn-light">Xem chi tiết</a>
                         </div>
                     </article>
@@ -1123,6 +1129,36 @@
                 console.error('Lỗi khi load sản phẩm:', error);
                 productGrid.innerHTML = '<p>Không thể tải dữ liệu sản phẩm.</p>';
             }
+        }
+
+        // HÀM MUA NGAY VÀ NHẢY TRANG
+        function buyNow(productId) {
+            // 1. Tìm thông tin sản phẩm từ biến toàn cục
+            const p = window.loadedProducts.find(x => x.id == productId);
+            if (!p) return;
+
+            // 2. Kéo giỏ hàng cũ từ LocalStorage ra
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            // 3. Nhét hàng vào giỏ
+            if(cart[p.id]) {
+                cart[p.id].qty += 1;
+            } else {
+                cart[p.id] = {
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    image: p.image_url || p.image,
+                    category: p.category,
+                    qty: 1
+                };
+            }
+            
+            // 4. Lưu lại vào bộ nhớ
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // 5. Chuyển hướng "bế" thẳng khách vào rạp (trang Giỏ hàng)
+            window.location.href = "cart.html";
         }
 
         document.addEventListener('DOMContentLoaded', fetchFeaturedProducts);

@@ -596,19 +596,51 @@ function getCartQuantity() {
 
 
 function updateCartCount() {
+    let totalItems = 0;
 
-    const cartEl =
-        document.getElementById(
-            "headerCartCount"
-        );
-
-    if (cartEl) {
-
-        cartEl.innerText =
-            getCartQuantity();
-
+    // 1. Đếm đồ mua lẻ (cart)
+    try {
+        let cartData = localStorage.getItem('cart');
+        if (cartData) {
+            let cart = JSON.parse(cartData);
+            // Hỗ trợ cả cấu trúc Mảng (cũ) và Object (mới)
+            let items = Array.isArray(cart) ? cart : Object.values(cart);
+            items.forEach(item => {
+                // Ép kiểu về số, nếu lỗi thì mặc định là 0
+                totalItems += Number(item.qty || item.quantity || 1) || 0; 
+            });
+        }
+    } catch (e) {
+        console.error("Lỗi đọc giỏ hàng lẻ:", e);
     }
 
+    // 2. Đếm đồ Build PC (pc_build)
+    try {
+        let buildData = localStorage.getItem('pc_build');
+        if (buildData) {
+            let buildCart = JSON.parse(buildData);
+            Object.values(buildCart).forEach(item => {
+                totalItems += Number(item.qty || item.quantity || 1) || 0;
+            });
+        }
+    } catch (e) {
+        console.error("Lỗi đọc giỏ hàng Build PC:", e);
+    }
+
+    // 3. Tìm và cập nhật text trên Header
+    // (Ông xem lại ID hoặc Class của cái nút Giỏ hàng để sửa querySelector cho đúng nhé)
+    const cartBtnElements = document.querySelectorAll('.cart-count-text, #cart-count'); 
+    
+    // Nếu ông không có ID/Class cụ thể, thử vét tất cả các thẻ có chữ "Giỏ hàng"
+    if(cartBtnElements.length > 0) {
+        cartBtnElements.forEach(el => el.innerText = `Giỏ hàng (${totalItems})`);
+    } else {
+        // Cách bạo lực: Quét toàn bộ HTML của Header để đổi chữ Giỏ hàng
+        const header = document.getElementById('header');
+        if(header) {
+            header.innerHTML = header.innerHTML.replace(/Giỏ hàng \((NaN|\d+)\)/g, `Giỏ hàng (${totalItems})`);
+        }
+    }
 }
 
 
@@ -653,3 +685,37 @@ document.addEventListener(
         });
 
     });
+    // Gắn thẳng hàm này vào Window để ở đâu cũng gọi được
+window.updateCartCount = function() {
+    let total = 0;
+    try {
+        // Gom cả 2 giỏ hàng vào đếm 1 lượt
+        ['cart', 'pc_build'].forEach(key => {
+            let data = JSON.parse(localStorage.getItem(key) || '{}');
+            let items = Array.isArray(data) ? data : Object.values(data);
+            items.forEach(item => {
+                // Ép kiểu số nguyên (parseInt), nếu rác thì mặc định là 0
+                total += parseInt(item.qty || item.quantity || 1) || 0;
+            });
+        });
+    } catch (e) { 
+        console.error("Lỗi đọc giỏ hàng:", e); 
+    }
+
+    // Hàm đệ quy: Đợi Header nạp xong mới đổi chữ
+    function applyCartCount() {
+        const headerEl = document.getElementById('header');
+        if (headerEl && headerEl.innerHTML.includes('Giỏ hàng')) {
+            // Dùng Regex quét tất cả các chữ Giỏ hàng (cái gì ở trong ngoặc cũng đổi thành số thật)
+            headerEl.innerHTML = headerEl.innerHTML.replace(/Giỏ hàng\s*\([^)]*\)/g, `Giỏ hàng (${total})`);
+        } else {
+            // Nếu Header chưa tải xong, đợi 100ms rồi thử lại
+            setTimeout(applyCartCount, 100);
+        }
+    }
+    
+    applyCartCount();
+};
+
+// Gọi một phát ngay khi nạp file để dọn dẹp lúc mới vào trang
+updateCartCount();

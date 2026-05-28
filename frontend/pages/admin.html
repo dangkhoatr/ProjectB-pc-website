@@ -568,7 +568,33 @@
             </div>
         </div>
     </div>
-
+    <div id="delete-confirm-modal"
+        class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hidden">
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col overflow-hidden transform transition-all dropdown-animate">
+            <div class="p-6 text-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4 border-4 border-red-100">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Xác nhận xóa sản phẩm</h3>
+                <p class="text-sm text-gray-500">Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn
+                    tác.</p>
+                <input type="hidden" id="delete-target-id">
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-center gap-3">
+                <button onclick="closeDeleteModal()"
+                    class="px-5 py-2 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition shadow-sm">Hủy
+                    bỏ</button>
+                <button onclick="executeDelete()"
+                    class="px-5 py-2 text-sm font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 transition shadow-sm active:scale-95">Đồng
+                    ý Xóa</button>
+            </div>
+        </div>
+    </div>
     <div id="toast-container" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2"></div>
 
     <script>
@@ -1025,21 +1051,40 @@
             }
         }
 
-        async function deleteProduct(id) {
-            if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi Database?")) return;
+        // Bật Modal hỏi ý kiến
+        function deleteProduct(id) {
+            document.getElementById('delete-target-id').value = id;
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+        }
+
+        // Tắt Modal nếu bấm Hủy
+        function closeDeleteModal() {
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+            document.getElementById('delete-target-id').value = "";
+        }
+
+        // Hàm thực thi xóa khi bấm nút Đỏ
+        async function executeDelete() {
+            const id = document.getElementById('delete-target-id').value;
+            if (!id) return;
+
+            closeDeleteModal(); // Tắt popup cho mượt rồi mới gửi request
+
+            showToast("Đang xử lý xóa...", "success");
+
             try {
                 const response = await fetch(`http://localhost:3000/api/products/${id}`, {
                     method: 'DELETE'
                 });
 
                 if (response.ok) {
-                    showToast("Đã xóa sản phẩm", "success");
+                    showToast("Đã xóa sản phẩm thành công!", "success");
                     loadProductsFromDB();
                 } else {
-                    showToast("Lỗi xóa! Có thể do sp này đã có người mua", "error");
+                    showToast("Lỗi xóa! Có thể do sản phẩm này đã có người mua", "error");
                 }
             } catch (err) {
-                showToast("Lỗi máy chủ", "error");
+                showToast("Lỗi kết nối máy chủ", "error");
             }
         }
 

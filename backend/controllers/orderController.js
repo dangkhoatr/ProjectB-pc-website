@@ -17,7 +17,7 @@ const orderController = {
             }
 
             // Gọi hàm thanh toán và trừ kho
-            const orderCode = await orderRepo.createOrderRecord(customerInfo.customer_id, totalAmount, cartItems);
+            const orderCode = await orderRepo.createOrderRecord(customerInfo.customer_id, cartItems);
 
             res.status(201).json({ 
                 message: 'Thanh toán thành công! Mã đơn: ' + orderCode,
