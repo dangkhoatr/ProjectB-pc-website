@@ -180,4 +180,4 @@ UPDATE users SET role = 'admin', is_verified = 1 WHERE email = 'giakiet189@gmail
 INSERT INTO admins (user_id, full_name, employee_code) 
 SELECT id, 'Gia Kiệt', 'EMP-VIP' FROM users WHERE email = 'giakiet189@gmail.com';
 USE eiu_computer;
-ALTER TABLE products ADD COLUMN description TEXT NULL AFTER name;
+ALTER TABLE products ADD COLUMN description TEXT NULL AFTER name; 
