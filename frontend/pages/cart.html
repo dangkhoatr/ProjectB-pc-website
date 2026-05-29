@@ -199,17 +199,21 @@
         transform: scale(1);
       }
     }
+
     /* CUSTOM CHECKBOX SHOPEE STYLE */
     .checkbox-cell {
       width: 50px;
       text-align: center;
     }
+
     .custom-checkbox {
       width: 20px;
       height: 20px;
       cursor: pointer;
-      accent-color: #dc2626; /* Màu đỏ chủ đạo */
+      accent-color: #dc2626;
+      /* Màu đỏ chủ đạo */
     }
+
     .custom-checkbox:hover {
       transform: scale(1.1);
     }
@@ -395,7 +399,7 @@
       // Cập nhật giá tiền
       const totalDisplay = document.getElementById('total-display');
       if (totalDisplay) totalDisplay.innerHTML = `TỔNG THANH TOÁN: ${total.toLocaleString("vi-VN")} đ`;
-      
+
       // Khóa nút thanh toán nếu không chọn món nào
       const btnCheckout = document.getElementById('btn-checkout');
       if (btnCheckout) {
@@ -451,14 +455,14 @@
         if (source === 'build') {
           const key = cb.getAttribute('data-key');
           const item = buildCart[key];
-          if(item) {
+          if (item) {
             cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: key });
             totalAmount += (price * qty);
           }
         } else if (source === 'regular') {
           const index = cb.getAttribute('data-index');
           const item = regularItems[index];
-          if(item) {
+          if (item) {
             cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: item.category });
             totalAmount += (price * qty);
           }
@@ -483,8 +487,25 @@
         const data = await response.json();
 
         if (response.ok) {
-          alert(`🎉 Đặt hàng thành công!\nMã đơn hàng của bạn: ${data.order_code}`);
-          
+          Swal.fire({
+            icon: 'success',
+            title: 'Chốt đơn thành công!',
+            text: 'Mã đơn hàng của bạn là: ' + data.order_code,
+            confirmButtonColor: '#dc2626', // Màu đỏ cho hợp với tông màu của EIU COMPUTER
+            confirmButtonText: 'Xem lịch sử đơn hàng',
+            allowOutsideClick: false // Bắt buộc bấm nút mới tắt được pop-up
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Sau khi bấm OK, tự động chuyển sang trang lịch sử đơn hàng (hoặc trang chủ)
+              if (result.isConfirmed) {
+                // 🔥 THÊM DÒNG NÀY ĐỂ XÓA GIỎ HÀNG SAU KHI MUA XONG
+                localStorage.removeItem('cart'); // (Hoặc 'cartItems' tùy team ông đặt tên là gì)
+
+                window.location.href = 'profile.html'; // Chuyển sang trang lịch sử
+              }
+            }
+          });
+
           // CHIÊU CUỐI: CHỈ XÓA NHỮNG MÓN ĐÃ MUA KHỎI GIỎ HÀNG
           checkedBoxes.forEach(cb => {
             const source = cb.getAttribute('data-source');
@@ -503,10 +524,10 @@
           // Cập nhật lại bộ nhớ
           localStorage.setItem("pc_build", JSON.stringify(buildCart));
           localStorage.setItem("cart", JSON.stringify(regularItems));
-          
+
           // Load lại UI
           loadCart();
-          if(typeof updateCartCount === 'function') updateCartCount();
+          if (typeof updateCartCount === 'function') updateCartCount();
           renderHeader("header");
 
         } else {
@@ -523,6 +544,7 @@
 
     loadCart();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
