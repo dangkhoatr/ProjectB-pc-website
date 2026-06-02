@@ -1,4 +1,5 @@
 <!doctype html>
+<form class="newsletter-form"></form>
 <html lang="vi">
 
 <head>
@@ -47,7 +48,7 @@
             width: 100%;
         }
 
-        
+
 
         .main-nav a {
             color: rgba(255, 255, 255, 0.8);
@@ -58,7 +59,7 @@
             color: #fff;
         }
 
-    
+
 
         .cart-btn {
             background: var(--main);
@@ -729,6 +730,102 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* FORM BÊN TRONG NEWSLETTER */
+        .newsletter-form {
+            margin-top: 30px;
+        }
+
+        /* 1. CÁI KHUNG TO BÊN NGOÀI (Phục hồi nền đen) */
+        .newsletter {
+            background: linear-gradient(135deg, var(--dark-2), #1e293b);
+            /* Nền xanh đen gradient cực sang */
+            color: #fff;
+            padding: 60px 20px;
+            text-align: center;
+            max-width: 1000px;
+            /* Thu gọn lại một chút nhìn cho giống thẻ Card */
+            margin: 60px auto;
+            /* Căn giữa màn hình */
+            border-radius: 24px;
+            /* Bo góc nguyên cái khối to */
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            /* Đổ bóng 3D */
+        }
+
+        /* 2. CHỈNH LẠI CHỮ CHO NỔI BẬT */
+        .newsletter h2 {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .newsletter p {
+            color: rgba(255, 255, 255, 0.7);
+            /* Chữ xám nhạt cho sang */
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        /* (Giữ nguyên đoạn .newsletter-form "viên thuốc" của ông ở bên dưới đoạn này nhé) */
+        /* Biến nguyên cục form thành 1 viên thuốc nền trắng */
+        .newsletter-form .input-group {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            max-width: 480px;
+            /* Độ dài vừa phải, không bị mập quá */
+            margin: 0 auto;
+            border-radius: 50px;
+            /* Bo tròn tuyệt đối */
+            padding: 6px;
+            /* Khoảng cách từ mép trắng đến nút đỏ */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            /* Bóng đổ cho form nổi lên */
+        }
+
+        /* Icon cái thư */
+        .newsletter-form .input-group i {
+            color: #94a3b8;
+            font-size: 18px;
+            margin-left: 20px;
+            margin-right: 12px;
+        }
+
+        /* Ô nhập chữ */
+        .newsletter-form input {
+            flex: 1;
+            /* Tự động kéo dài lấp đầy khoảng trống */
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            font-size: 15px;
+            background: transparent;
+            color: var(--text);
+        }
+
+        /* Nút bấm Đăng ký */
+        .newsletter-form button {
+            background: var(--main);
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 50px;
+            /* Nút cũng phải bo tròn theo form */
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            /* Ép chữ không bị rớt dòng */
+            transition: all 0.3s ease;
+        }
+
+        /* Hiệu ứng rê chuột vào nút */
+        .newsletter-form button:hover {
+            background: var(--main-dark);
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 
@@ -920,8 +1017,11 @@
             <p>Nhận thông tin khuyến mãi, cấu hình hot và sản phẩm mới mỗi tuần.</p>
 
             <form class="newsletter-form">
-                <input type="email" placeholder="Nhập email của bạn..." />
-                <button type="submit">Đăng ký</button>
+                <div class="input-group">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input type="email" placeholder="Nhập email của bạn..." required />
+                    <button type="submit">Đăng ký</button>
+                </div>
             </form>
         </div>
     </section>
@@ -1078,7 +1178,7 @@
 
                 // Cắt lấy 8 sản phẩm đầu tiên
                 const featuredProducts = products.slice(0, 8);
-                
+
                 // Lưu vào biến toàn cục để xài cho hàm buyNow
                 window.loadedProducts = featuredProducts;
 
@@ -1139,9 +1239,9 @@
 
             // 2. Kéo giỏ hàng cũ từ LocalStorage ra
             let cart = JSON.parse(localStorage.getItem('cart')) || {};
-            
+
             // 3. Nhét hàng vào giỏ
-            if(cart[p.id]) {
+            if (cart[p.id]) {
                 cart[p.id].qty += 1;
             } else {
                 cart[p.id] = {
@@ -1153,7 +1253,7 @@
                     qty: 1
                 };
             }
-            
+
             // 4. Lưu lại vào bộ nhớ
             localStorage.setItem('cart', JSON.stringify(cart));
 

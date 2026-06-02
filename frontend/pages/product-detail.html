@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
       --red: #ef2b1d;
@@ -234,6 +234,7 @@
         grid-template-columns: 1fr;
       }
     }
+
     /* TOAST NOTIFICATION (THÔNG BÁO XỊN) */
     #toast-container {
       position: fixed;
@@ -246,7 +247,8 @@
     }
 
     .toast-msg {
-      background: #10b981; /* Xanh lá Emerald */
+      background: #10b981;
+      /* Xanh lá Emerald */
       color: white;
       padding: 14px 24px;
       border-radius: 8px;
@@ -256,17 +258,32 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, 
-                 fadeOutRight 0.4s ease 2.5s forwards;
+      animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+        fadeOutRight 0.4s ease 2.5s forwards;
     }
 
     @keyframes slideInRight {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      from {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
+
     @keyframes fadeOutRight {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(120%); opacity: 0; }
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(120%);
+        opacity: 0;
+      }
     }
   </style>
 </head>
@@ -399,10 +416,10 @@
       `;
 
       // Xử lý xuống dòng cho mô tả (Fix bug dính chữ)
-      const finalDesc = product.description 
-          ? product.description.replace(/\n/g, '<br>') 
-          : `${product.name} là sản phẩm linh kiện chính hãng, được phân phối bởi EIU Computer với chính sách bảo hành dài hạn và hậu mãi chu đáo.`;
-      
+      const finalDesc = product.description
+        ? product.description.replace(/\n/g, '<br>')
+        : `${product.name} là sản phẩm linh kiện chính hãng, được phân phối bởi EIU Computer với chính sách bảo hành dài hạn và hậu mãi chu đáo.`;
+
       document.getElementById("dynamic-description").innerHTML = finalDesc;
       document.getElementById("dynamic-review-title").innerText = `Đánh giá & Nhận xét về ${product.name}`;
 
@@ -438,7 +455,7 @@
         const res = await fetch(`http://localhost:3000/api/products/detail/${id}`, { method: "POST" });
         if (!res.ok) throw new Error();
         const product = await res.json();
-        
+
         // CODE CỦA KHOA: Lưu tạm product để addToCart có thể đọc được
         window.currentProduct = product;
         renderProduct(product);
@@ -459,47 +476,51 @@
         container.id = 'toast-container';
         document.body.appendChild(container);
       }
-      
+
       const toast = document.createElement('div');
       toast.className = 'toast-msg';
       // Icon tick xanh
       toast.innerHTML = `<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> ${msg}`;
-      
+
       container.appendChild(toast);
-      
+
       // Tự động dọn rác sau khi ẩn
       setTimeout(() => { toast.remove(); }, 3000);
     }
 
-    // HÀM THÊM VÀO GIỎ HÀNG (ĐÃ SỬA LẠI LOGIC LƯU TRỮ)
+    // HÀM THÊM VÀO GIỎ HÀNG (ĐÃ SỬA CHUẨN SANG DÙNG MẢNG ARRAY)
     function addToCart() {
       if (!window.currentProduct) return;
-      
+
       const p = window.currentProduct;
 
-      // 1. Kéo giỏ hàng cũ từ LocalStorage ra (nếu chưa có thì tạo object rỗng)
-      let cart = JSON.parse(localStorage.getItem('cart')) || {};
-      
-      // 2. Kiểm tra xem món này có trong giỏ chưa
-      if(cart[p.id]) {
-         cart[p.id].qty += 1; // Có rồi thì cộng dồn số lượng
+      // 1. Kéo giỏ hàng từ LocalStorage ra (CHÚ Ý: DÙNG MẢNG [] THAY VÌ {})
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // 2. Tìm xem sản phẩm đã có trong mảng chưa
+      let existingItem = cart.find(item => item.id == p.id);
+
+      if (existingItem) {
+        // Có rồi thì cộng dồn số lượng
+        existingItem.qty += 1;
       } else {
-         cart[p.id] = {       // Chưa có thì tạo mới
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            image: p.image_url || p.image,
-            category: p.category,
-            qty: 1
-         };
+        // Chưa có thì đẩy (push) nguyên cục mới vào mảng
+        cart.push({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          image: p.image_url || p.image,
+          category: p.category,
+          qty: 1
+        });
       }
-      
+
       // 3. Nhét ngược lại vào LocalStorage
       localStorage.setItem('cart', JSON.stringify(cart));
 
       // 4. Bắn thông báo xịn sò
       showToast("Đã thêm " + p.name + " vào giỏ hàng!");
-      
+
       // 5. Cập nhật lại UI Header
       if (typeof updateCartCount === "function") {
         updateCartCount();

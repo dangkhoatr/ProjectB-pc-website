@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="../assets/css/style.css">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <title>Giỏ hàng của bạn</title>
+  <title>Giỏ hàng của bạn | EIU COMPUTER</title>
+
   <style>
     body {
       margin: 0;
@@ -200,7 +200,7 @@
       }
     }
 
-    /* CUSTOM CHECKBOX SHOPEE STYLE */
+    /* CUSTOM CHECKBOX */
     .checkbox-cell {
       width: 50px;
       text-align: center;
@@ -211,7 +211,6 @@
       height: 20px;
       cursor: pointer;
       accent-color: #dc2626;
-      /* Màu đỏ chủ đạo */
     }
 
     .custom-checkbox:hover {
@@ -225,13 +224,11 @@
 
   <div class="container">
     <h1><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG CỦA BẠN</h1>
-
-    <div id="cartContent">
-    </div>
-
+    <div id="cartContent"></div>
   </div>
 
   <div id="footer"></div>
+
   <div id="clear-cart-modal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
       <div class="modal-icon">
@@ -245,8 +242,10 @@
       </div>
     </div>
   </div>
+
   <script src="../components/header.js"></script>
   <script src="../components/footer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
     renderHeader("header");
@@ -282,7 +281,6 @@
         return;
       }
 
-      // THÊM CỘT CHECKBOX VÀO TIÊU ĐỀ
       let html = `
         <table class="cart-table">
           <thead>
@@ -358,23 +356,21 @@
             <i class="fa-solid fa-trash"></i> Xóa giỏ hàng
           </button>
           <button class="btn btn-checkout" onclick="checkout()" id="btn-checkout">
-            Tiến hành Đặt hàng <i class="fa-solid fa-arrow-right"></i>
+            Xác nhận & Đi đến Thanh toán <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
       `;
 
       cartContent.innerHTML = html;
-      calculateTotal(); // Chạy tính tiền lần đầu
+      calculateTotal();
     }
 
-    // LOGIC CHECKBOX: Chọn tất cả / Bỏ chọn tất cả
     function toggleAll(source) {
       const checkboxes = document.querySelectorAll('.item-check');
       checkboxes.forEach(cb => cb.checked = source.checked);
       calculateTotal();
     }
 
-    // LOGIC TÍNH TIỀN: Chỉ tính những ô được tích
     function calculateTotal() {
       const checkboxes = document.querySelectorAll('.item-check');
       let total = 0;
@@ -392,15 +388,12 @@
         }
       });
 
-      // Tự động gỡ dấu tick "Chọn tất cả" nếu có 1 ô bị bỏ chọn
       const checkAll = document.getElementById('check-all');
       if (checkAll) checkAll.checked = allChecked && checkboxes.length > 0;
 
-      // Cập nhật giá tiền
       const totalDisplay = document.getElementById('total-display');
       if (totalDisplay) totalDisplay.innerHTML = `TỔNG THANH TOÁN: ${total.toLocaleString("vi-VN")} đ`;
 
-      // Khóa nút thanh toán nếu không chọn món nào
       const btnCheckout = document.getElementById('btn-checkout');
       if (btnCheckout) {
         btnCheckout.disabled = !anyChecked;
@@ -409,13 +402,14 @@
       }
     }
 
-    // Xóa Popup cũ (Vẫn giữ nguyên chức năng của ông)
     function clearCart() {
       document.getElementById('clear-cart-modal').style.display = 'flex';
     }
+
     function closeClearModal() {
       document.getElementById('clear-cart-modal').style.display = 'none';
     }
+
     function executeClearCart() {
       localStorage.removeItem("pc_build");
       localStorage.removeItem("cart");
@@ -426,27 +420,24 @@
       renderHeader("header");
     }
 
-    // THANH TOÁN (CHỈ MUA NHỮNG MÓN ĐƯỢC TÍCH CHỌN)
+    // ==========================================
+    // HÀM CHUẨN BỊ DỮ LIỆU VÀ CHUYỂN SANG TRANG THANH TOÁN (PAYMENT INFO)
+    // ==========================================
+    // TRONG FILE CART.HTML
     async function checkout() {
       const token = localStorage.getItem('token');
-      if (!token) {
-        alert("Vui lòng đăng nhập để tiến hành thanh toán!");
-        window.location.href = "auth.html";
-        return;
-      }
+      if (!token) return Swal.fire('Khoan đã!', 'Vui lòng đăng nhập.', 'warning').then(() => window.location.href = "auth.html");
 
-      // Lọc ra các ô được đánh dấu
       const checkedBoxes = document.querySelectorAll('.item-check:checked');
-      if (checkedBoxes.length === 0) return;
+      if (checkedBoxes.length === 0) return Swal.fire('Opps!', 'Vui lòng chọn sản phẩm!', 'info');
 
+      // (Đoạn lấy buildCart, regularCart và tính totalAmount giữ nguyên của ông...)
       let buildCart = JSON.parse(localStorage.getItem("pc_build")) || {};
       let regularCart = JSON.parse(localStorage.getItem("cart")) || [];
       let regularItems = Array.isArray(regularCart) ? regularCart : Object.values(regularCart);
-
       let cartItems = [];
       let totalAmount = 0;
 
-      // Gom data của những món được tích
       checkedBoxes.forEach(cb => {
         const source = cb.getAttribute('data-source');
         const qty = Number(cb.getAttribute('data-qty'));
@@ -454,97 +445,49 @@
 
         if (source === 'build') {
           const key = cb.getAttribute('data-key');
-          const item = buildCart[key];
-          if (item) {
-            cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: key });
-            totalAmount += (price * qty);
-          }
+          if (buildCart[key]) { cartItems.push({ id: buildCart[key].id, name: buildCart[key].name, price: buildCart[key].price, qty: qty, image: buildCart[key].image, category: key }); totalAmount += (price * qty); }
         } else if (source === 'regular') {
           const index = cb.getAttribute('data-index');
-          const item = regularItems[index];
-          if (item) {
-            cartItems.push({ id: item.id, name: item.name, price: item.price, qty: qty, image: item.image, category: item.category });
-            totalAmount += (price * qty);
-          }
+          if (regularItems[index]) { cartItems.push({ id: regularItems[index].id, name: regularItems[index].name, price: regularItems[index].price, qty: qty, image: regularItems[index].image, category: regularItems[index].category }); totalAmount += (price * qty); }
         }
       });
 
       const btnCheckout = document.getElementById('btn-checkout');
-      const originalText = btnCheckout.innerHTML;
-      btnCheckout.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+      btnCheckout.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo hóa đơn...';
       btnCheckout.disabled = true;
 
       try {
+        // GỌI API TẠO ĐƠN HÀNG (TRỪ KHO LUÔN)
         const response = await fetch('http://localhost:3000/api/orders/checkout', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ cartItems: cartItems, totalAmount: totalAmount })
         });
-
         const data = await response.json();
 
         if (response.ok) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Chốt đơn thành công!',
-            text: 'Mã đơn hàng của bạn là: ' + data.order_code,
-            confirmButtonColor: '#dc2626', // Màu đỏ cho hợp với tông màu của EIU COMPUTER
-            confirmButtonText: 'Xem lịch sử đơn hàng',
-            allowOutsideClick: false // Bắt buộc bấm nút mới tắt được pop-up
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Sau khi bấm OK, tự động chuyển sang trang lịch sử đơn hàng (hoặc trang chủ)
-              if (result.isConfirmed) {
-                // 🔥 THÊM DÒNG NÀY ĐỂ XÓA GIỎ HÀNG SAU KHI MUA XONG
-                localStorage.removeItem('cart'); // (Hoặc 'cartItems' tùy team ông đặt tên là gì)
-
-                window.location.href = 'profile.html'; // Chuyển sang trang lịch sử
-              }
-            }
-          });
-
-          // CHIÊU CUỐI: CHỈ XÓA NHỮNG MÓN ĐÃ MUA KHỎI GIỎ HÀNG
+          // Xóa những món đã mua khỏi Giỏ hàng cục bộ
           checkedBoxes.forEach(cb => {
-            const source = cb.getAttribute('data-source');
-            if (source === 'build') {
-              const key = cb.getAttribute('data-key');
-              delete buildCart[key]; // Xóa món trong Build
-            } else if (source === 'regular') {
-              const index = cb.getAttribute('data-index');
-              regularItems[index] = null; // Đánh dấu mảng lẻ là null để xóa
-            }
+            if (cb.getAttribute('data-source') === 'build') delete buildCart[cb.getAttribute('data-key')];
+            else regularItems[cb.getAttribute('data-index')] = null;
           });
-
-          // Lọc rác
           regularItems = regularItems.filter(item => item !== null);
-
-          // Cập nhật lại bộ nhớ
           localStorage.setItem("pc_build", JSON.stringify(buildCart));
           localStorage.setItem("cart", JSON.stringify(regularItems));
 
-          // Load lại UI
-          loadCart();
-          if (typeof updateCartCount === 'function') updateCartCount();
-          renderHeader("header");
-
+          // BAY SANG TRANG PAYMENT-INFO VỚI MÃ ĐƠN
+          window.location.href = `payment-info.html?code=${data.order_code}`;
         } else {
-          alert("Lỗi: " + data.message);
+          Swal.fire('Lỗi', data.message, 'error');
+          btnCheckout.innerHTML = 'Xác nhận & Đi đến Thanh toán'; btnCheckout.disabled = false;
         }
       } catch (error) {
-        console.error("Lỗi Checkout:", error);
-        alert("Mất kết nối đến máy chủ. Hãy kiểm tra xem Backend đã bật chưa!");
-      } finally {
-        btnCheckout.innerHTML = originalText;
-        btnCheckout.disabled = false;
+        Swal.fire('Lỗi', 'Mất kết nối máy chủ', 'error');
+        btnCheckout.innerHTML = 'Xác nhận & Đi đến Thanh toán'; btnCheckout.disabled = false;
       }
     }
-
     loadCart();
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Thông tin Thanh toán | EIU COMPUTER</title>
+    <style>
+        body {
+            background: #f3f4f6;
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            color: #111827;
+        }
+
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .box h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+            font-size: 20px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Cột bên trái: Info */
+        .info-group {
+            margin-bottom: 20px;
+        }
+
+        .info-group label {
+            display: block;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-group .info-val {
+            background: #f9fafb;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .alert-note {
+            background: #fffbeb;
+            color: #b45309;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Cột bên phải: Order Summary */
+        .item-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        .order-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+
+        .order-item-info {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .order-item-qty {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .order-item-price {
+            font-weight: bold;
+            color: #dc2626;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 15px;
+            color: #4b5563;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .summary-total .price {
+            color: #dc2626;
+            font-size: 24px;
+        }
+
+        .btn-pay {
+            width: 100%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover {
+            background: #b91c1c;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-pay:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            color: #2563eb;
+        }
+
+        @media (max-width: 900px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+
+    <div class="checkout-container">
+        <!-- Cột trái: Thông tin khách hàng -->
+        <div>
+            <a href="cart.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại giỏ hàng</a>
+            <div class="box">
+                <h2><i class="fa-solid fa-address-card"></i> Thông tin Nhận hàng & Thanh toán</h2>
+
+                <div class="info-group">
+                    <label>Họ và Tên khách hàng</label>
+                    <div class="info-val" id="info-name">Đang tải...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Số điện thoại</label>
+                    <div class="info-val" id="info-phone">Đang tải...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Email xác nhận</label>
+                    <div class="info-val" id="info-email">Đang tải...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Địa chỉ giao hàng (Mặc định từ hồ sơ)</label>
+                    <div class="info-val" id="info-address" style="min-height: 60px;">Đang tải...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Ngày đặt hàng</label>
+                    <div class="info-val" id="info-date"></div>
+                </div>
+
+                <div class="alert-note">
+                    <i class="fa-solid fa-circle-info" style="margin-top: 3px;"></i>
+                    <span>Nếu muốn thay đổi thông tin nhận hàng, vui lòng quay lại trang <a href="account.html"
+                            style="color: #b45309; font-weight: bold;">Hồ sơ tài khoản</a> để cập nhật trước khi thanh
+                        toán.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Đơn hàng -->
+        <div>
+            <div class="box">
+                <h2><i class="fa-solid fa-box-open"></i> Đơn hàng của bạn</h2>
+
+                <div class="item-list" id="order-items">
+                    <!-- Dữ liệu JS render vào đây -->
+                </div>
+
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span id="sub-total">0 đ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí giao hàng:</span>
+                    <span style="color: #059669; font-weight: bold;">Miễn phí</span>
+                </div>
+
+                <div class="summary-total">
+                    <span>Tổng tiền:</span>
+                    <span class="price" id="final-total">0 đ</span>
+                </div>
+
+                <button class="btn-pay" id="btn-confirm" onclick="processCheckout()">XÁC NHẬN & THANH TOÁN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="../components/header.js"></script>
+    <script src="../components/footer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+       renderHeader("header");
+    renderFooter("footer");
+
+    function getSafeImageUrl(imgStr) {
+      if (!imgStr) return "https://placehold.co/100x100/1f2937/fff?text=No+Image";
+      if (imgStr.startsWith('http') || imgStr.startsWith('data:')) return imgStr;
+      if (imgStr.startsWith('uploads/')) return `../../${imgStr}`;
+      if (imgStr.startsWith('assets/')) return `../${imgStr}`;
+      return `http://localhost:3000/${imgStr}`;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderCode = urlParams.get('code');
+    const token = localStorage.getItem('token');
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!token || !orderCode || !user) return window.location.href = 'cart.html';
+
+      // Load Info Khách hàng
+      document.getElementById('info-name').innerText = user.name || "Không rõ";
+      document.getElementById('info-phone').innerText = user.phone || "Chưa cập nhật";
+      document.getElementById('info-email').innerText = user.email || "Không có";
+      document.getElementById('info-address').innerText = user.address || "Chưa cập nhật địa chỉ!";
+
+      // Fetch hóa đơn từ Backend
+      try {
+          const res = await fetch(`http://localhost:3000/api/orders/detail/${orderCode}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (!res.ok) throw new Error();
+          
+          const orderData = await res.json();
+          
+          // Render Ngày đặt
+          const oDate = new Date(orderData.order_date);
+          document.getElementById('info-date').innerText = `${oDate.toLocaleDateString('vi-VN')} ${oDate.toLocaleTimeString('vi-VN')}`;
+
+          // Render sản phẩm
+          let itemsHtml = '';
+          orderData.items.forEach(item => {
+              itemsHtml += `
+              <div class="order-item">
+                  <img src="${getSafeImageUrl(item.product_image)}">
+                  <div class="order-item-info">
+                  <div class="order-item-name">${item.product_name}</div>
+                  <div class="order-item-qty">Số lượng: x${item.quantity}</div>
+                  </div>
+                  <div class="order-item-price">${Number(item.price * item.quantity).toLocaleString('vi-VN')} đ</div>
+              </div>`;
+          });
+          document.getElementById('order-items').innerHTML = itemsHtml;
+
+          // Tiền nong
+          const moneyStr = Number(orderData.total_amount).toLocaleString('vi-VN') + " đ";
+          document.getElementById('sub-total').innerText = moneyStr;
+          document.getElementById('final-total').innerText = moneyStr;
+
+          // Nếu đơn đã thanh toán hoặc đã hủy, khóa nút
+          if (orderData.status !== 'Đang xử lý' && orderData.status !== 'Chờ thanh toán') {
+              const btn = document.getElementById('btn-confirm');
+              btn.innerText = `ĐƠN HÀNG: ${orderData.status.toUpperCase()}`;
+              btn.disabled = true;
+          }
+
+      } catch (error) {
+          Swal.fire('Lỗi', 'Không tải được Hóa đơn!', 'error').then(()=> window.location.href='account.html');
+      }
+    });
+
+    // CHỐT ĐÓNG TIỀN CHO ĐƠN NÀY
+    async function processCheckout() {
+      const btn = document.getElementById('btn-confirm');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thanh toán...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('http://localhost:3000/api/orders/pay', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ order_code: orderCode })
+        });
+        
+        if (res.ok) {
+            Swal.fire({
+                icon: 'success', title: 'Thanh toán thành công!',
+                text: 'Hóa đơn đã được ghi nhận. Cảm ơn bạn!',
+                confirmButtonColor: '#10b981', allowOutsideClick: false
+            }).then(() => window.location.href = 'account.html');
+        } else {
+            Swal.fire('Lỗi', 'Thanh toán thất bại!', 'error');
+            btn.innerHTML = 'XÁC NHẬN & THANH TOÁN'; btn.disabled = false;
+        }
+      } catch (e) {
+          Swal.fire('Lỗi', 'Mất kết nối!', 'error');
+          btn.innerHTML = 'XÁC NHẬN & THANH TOÁN'; btn.disabled = false;
+      }
+    }
+    </script>
+</body>
+
+</html>
